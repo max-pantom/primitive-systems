@@ -165,3 +165,21 @@ test('text fields are 500px wide; focus matches hover; light fill is #EEEEEE', a
   await input.focus();
   expect(await input.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe(hover);
 });
+
+test('responsive: no horizontal overflow and every section reachable at phone and tablet widths', async ({ page }) => {
+  for (const [w, h] of [[390, 800], [820, 1100]]) {
+    await page.setViewportSize({ width: w, height: h });
+    for (const id of ['button', 'text-input', 'table', 'command-palette', 'dialog']) {
+      await page.goto(`/#${id}`);
+      await page.evaluate(() => document.fonts.ready);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${id} at ${w}px overflows horizontally`).toBe(true);
+      for (const t of ['preview', 'code', 'panel']) await expect(page.getByTestId(t)).toBeAttached();
+      await page.getByTestId('panel').scrollIntoViewIfNeeded();
+      await expect(page.getByTestId('panel')).toBeVisible();
+    }
+    // nav strip scrolls instead of wrapping off-screen
+    await page.goto('/');
+    await page.getByRole('navigation', { name: 'Components' }).getByRole('link', { name: 'Avatar Group' }).click();
+    await expect(page.getByRole('heading', { name: 'Avatar Group', level: 1 })).toBeVisible();
+  }
+});

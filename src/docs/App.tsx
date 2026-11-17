@@ -154,6 +154,7 @@ export default function App() {
   const [hash, go] = useHash();
   const def = components.find((c) => c.id === hash) ?? components[0];
   const [theme, setTheme] = useState('light');
+  useEffect(() => { document.querySelector('.nav a[aria-current="page"]')?.scrollIntoView({ inline: 'center', block: 'nearest' }); }, [hash]);
   const [left, setLeft] = useState(220);
   const [right, setRight] = useState(360);
   useEffect(() => {
