@@ -2,7 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { site } from '../config/site';
 import { FRAMEWORKS } from '../codegen';
-import { ApiError, composeCode, getCode, getComponent, getInstall, getRules, getThemeBuild, getTokens, lintCode, listComponents, searchComponents } from '../api/handlers';
+import { ApiError, composeCode, getCode, getChangelog, getComponent, getInstall, getRules, getThemeBuild, getTokens, lintCode, listComponents, searchComponents } from '../api/handlers';
 
 const wrap = (fn: () => unknown) => {
   try {
@@ -19,6 +19,7 @@ export function createMcpServer() {
   server.registerTool('list_components', { description: 'List the component catalog: id, name, description, tags, status.', inputSchema: {} }, async () => wrap(() => listComponents()));
   server.registerTool('get_tokens', { description: 'The theme/token set: named colors (light/dark), spacing, radius, type.', inputSchema: {} }, async () => wrap(() => getTokens()));
   server.registerTool('get_rules', { description: 'The rule book: design rules, documented exceptions, allowed grid values, and per-component do/don\'t guidelines. Read before composing UI.', inputSchema: {} }, async () => wrap(() => getRules()));
+  server.registerTool('get_changelog', { description: 'Release history: what is New or Refined per version, with the components each release added.', inputSchema: {} }, async () => wrap(() => getChangelog()));
   server.registerTool('get_install', { description: 'How to use the library: remote MCP URL, HTTP endpoints, CLI commands, the <p8-*> script tag and the skill.', inputSchema: {} }, async () => wrap(() => getInstall()));
   server.registerTool('search_components', { description: 'Find the right components for a need, e.g. "confirm a destructive action" or "loading state". Returns ranked components with why.', inputSchema: { query: z.string(), limit: z.number().int().min(1).max(20).optional() } }, async ({ query, limit }) => wrap(() => searchComponents(query, limit ?? 8)));
   server.registerTool('compose_code', {

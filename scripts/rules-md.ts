@@ -3,6 +3,7 @@ import { EXCEPTIONS, RULES } from '../src/rules/rulebook';
 import { checkAll, checkNode, checkRules, variants } from '../src/rules/check';
 import { components } from '../src/components';
 import { site } from '../src/config/site';
+import { changelogMarkdown } from '../src/changelog';
 
 const rule = RULES.map((r) => `### ${r.title} \`${r.id}\`\n\n${r.statement}\n${EXCEPTIONS.filter((e) => e.rule === r.id).map((e) => `\n- **Exception — \`${e.target}\`:** ${e.reason}`).join('')}\n`).join('\n');
 writeFileSync('RULEBOOK.md', `# ${site.name} rule book\n\nGenerated from \`src/rules/rulebook.ts\`. Do not edit by hand. Every rule below is checked automatically (see CHECKBOOK.md).\n\n${rule}`);
@@ -29,4 +30,5 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | --- | --- | --- | --- | --- |
 ${rows.join('\n')}
 `);
-console.log('wrote RULEBOOK.md and CHECKBOOK.md');
+writeFileSync('CHANGELOG.md', changelogMarkdown());
+console.log('wrote RULEBOOK.md, CHECKBOOK.md and CHANGELOG.md');

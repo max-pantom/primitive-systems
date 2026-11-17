@@ -1,5 +1,14 @@
 # Progress
 
+## 0.9.0 — pickers and changelog
+
+- Nine new components: Date Picker, Time Picker, Multi-select, File Upload, Swatch Picker, Carousel, Timeline, Context Menu and Hover Card → 66 total. All share the seed tokens, six framework generators and per-component guidelines.
+- Release history now lives in `src/changelog.ts`, generating CHANGELOG.md and powering `/changelog`, `GET /api/changelog` and MCP `get_changelog`. The catalog and component pages show release metadata.
+- Fixed typed-date synchronization, invalid date fallbacks, disabled picker actions, keyboard swatch entry, multi-select filtering and selection announcements, and upload drops (including accept/multiple restrictions and the native FileList). Custom swatch colors work in React and inline HTML.
+- Added interaction regression tests, MCP/HTTP changelog parity, custom-color codegen checks, and browser coverage for changelog links and new controls. Browser catalog checks now use the API count instead of a hardcoded 57.
+- Verification: 1,204 Vitest tests; type checking and 66-component rule audit pass. Production build passes. All 18 Playwright checks pass (17 in the full run, then the catalog-wide layout guard after its final fix). Multi-select keeps its empty height and may grow as chips wrap.
+- Usage storage remains unconnected, as documented in 0.8.0; this release does not change that.
+
 ## 0.8.0 — done
 
 - Slider drag stretch; Menu shortcut hints; 5 new components (Tree View, Scroll Area, Timer, Inline Edit, Code Block) → 57 total.
@@ -20,9 +29,9 @@
 
 **Blocks** (explicitly later): sign-in, settings, pricing, onboarding, chat, empty dashboard, and then a generative "describe it" tool on top of them. Today `search_components` + `compose_code` cover the agent-driven version.
 
-**More components:** Date picker, Time picker, Multi-select with chips, File upload (dropzone + list), Color swatch picker, Carousel, Timeline / activity feed, Context menu, Hover card. (Done since: Tree View, Scroll Area, Timer, Inline Edit, Code Block, Shortcut hint.)
+**Components:** the remaining pickers, upload, carousel, timeline, context menu and hover card shipped in 0.9.0.
 
-**Bigger features:** Figma sync of tokens and components (needs the Figma connection); motion presets beyond the two motion tokens (enter / exit / press); accessibility *page* per component showing contrast / keyboard / labels (the automated checks exist, the docs UI for them does not); theme builder UI in the docs site (CLI, MCP and API exist); publish the CLI to npm so `npx primitive` works without the repo; changelog view in the docs site; per-framework live previews (Svelte island).
+**Bigger features:** Figma sync of tokens and components (needs the Figma connection); motion presets beyond the two motion tokens (enter / exit / press); accessibility *page* per component showing contrast / keyboard / labels (the automated checks exist, the docs UI for them does not); theme builder UI in the docs site (CLI, MCP and API exist); publish the CLI to npm so `npx primitive` works without the repo; per-framework live previews (Svelte island).
 
 ## Earlier work
 ## Behavior + 25 new components — done

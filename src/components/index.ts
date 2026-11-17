@@ -10,13 +10,16 @@ import { popover, dropdown, sheet } from './overlay';
 import { iconButton, kbd, tag, copyButton } from './bits';
 import { combobox, numberInput, otpInput, stepper, rating, accordion, statCard, avatarGroup, progressRing, banner } from './more';
 import { treeView, scrollArea, timer, inlineEdit, codeBlock } from './extras';
+import { datePicker, timePicker, multiSelect, fileUpload, swatchPicker } from './pickers';
+import { carousel, timeline, contextMenu, hoverCard } from './extras2';
 import type { ComponentDef, Node, Rule } from './types';
 
 export const components: ComponentDef[] = [button, card, input, textarea, divider, menu, tabs, disclosure, dataList, select, checkbox, switchC, badge, tooltip, dialog, toast, avatar,
   radioGroup, field, search, segmented, slider, spinner, skeleton, progress, alert, sidebarNav, breadcrumbs, pagination, commandPalette,
   listRow, table, keyValue, stack, toolbar, popover, dropdown, sheet, iconButton, kbd, tag, copyButton,
   combobox, numberInput, otpInput, stepper, rating, accordion, statCard, avatarGroup, progressRing, banner,
-  treeView, scrollArea, timer, inlineEdit, codeBlock];
+  treeView, scrollArea, timer, inlineEdit, codeBlock,
+  datePicker, timePicker, multiSelect, fileUpload, swatchPicker, carousel, timeline, contextMenu, hoverCard];
 import { GUIDELINES, MARKS } from './guidelines';
 for (const c of components) { c.guidelines = GUIDELINES[c.id]; c.since = MARKS[c.id]?.since ?? '0.6.0'; c.mark = MARKS[c.id]?.mark; }
 export const getDef = (id: string) => components.find((c) => c.id === id);

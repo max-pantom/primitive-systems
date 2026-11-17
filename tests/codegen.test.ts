@@ -73,3 +73,16 @@ describe('behaviour', () => {
     expect(generate(components[0], { label: '{x}' }, 'react').code).toContain("{'{'}x{'}'}");
   });
 });
+
+describe('custom swatch styles', () => {
+  it('keeps custom colors in HTML, React and Tailwind outputs', () => {
+    const def = components.find((c) => c.id === 'swatch-picker')!;
+    for (const framework of ['html', 'react', 'tailwind'] as const) {
+      const { code } = generate(def, { colors: '#ff0000\n#00ff00', value: '#00ff00' }, framework);
+      expect(code).toContain('#ff0000');
+      expect(code).toContain('#00ff00');
+      if (framework === 'react') expect(code).toContain('style={{ background: "#ff0000" }}');
+      if (framework === 'html') expect(code).toContain('; background: #ff0000');
+    }
+  });
+});

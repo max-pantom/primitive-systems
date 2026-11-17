@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { site } from '../config/site';
+import { RELEASES } from '../changelog';
+import { components } from '../components';
+
+const byVersion = (v: string) => components.filter((c) => c.since === v);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Changelog — {site.name}</title>
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" />
+    <script is:inline>
+      document.documentElement.dataset.theme = localStorage.getItem('theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+  </head>
+  <body>
+    <main class="usage changelog" data-testid="changelog">
+      <header>
+        <a href="/" class="muted">← {site.name}</a>
+        <h1>Changelog</h1>
+        <p class="muted">What changed in each release. Components are marked <span class="mark">New</span> or <span class="mark">Refined</span> in the catalog.</p>
+      </header>
+      {RELEASES.map((r, i) => (
+        <section class="u-card" id={`v${r.version}`} data-version={r.version}>
+          <h2><span class="mono">{r.version}</span> — {r.title}{i === 0 && <span class="mark"> Latest</span>}</h2>
+          <ul class="rules">{r.items.map((t) => <li>{t}</li>)}</ul>
+          {byVersion(r.version).length > 0 && (
+            <div class="chips">
+              {byVersion(r.version).map((c) => (
+                <a class="chip" href={`/#${c.id}`}>{c.name}{c.mark === 'new' && <span class="mark">New</span>}{c.mark === 'refined' && <span class="mark">Refined</span>}</a>
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
+    </main>
+  </body>
+</html>

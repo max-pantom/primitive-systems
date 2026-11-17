@@ -17,6 +17,9 @@ padding, margin and gap use space-4, 8, 12, 16, 20, 24 or 32 (plus space-6 for m
 
 Every clickable control with horizontal padding (button, input, textarea, select, icon button, tab, segment, page button, list row…) uses padding-inline: space-12. Top and bottom are space-8 (md) or space-12 (lg).
 
+- **Exception — `p8-cal__day`:** Fixed 32px calendar cell with no padding; digits are centered in the square.
+- **Exception — `p8-swatch`:** Fixed 24px colour swatch with no padding.
+- **Exception — `p8-rating__star`:** Fixed 24px star target with no padding.
 - **Exception — `p8-menu__item`:** Menu item exception: 6px left/right, 4px top/bottom.
 - **Exception — `p8-pager__btn`:** Fixed-width page number button; 12px side padding inside a 32px minimum width.
 
@@ -28,6 +31,7 @@ Surfaces drawn with the hairline (card, dialog, sheet, popover panel, alert, toa
 - **Exception — `p8-menu`:** Wrapper around menu items: 4px inset around items that carry their own 6/4 padding.
 - **Exception — `p8-palette`:** Wrapper around an input and options that carry their own control padding.
 - **Exception — `p8-combobox__list`:** Option list wrapper: 4px inset around options that carry their own 12px control padding.
+- **Exception — `p8-multi__list`:** Option list wrapper: 4px inset around options that carry their own 12px control padding.
 - **Exception — `p8-sheet`:** Full-height drawer uses 16px on all sides.
 
 ### Default gap 12 `gap`

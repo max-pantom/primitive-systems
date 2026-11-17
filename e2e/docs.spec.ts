@@ -10,7 +10,7 @@ test('/ shows the first component immediately; no seeds banner', async ({ page }
 test('nav lists all components and switches in place', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(57);
+  await expect(nav.getByRole('link')).toHaveCount((await (await page.request.get('/api/components')).json()).components.length);
   await nav.getByRole('link', { name: 'Tabs' }).click();
   await expect(page.getByRole('heading', { name: 'Tabs', level: 1 })).toBeVisible();
   await expect(page).toHaveURL(/#tabs$/);
@@ -89,7 +89,7 @@ test('spacing rules hold in the rendered preview', async ({ page }) => {
 test('every component renders and has code in every tab', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(57);
+  await expect(nav.getByRole('link')).toHaveCount((await (await page.request.get('/api/components')).json()).components.length);
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   for (const name of names) {
     await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
@@ -122,11 +122,12 @@ test('dark mode toggle', async ({ page }) => {
   expect(new Set([a, b])).toEqual(new Set(['light', 'dark']));
 });
 
-/** Layout-shift guard: interacting with any component must never move or resize it. */
+/** Fixed controls keep their bounds; multi-select may grow vertically as chips wrap. */
 test('no layout shift when interacting with any component', async ({ page }) => {
+  test.setTimeout(120_000);
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(57);
+  await expect(nav.getByRole('link')).toHaveCount((await (await page.request.get('/api/components')).json()).components.length);
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   const box = async () => {
     const root = page.getByTestId('preview').locator('> div > *').first();
@@ -147,9 +148,12 @@ test('no layout shift when interacting with any component', async ({ page }) => 
       await page.waitForTimeout(220);
       const after = await box();
       expect(Math.round(after.x), `${name} x after click #${i}`).toBe(Math.round(before.x));
-      expect(Math.round(after.y), `${name} y after click #${i}`).toBe(Math.round(before.y));
+      if (name !== 'Multi-select') expect(Math.round(after.y), `${name} y after click #${i}`).toBe(Math.round(before.y));
       expect(Math.round(after.width), `${name} width after click #${i}`).toBe(Math.round(before.width));
-      expect(Math.round(after.height), `${name} height after click #${i}`).toBe(Math.round(before.height));
+      if (name === 'Multi-select') {
+        expect(after.height).toBeGreaterThanOrEqual(before.height);
+        expect(await page.getByTestId('preview').locator('.p8-multi').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+      } else expect(Math.round(after.height), `${name} height after click #${i}`).toBe(Math.round(before.height));
     }
   }
 });
@@ -229,4 +233,46 @@ test('new components: slider thumb stretches while dragging; menu shows shortcut
   const pressed = await slider.screenshot();
   await page.mouse.up();
   expect(pressed.equals(rest)).toBe(false);
+});
+
+test('changelog links to the new components', async ({ page }) => {
+  await page.goto('/');
+  await page.getByTestId('changelog-link').click();
+  await expect(page.getByRole('heading', { name: 'Changelog', exact: true })).toBeVisible();
+  const latest = page.locator('[data-version="0.9.0"]');
+  await expect(latest.locator('a.chip')).toHaveCount(9);
+  await latest.getByRole('link', { name: 'Date Picker' }).click();
+  await expect(page.getByRole('heading', { name: 'Date Picker', exact: true })).toBeVisible();
+});
+
+test('new pickers, file drops and hover focus work in the preview', async ({ page }) => {
+  await page.goto('/#date-picker');
+  let preview = page.getByTestId('preview');
+  await preview.getByRole('textbox', { name: 'Date', exact: true }).fill('2028-02-29');
+  await expect(preview.locator('[data-label]')).toHaveText('February 2028');
+  await preview.getByRole('button', { name: '2028-02-29', exact: true }).click();
+  await expect(preview.locator('[data-panel]')).toBeHidden();
+  await page.goto('/#time-picker');
+  await preview.getByRole('combobox', { name: 'Hour', exact: true }).selectOption('14');
+  await expect(preview.getByRole('combobox', { name: 'Hour', exact: true })).toHaveValue('14');
+  await page.goto('/#multi-select');
+  await preview.getByRole('combobox').fill('Engineering');
+  await expect(preview.getByRole('option', { name: 'Design', exact: true })).toBeHidden();
+  await preview.getByRole('combobox').press('Enter');
+  await expect(preview.locator('[data-chips]')).toContainText('Engineering');
+  await preview.getByRole('button', { name: 'Remove Engineering', exact: true }).click();
+  await expect(preview.locator('[data-chips]')).not.toContainText('Engineering');
+  await page.goto('/#file-upload');
+  await preview.locator('[data-zone]').evaluate((zone) => {
+    const data = new DataTransfer();
+    data.items.add(new File(['hello'], 'hello.txt', { type: 'text/plain' }));
+    zone.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: data }));
+  });
+  await expect(preview.locator('[data-files]')).toContainText('hello.txt');
+  expect(await preview.locator('input[type=file]').evaluate((input: HTMLInputElement) => input.files?.length)).toBe(1);
+  await preview.getByRole('button', { name: 'Remove hello.txt' }).click();
+  expect(await preview.locator('input[type=file]').evaluate((input: HTMLInputElement) => input.files?.length)).toBe(0);
+  await page.goto('/#hover-card');
+  await preview.locator('a').focus();
+  await expect(preview.locator('.p8-hovercard__wrap')).toHaveCSS('opacity', '1');
 });

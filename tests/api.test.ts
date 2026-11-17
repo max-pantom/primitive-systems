@@ -16,7 +16,7 @@ const parse = (r: any) => JSON.parse(r.content[0].text);
 describe('MCP and HTTP return the same data', () => {
   it('lists tools', async () => {
     const c = await mcp();
-    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['build_theme', 'compose_code', 'get_code', 'get_component', 'get_install', 'get_rules', 'get_tokens', 'lint_code', 'list_components', 'search_components']);
+    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['build_theme', 'compose_code', 'get_changelog', 'get_code', 'get_component', 'get_install', 'get_rules', 'get_tokens', 'lint_code', 'list_components', 'search_components']);
   });
   it('list_components', async () => {
     const c = await mcp();
@@ -25,6 +25,13 @@ describe('MCP and HTTP return the same data', () => {
   it('get_component', async () => {
     const c = await mcp();
     expect(parse(await c.callTool({ name: 'get_component', arguments: { id: 'card' } }))).toEqual(route('GET', '/api/components/card').body);
+  });
+  it('get_changelog returns the same release and component metadata over MCP and HTTP', async () => {
+    const c = await mcp();
+    const http = route('GET', '/api/changelog');
+    expect(http.status).toBe(200);
+    expect(parse(await c.callTool({ name: 'get_changelog', arguments: {} }))).toEqual(http.body);
+    expect((http.body as any).releases[0].components).toHaveLength(9);
   });
   it('get_tokens', async () => {
     const c = await mcp();

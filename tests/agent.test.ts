@@ -82,7 +82,7 @@ describe('rules endpoint and web handlers', () => {
       return r.json();
     };
     const list = await call({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
-    expect(list.result.tools.map((t: { name: string }) => t.name)).toEqual(expect.arrayContaining(['list_components', 'get_code', 'get_rules', 'search_components', 'compose_code', 'build_theme', 'lint_code', 'get_tokens', 'get_install']));
+    expect(list.result.tools.map((t: { name: string }) => t.name)).toEqual(expect.arrayContaining(['get_changelog', 'list_components', 'get_code', 'get_rules', 'search_components', 'compose_code', 'build_theme', 'lint_code', 'get_tokens', 'get_install']));
     const out = await call({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'get_code', arguments: { component: 'switch', framework: 'react' } } });
     expect(JSON.parse(out.result.content[0].text).code).toContain('useEffect');
   });

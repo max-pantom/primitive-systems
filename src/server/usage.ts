@@ -82,7 +82,7 @@ export async function getUsage(): Promise<UsageSummary> {
 export function resetMemoryUsage() { HASHES.forEach((h) => mem[h].clear()); mem.since = undefined; }
 
 /** HTTP route → the equivalent tool name, so HTTP and MCP callers are counted together. */
-const HTTP_TOOL: [RegExp, string, string][] = [[/^GET \/api\/components$/, 'list_components', ''], [/^GET \/api\/components\/[^/]+$/, 'get_component', ''], [/^POST \/api\/code$/, 'get_code', ''], [/^POST \/api\/compose$/, 'compose_code', ''], [/^GET \/api\/search$/, 'search_components', ''], [/^GET \/api\/rules$/, 'get_rules', ''], [/^GET \/api\/tokens$/, 'get_tokens', ''], [/^POST \/api\/theme$/, 'build_theme', ''], [/^POST \/api\/lint$/, 'lint_code', ''], [/^GET \/api\/install$/, 'get_install', '']];
+const HTTP_TOOL: [RegExp, string, string][] = [[/^GET \/api\/components$/, 'list_components', ''], [/^GET \/api\/components\/[^/]+$/, 'get_component', ''], [/^POST \/api\/code$/, 'get_code', ''], [/^POST \/api\/compose$/, 'compose_code', ''], [/^GET \/api\/search$/, 'search_components', ''], [/^GET \/api\/rules$/, 'get_rules', ''], [/^GET \/api\/tokens$/, 'get_tokens', ''], [/^POST \/api\/theme$/, 'build_theme', ''], [/^POST \/api\/lint$/, 'lint_code', ''], [/^GET \/api\/install$/, 'get_install', ''], [/^GET \/api\/changelog$/, 'get_changelog', '']];
 
 export function describeCall(tool: string, args: Record<string, unknown> | undefined): Pick<UsageEvent, 'components' | 'framework'> {
   const a = args ?? {};

@@ -1,6 +1,6 @@
 import { site } from '../config/site';
 import { getDef, ruleMap, usedClasses, parseProps, defaultsOf } from '../components';
-import { reactify } from './react-node';
+import { reactify, styleToObject } from './react-node';
 import { hasBehavior, runtime } from './behavior';
 import type { ComponentDef, Decls, Node, Props, Rule } from '../components';
 
@@ -139,12 +139,14 @@ function attrString(node: Node, mode: Mode): string {
     const t = [...cls.filter(isPair), tailwindClasses(cls.filter((k) => !isMod(k)))].filter(Boolean).join(' ');
     if (t) parts.push(`class="${t}"`);
   } else {
-    const base = declLines(mergedDecls(cls.filter((k) => !isMod(k)), 'base')).join(' ').replace(/;$/, '');
+    const base = [declLines(mergedDecls(cls.filter((k) => !isMod(k)), 'base')).join(' ').replace(/;$/, ''), typeof node.attrs?.style === 'string' ? node.attrs.style : ''].filter(Boolean).join('; ');
     const stateful = cls.filter((k) => isPair(k) || STATES.some((s) => ruleMap.get(k)?.[s]) || ruleMap.get(k)?.parent || ruleMap.get(k)?.nested);
     if (stateful.length) parts.push(`class="${stateful.join(' ')}"`);
     if (base) parts.push(`style="${base}"`);
   }
   for (const [k, val] of Object.entries(node.attrs ?? {})) {
+    if (k === 'style' && mode === 'inline') continue;
+    if (k === 'style' && mode === 'react' && typeof val === 'string') { parts.push(`style={${JSON.stringify(styleToObject(val)).replace(/"([A-Za-z_$][\w$]*)":/g, '$1: ').replace(/^\{/, '{ ').replace(/\}$/, ' }')}}`); continue; }
     const name = mode === 'react' ? (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : camel(k)) : k;
     parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }

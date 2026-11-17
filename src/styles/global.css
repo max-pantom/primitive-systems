@@ -142,3 +142,10 @@ ul.cmds li { display: grid; grid-template-columns: 1fr auto; gap: var(--p8-space
 ul.cmds li span { grid-column: 1 / -1; color: var(--p8-color-ink-muted); }
 ul.cmds code { padding: var(--p8-space-8) var(--p8-space-12); border-radius: var(--p8-radius-8); background: var(--p8-color-control); overflow-x: auto; white-space: nowrap; }
 @media (max-width: 640px) { main.usage { padding: var(--p8-space-16); } ol.bars li { grid-template-columns: 90px 1fr auto; } }
+
+/* Changelog */
+.mono { font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono); }
+main.changelog h2 { display: flex; gap: var(--p8-space-8); align-items: baseline; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--p8-space-8); }
+a.chip { display: inline-flex; align-items: center; gap: var(--p8-space-8); padding: var(--p8-space-4) var(--p8-space-12); border-radius: var(--p8-radius-8); background: var(--p8-color-control); }
+a.chip:hover { background: var(--p8-color-control-strong); }

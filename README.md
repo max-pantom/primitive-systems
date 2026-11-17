@@ -16,7 +16,9 @@ Docs + live playground: https://primitive-systems.vercel.app
 | **Zero build** | `<script src="https://primitive-systems.vercel.app/p8.js"></script>` → `<p8-button variant="primary">Save</p8-button>` |
 | **llms.txt** | https://primitive-systems.vercel.app/llms.txt |
 
-MCP tools: `list_components`, `get_component` (props + do/don't guidelines), `get_code`, `compose_code`, `search_components`, `get_rules`, `get_tokens`, `build_theme`, `lint_code`, `get_install`.
+MCP tools: `list_components`, `get_component` (props + do/don't guidelines), `get_code`, `compose_code`, `search_components`, `get_rules`, `get_tokens`, `build_theme`, `lint_code`, `get_install`, `get_changelog`.
+
+Release history: `/changelog` (site), `GET /api/changelog` (JSON), and `get_changelog` (MCP).
 
 ## Rules and checks
 

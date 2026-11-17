@@ -2,7 +2,7 @@ import { Fragment, createElement, useEffect, useMemo, useRef, useState, type Rea
 import { Agentation } from 'agentation';
 import { site } from '../config/site';
 import { FRAMEWORKS, FRAMEWORK_LABELS, generate, type Framework } from '../codegen';
-import { reactify } from '../codegen/react-node';
+import { reactify, styleToObject } from '../codegen/react-node';
 import { hasBehavior, runtime } from '../codegen/behavior';
 import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { iconElements } from '../icons/icons';
@@ -17,7 +17,7 @@ function toReact(node: Node | string, key?: number): ReactNode {
   const r = reactify(node);
   const attrs: Record<string, unknown> = { key };
   if (r.cls?.length) attrs.className = r.cls.join(' ');
-  for (const [k, v] of Object.entries(r.attrs ?? {})) attrs[camel(k)] = v;
+  for (const [k, v] of Object.entries(r.attrs ?? {})) attrs[camel(k)] = k === 'style' && typeof v === 'string' ? styleToObject(v) : v;
   if (r.tag === 'a') attrs.onClick = (e: { preventDefault(): void }) => e.preventDefault();
   return createElement(r.tag, attrs, ...(r.children ?? []).map((c, i) => toReact(c, i)));
 }
@@ -142,6 +142,7 @@ function Workbench({ def }: { def: ComponentDef }) {
         <header>
           <h1>{def.name}</h1>
           <p className="muted">{def.description}</p>
+          <p className="muted since" data-testid="since">Since {def.since}{def.mark ? ` · ${def.mark === 'new' ? 'New' : 'Refined'}` : ''}</p>
         </header>
         <div data-testid="preview" className="preview">
           <div key={key} ref={previewRef} style={{ width: props.fullWidth ? '100%' : undefined }}>{toReact(tree)}</div>
@@ -229,6 +230,7 @@ export default function App() {
           ))}
         </nav>
         <a className="link" href="/usage" data-testid="usage-link">Usage</a>
+        <a className="link" href="/changelog" data-testid="changelog-link">Changelog</a>
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
           {theme === 'dark' ? 'Light' : 'Dark'} mode

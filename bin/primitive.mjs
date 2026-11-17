@@ -1500,10 +1500,10 @@ function $constructor(name, initializer3, proto, params) {
     if (initialized) {
       const own2 = Object.getPrototypeOf(inst);
       const ctorProto = inst._zod.constr.prototype;
-      let up = own2;
-      while (up && up !== ctorProto)
-        up = Object.getPrototypeOf(up);
-      const target = up ?? own2;
+      let up2 = own2;
+      while (up2 && up2 !== ctorProto)
+        up2 = Object.getPrototypeOf(up2);
+      const target = up2 ?? own2;
       if (!initialized.has(target)) {
         initialized.add(target);
         members(target, protoMembers);
@@ -19837,7 +19837,7 @@ function themeToCss() {
 }
 
 // src/icons/pack.json
-var pack_default = { "arrow-right": { "14": [{ line: [2.75, 6.75, 11.25, 6.75] }, { d: "M9 4.5L11.25 6.75L9 9", accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75] }, { d: "M10.5 5L13.25 7.75L10.5 10.5", accent: true }] }, check: { "14": [{ d: "M2.5 7L5.5 10L11.5 4", accent: true }], "16": [{ d: "M3 8L6.5 11.5L13 5", accent: true }] }, plus: { "14": [{ line: [2.75, 6.75, 11.25, 6.75] }, { line: [6.75, 2.75, 6.75, 11.25], accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75] }, { line: [7.75, 2.75, 7.75, 13.25], accent: true }] }, search: { "14": [{ circle: [6, 6, 3.75], fill: true }, { line: [9, 9, 11.5, 11.5], accent: true }], "16": [{ circle: [7, 7, 4.25], fill: true }, { line: [10.5, 10.5, 13.5, 13.5], accent: true }] }, "chevron-down": { "14": [{ d: "M3.5 5.5L7 9L10.5 5.5", accent: true }], "16": [{ d: "M4 6L8 10L12 6", accent: true }] }, moon: { "14": [{ d: "M11.25 8.25A4.75 4.75 0 1 1 5.75 2.75A4 4 0 0 0 11.25 8.25Z", fill: true, accent: true }], "16": [{ d: "M13.25 9.25A5.75 5.75 0 1 1 6.75 2.75A4.75 4.75 0 0 0 13.25 9.25Z", fill: true, accent: true }] }, close: { "14": [{ line: [3.5, 3.5, 10.5, 10.5] }, { line: [10.5, 3.5, 3.5, 10.5], accent: true }], "16": [{ line: [4, 4, 12, 12] }, { line: [12, 4, 4, 12], accent: true }] }, copy: { "14": [{ d: "M5.75 3.25Q5.75 1.75 7.25 1.75H10.75Q12.25 1.75 12.25 3.25V6.75Q12.25 8.25 10.75 8.25" }, { rect: [1.75, 5.75, 6.5, 6.5, 2], fill: true, accent: true }], "16": [{ d: "M5.75 3.25Q5.75 1.75 7.25 1.75H12.75Q14.25 1.75 14.25 3.25V8.75Q14.25 10.25 12.75 10.25" }, { rect: [1.75, 5.75, 8.5, 8.5, 2.5], fill: true, accent: true }] }, sun: { "14": [{ circle: [7, 7, 2.25], fill: true }, { d: "M6.75 1.75V2.25M6.75 11.75V12.25M1.75 6.75H2.25M11.75 6.75H12.25", accent: true }], "16": [{ circle: [8, 8, 2.25], fill: true }, { d: "M7.75 1.75V2.25M7.75 13.75V14.25M1.75 7.75H2.25M13.75 7.75H14.25M3.5 3.5L4 4M12 12L12.5 12.5M3.5 12.5L4 12M12 4L12.5 3.5", accent: true }] }, "chevron-right": { "14": [{ d: "M5.5 3.5L9 7L5.5 10.5", accent: true }], "16": [{ d: "M6 4L10 8L6 12", accent: true }] }, info: { "14": [{ circle: [7, 7, 5.25], fill: true }, { circle: [7, 4.5, 1], role: "dot", accent: true }, { line: [6.75, 8.25, 6.75, 9.25], accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { circle: [8, 5, 1], role: "dot", accent: true }, { line: [7.75, 8.75, 7.75, 11.25], accent: true }] }, bell: { "14": [{ d: "M3.75 5.5A3.25 3.25 0 0 1 10.25 5.5V7L11.25 8.75H2.75L3.75 7Z", fill: true }, { circle: [7, 11.5, 1], role: "dot", accent: true }], "16": [{ d: "M4.75 6.5A3.25 3.25 0 0 1 11.25 6.5V9L13.25 10.75H2.75L4.75 9Z", fill: true }, { line: [6.75, 13.25, 9.25, 13.25], accent: true }] }, inbox: { "14": [{ d: "M1.75 8.75L3.75 1.75H10.25L12.25 8.75V10.75Q12.25 12.25 10.75 12.25H3.25Q1.75 12.25 1.75 10.75Z", fill: true }, { d: "M1.75 8.75H4.75L5.75 9.75H8.25L9.25 8.75H12.25", accent: true, clipTo: 0 }], "16": [{ d: "M2.75 9.75L4.75 2.75H11.25L13.25 9.75V11.75Q13.25 13.25 11.75 13.25H4.25Q2.75 13.25 2.75 11.75Z", fill: true }, { d: "M2.75 9.75H5.75L6.75 10.75H9.25L10.25 9.75H13.25", accent: true, clipTo: 0 }] }, settings: { "14": [{ line: [2.75, 3.75, 11.25, 3.75] }, { line: [2.75, 10.25, 11.25, 10.25] }, { line: [5.75, 2.75, 5.75, 5.25], accent: true }, { line: [8.25, 8.75, 8.25, 11.25], accent: true }], "16": [{ line: [2.75, 4.75, 13.25, 4.75] }, { line: [2.75, 11.25, 13.25, 11.25] }, { line: [5.75, 2.75, 5.75, 6.25], accent: true }, { line: [10.25, 9.75, 10.25, 13.25], accent: true }] }, mail: { "14": [{ rect: [1.75, 3.75, 10.5, 6.5, 2], fill: true }, { d: "M2.5 4.5L7 7.75L11.5 4.5", accent: true }], "16": [{ rect: [1.75, 3.75, 12.5, 8.5, 2.5], fill: true }, { d: "M2.5 5L7 8.5Q8 9.25 9 8.5L13.5 5", accent: true }] }, download: { "14": [{ d: "M2.75 9.75V10.25Q2.75 11.25 3.75 11.25H10.25Q11.25 11.25 11.25 10.25V9.75" }, { d: "M6.75 2.75V7.25M4.5 5L6.75 7.25L9 5", accent: true }], "16": [{ d: "M2.75 10.75V11.75Q2.75 13.25 4.25 13.25H11.75Q13.25 13.25 13.25 11.75V10.75" }, { d: "M7.75 2.75V8.75M5.5 6.5L7.75 8.75L10 6.5", accent: true }] }, lock: { "14": [{ rect: [2.75, 6.75, 8.5, 5.5, 1.5], fill: true }, { d: "M4.75 6.25V4A2.25 2.25 0 0 1 9.25 4V6.25" }], "16": [{ rect: [2.75, 7.75, 10.5, 6.5, 2], fill: true }, { d: "M4.75 7.25V5A3.25 3.25 0 0 1 11.25 5V7.25" }, { circle: [8, 11, 1], role: "dot", accent: true }] }, link: { "14": [{ d: "M6 3.5L7 2.5A3.18 3.18 0 0 1 11.5 7L10.5 8M3.5 6L2.5 7A3.18 3.18 0 0 0 7 11.5L8 10.5" }, { line: [5, 9, 9, 5], accent: true }], "16": [{ d: "M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" }, { line: [5.5, 10.5, 10.5, 5.5], accent: true }] }, warning: { "14": [{ poly: [[7, 1.75], [12, 11.25], [2, 11.25]], r: 0.75, fill: true }, { circle: [7, 7.5, 1], role: "dot", accent: true }], "16": [{ poly: [[8, 2], [14, 13.25], [2, 13.25]], r: 1, fill: true }, { line: [7.75, 5.75, 7.75, 7.25], accent: true }, { circle: [8, 10.5, 1], role: "dot", accent: true }] }, user: { "14": [{ circle: [7, 4, 1.75], fill: true, accent: true }, { d: "M2.75 11.25C2.75 6.75 11.25 6.75 11.25 11.25" }], "16": [{ circle: [8, 4.5, 2], fill: true, accent: true }, { d: "M2.75 13.25C2.75 7 13.25 7 13.25 13.25" }] }, home: { "14": [{ d: "M2.75 6.75L7 2.5L11.25 6.75V10.25Q11.25 11.25 10.25 11.25H3.75Q2.75 11.25 2.75 10.25Z", fill: true }, { line: [6.75, 11.25, 6.75, 8.75], accent: true }], "16": [{ d: "M2.75 7.75L8 2.5L13.25 7.75V12.25Q13.25 13.25 12.25 13.25H3.75Q2.75 13.25 2.75 12.25Z", fill: true }, { d: "M6.75 13.25V9.75H9.25V13.25", accent: true }] }, list: { "14": [{ circle: [2.5, 3, 1], role: "dot", accent: true }, { circle: [2.5, 7, 1], role: "dot", accent: true }, { circle: [2.5, 11, 1], role: "dot", accent: true }, { d: "M6.75 2.75H11.25M6.75 6.75H11.25M6.75 11.25H11.25" }], "16": [{ circle: [3, 4, 1], role: "dot", accent: true }, { circle: [3, 8, 1], role: "dot", accent: true }, { circle: [3, 12, 1], role: "dot", accent: true }, { d: "M7.75 3.75H13.25M7.75 7.75H13.25M7.75 12.25H13.25" }] }, file: { "14": [{ d: "M7.75 1.75H4.75Q3.75 1.75 3.75 2.75V11.25Q3.75 12.25 4.75 12.25H9.25Q10.25 12.25 10.25 11.25V4.25Z", fill: true }, { d: "M7.75 1.75V4.25H10.25", accent: true }], "16": [{ d: "M9.75 1.75H5.25Q3.75 1.75 3.75 3.25V12.75Q3.75 14.25 5.25 14.25H10.75Q12.25 14.25 12.25 12.75V4.25Z", fill: true }, { d: "M9.75 1.75V4.25H12.25", accent: true }, { line: [6.75, 9.75, 9.25, 9.75] }] }, "chevron-up": { "14": [{ d: "M3.5 8.5L7 5L10.5 8.5", accent: true }], "16": [{ d: "M4 10L8 6L12 10", accent: true }] }, "more-horizontal": { "14": [{ circle: [2, 7, 1], role: "dot" }, { circle: [7, 7, 1], role: "dot", accent: true }, { circle: [12, 7, 1], role: "dot" }], "16": [{ circle: [3, 8, 1], role: "dot" }, { circle: [8, 8, 1], role: "dot", accent: true }, { circle: [13, 8, 1], role: "dot" }] }, tag: { "14": [{ poly: [[1.75, 1.75], [6.75, 1.75], [12, 7], [7, 12], [1.75, 6.75]], r: 0.6, fill: true }, { circle: [5, 5, 1], role: "dot", accent: true }], "16": [{ poly: [[2.75, 2.75], [8, 2.75], [13.5, 8.25], [8.25, 13.5], [2.75, 8]], r: 0.75, fill: true }, { circle: [6, 6, 1], role: "dot", accent: true }] }, calendar: { "14": [{ rect: [2.75, 4.75, 8.5, 6.5, 2], fill: true }, { d: "M4.75 2.75V5.25M9.25 2.75V5.25", accent: true }], "16": [{ rect: [2.75, 4.75, 10.5, 8.5, 2.5], fill: true }, { d: "M2.75 8.75H13.25M5.75 2.75V5.25M10.25 2.75V5.25", accent: true }] }, filter: { "14": [{ poly: [[1.75, 1.75], [12.25, 1.75], [8.25, 7.75], [8.25, 11.25], [5.75, 12.25], [5.75, 7.75]], r: 0.5, fill: true, accent: true }], "16": [{ poly: [[2.75, 2.75], [13.25, 2.75], [9.25, 8.75], [9.25, 12.25], [6.75, 13.25], [6.75, 8.75]], r: 0.6, fill: true, accent: true }] }, clock: { "14": [{ circle: [7, 7, 5.25], fill: true }, { d: "M6.75 3.75V7.25H9.25", accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { d: "M7.75 4.75V8.25H10.25", accent: true }] }, command: { "14": [{ d: "M5.25 5.25V3.25A1.5 1.5 0 1 0 3.75 4.75H10.25A1.5 1.5 0 1 0 8.75 3.25V10.25A1.5 1.5 0 1 0 10.25 8.75H3.25A1.5 1.5 0 1 0 4.75 10.25V5.25Z", accent: true }], "16": [{ d: "M5.75 5.75V3.75A2 2 0 1 0 3.75 5.75H12.25A2 2 0 1 0 10.25 3.75V12.25A2 2 0 1 0 12.25 10.25H3.75A2 2 0 1 0 5.75 12.25Z", accent: true }] }, eye: { "14": [{ d: "M1.75 7C4.25 2 9.75 2 12.25 7C9.75 12 4.25 12 1.75 7Z", fill: true }, { circle: [7, 7, 1.75], accent: true }], "16": [{ d: "M1.75 8C4.75 1.75 11.25 1.75 14.25 8C11.25 14.25 4.75 14.25 1.75 8Z", fill: true }, { circle: [8, 8, 2.25], accent: true }] }, "external-link": { "14": [{ d: "M5.25 2.75H4.25Q2.75 2.75 2.75 4.25V9.75Q2.75 11.25 4.25 11.25H9.75Q11.25 11.25 11.25 9.75V8.75" }, { d: "M8.75 2.75H11.25V5.25M11 3L6 8", accent: true }], "16": [{ d: "M6.25 2.75H5.25Q2.75 2.75 2.75 5.25V10.75Q2.75 13.25 5.25 13.25H10.75Q13.25 13.25 13.25 10.75V9.75" }, { d: "M9.75 2.75H13.25V6.25M13 3L7 9", accent: true }] }, minus: { "14": [{ line: [2.75, 6.75, 11.25, 6.75], accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75], accent: true }] }, folder: { "14": [{ d: "M2.75 5.75V4.25Q2.75 2.75 4.25 2.75H5L7 4.75H9.75Q11.25 4.75 11.25 6.25V9.75Q11.25 11.25 9.75 11.25H4.25Q2.75 11.25 2.75 9.75Z", fill: true }], "16": [{ d: "M2.75 6.75V4.75Q2.75 2.75 4.75 2.75H6L8 4.75H11.25Q13.25 4.75 13.25 6.75V11.25Q13.25 13.25 11.25 13.25H4.75Q2.75 13.25 2.75 11.25Z", fill: true }] }, "chevron-left": { "14": [{ d: "M8.5 3.5L5 7L8.5 10.5", accent: true }], "16": [{ d: "M10 4L6 8L10 12", accent: true }] }, menu: { "14": [{ line: [2.75, 2.75, 11.25, 2.75] }, { line: [2.75, 6.75, 11.25, 6.75], accent: true }, { line: [2.75, 11.25, 11.25, 11.25] }], "16": [{ line: [2.75, 3.75, 13.25, 3.75] }, { line: [2.75, 7.75, 13.25, 7.75], accent: true }, { line: [2.75, 12.25, 13.25, 12.25] }] }, "check-circle": { "14": [{ circle: [7, 7, 5.25], fill: true }, { d: "M4 7L6 9L10 5", accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { d: "M4.5 8L7 10.5L11.5 6", accent: true }] }, edit: { "14": [{ poly: [[2.5, 9], [9, 2.5], [11.5, 5], [5, 11.5], [2.75, 11.25]], r: 0.4, fill: true }, { line: [7.5, 4, 10, 6.5], accent: true }], "16": [{ poly: [[3, 10], [10, 3], [13, 6], [6, 13], [2.75, 13.25]], r: 0.5, fill: true }, { line: [8.5, 4.5, 11.5, 7.5], accent: true }] }, trash: { "14": [{ d: "M3.75 6.75L4.25 10.25Q4.3 11.25 5.25 11.25H8.75Q9.7 11.25 9.75 10.25L10.25 6.75", fill: true }, { d: "M2.75 5.75H11.25M5.75 5.75V2.75H8.25V5.75", accent: true }], "16": [{ d: "M3.75 6.75L4.25 12.25Q4.3 13.25 5.75 13.25H10.25Q11.7 13.25 11.75 12.25L12.25 6.75", fill: true }, { d: "M2.75 5.75H13.25M5.75 5.75V2.75H10.25V5.75", accent: true }, { line: [7.75, 8.75, 7.75, 10.25] }] }, star: { "14": [{ poly: [[7, 1.75], [8.5, 5], [12, 5.5], [9.5, 8], [10.1, 11.5], [7, 9.9], [3.9, 11.5], [4.5, 8], [2, 5.5], [5.5, 5]], r: 0.4, fill: true, accent: true }], "16": [{ poly: [[8, 2], [9.8, 5.7], [14, 6.3], [11, 9.2], [11.7, 13.3], [8, 11.4], [4.3, 13.3], [5, 9.2], [2, 6.3], [6.2, 5.7]], r: 0.5, fill: true, accent: true }] } };
+var pack_default = { "arrow-right": { "14": [{ line: [2.75, 6.75, 11.25, 6.75] }, { d: "M9 4.5L11.25 6.75L9 9", accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75] }, { d: "M10.5 5L13.25 7.75L10.5 10.5", accent: true }] }, check: { "14": [{ d: "M2.5 7L5.5 10L11.5 4", accent: true }], "16": [{ d: "M3 8L6.5 11.5L13 5", accent: true }] }, plus: { "14": [{ line: [2.75, 6.75, 11.25, 6.75] }, { line: [6.75, 2.75, 6.75, 11.25], accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75] }, { line: [7.75, 2.75, 7.75, 13.25], accent: true }] }, search: { "14": [{ circle: [6, 6, 3.75], fill: true }, { line: [9, 9, 11.5, 11.5], accent: true }], "16": [{ circle: [7, 7, 4.25], fill: true }, { line: [10.5, 10.5, 13.5, 13.5], accent: true }] }, "chevron-down": { "14": [{ d: "M3.5 5.5L7 9L10.5 5.5", accent: true }], "16": [{ d: "M4 6L8 10L12 6", accent: true }] }, moon: { "14": [{ d: "M11.25 8.25A4.75 4.75 0 1 1 5.75 2.75A4 4 0 0 0 11.25 8.25Z", fill: true, accent: true }], "16": [{ d: "M13.25 9.25A5.75 5.75 0 1 1 6.75 2.75A4.75 4.75 0 0 0 13.25 9.25Z", fill: true, accent: true }] }, close: { "14": [{ line: [3.5, 3.5, 10.5, 10.5] }, { line: [10.5, 3.5, 3.5, 10.5], accent: true }], "16": [{ line: [4, 4, 12, 12] }, { line: [12, 4, 4, 12], accent: true }] }, copy: { "14": [{ d: "M5.75 3.25Q5.75 1.75 7.25 1.75H10.75Q12.25 1.75 12.25 3.25V6.75Q12.25 8.25 10.75 8.25" }, { rect: [1.75, 5.75, 6.5, 6.5, 2], fill: true, accent: true }], "16": [{ d: "M5.75 3.25Q5.75 1.75 7.25 1.75H12.75Q14.25 1.75 14.25 3.25V8.75Q14.25 10.25 12.75 10.25" }, { rect: [1.75, 5.75, 8.5, 8.5, 2.5], fill: true, accent: true }] }, sun: { "14": [{ circle: [7, 7, 2.25], fill: true }, { d: "M6.75 1.75V2.25M6.75 11.75V12.25M1.75 6.75H2.25M11.75 6.75H12.25", accent: true }], "16": [{ circle: [8, 8, 2.25], fill: true }, { d: "M7.75 1.75V2.25M7.75 13.75V14.25M1.75 7.75H2.25M13.75 7.75H14.25M3.5 3.5L4 4M12 12L12.5 12.5M3.5 12.5L4 12M12 4L12.5 3.5", accent: true }] }, "chevron-right": { "14": [{ d: "M5.5 3.5L9 7L5.5 10.5", accent: true }], "16": [{ d: "M6 4L10 8L6 12", accent: true }] }, info: { "14": [{ circle: [7, 7, 5.25], fill: true }, { circle: [7, 4.5, 1], role: "dot", accent: true }, { line: [6.75, 8.25, 6.75, 9.25], accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { circle: [8, 5, 1], role: "dot", accent: true }, { line: [7.75, 8.75, 7.75, 11.25], accent: true }] }, bell: { "14": [{ d: "M3.75 5.5A3.25 3.25 0 0 1 10.25 5.5V7L11.25 8.75H2.75L3.75 7Z", fill: true }, { circle: [7, 11.5, 1], role: "dot", accent: true }], "16": [{ d: "M4.75 6.5A3.25 3.25 0 0 1 11.25 6.5V9L13.25 10.75H2.75L4.75 9Z", fill: true }, { line: [6.75, 13.25, 9.25, 13.25], accent: true }] }, inbox: { "14": [{ d: "M1.75 8.75L3.75 1.75H10.25L12.25 8.75V10.75Q12.25 12.25 10.75 12.25H3.25Q1.75 12.25 1.75 10.75Z", fill: true }, { d: "M1.75 8.75H4.75L5.75 9.75H8.25L9.25 8.75H12.25", accent: true, clipTo: 0 }], "16": [{ d: "M2.75 9.75L4.75 2.75H11.25L13.25 9.75V11.75Q13.25 13.25 11.75 13.25H4.25Q2.75 13.25 2.75 11.75Z", fill: true }, { d: "M2.75 9.75H5.75L6.75 10.75H9.25L10.25 9.75H13.25", accent: true, clipTo: 0 }] }, settings: { "14": [{ line: [2.75, 3.75, 11.25, 3.75] }, { line: [2.75, 10.25, 11.25, 10.25] }, { line: [5.75, 2.75, 5.75, 5.25], accent: true }, { line: [8.25, 8.75, 8.25, 11.25], accent: true }], "16": [{ line: [2.75, 4.75, 13.25, 4.75] }, { line: [2.75, 11.25, 13.25, 11.25] }, { line: [5.75, 2.75, 5.75, 6.25], accent: true }, { line: [10.25, 9.75, 10.25, 13.25], accent: true }] }, mail: { "14": [{ rect: [1.75, 3.75, 10.5, 6.5, 2], fill: true }, { d: "M2.5 4.5L7 7.75L11.5 4.5", accent: true }], "16": [{ rect: [1.75, 3.75, 12.5, 8.5, 2.5], fill: true }, { d: "M2.5 5L7 8.5Q8 9.25 9 8.5L13.5 5", accent: true }] }, download: { "14": [{ d: "M2.75 9.75V10.25Q2.75 11.25 3.75 11.25H10.25Q11.25 11.25 11.25 10.25V9.75" }, { d: "M6.75 2.75V7.25M4.5 5L6.75 7.25L9 5", accent: true }], "16": [{ d: "M2.75 10.75V11.75Q2.75 13.25 4.25 13.25H11.75Q13.25 13.25 13.25 11.75V10.75" }, { d: "M7.75 2.75V8.75M5.5 6.5L7.75 8.75L10 6.5", accent: true }] }, lock: { "14": [{ rect: [2.75, 6.75, 8.5, 5.5, 1.5], fill: true }, { d: "M4.75 6.25V4A2.25 2.25 0 0 1 9.25 4V6.25" }], "16": [{ rect: [2.75, 7.75, 10.5, 6.5, 2], fill: true }, { d: "M4.75 7.25V5A3.25 3.25 0 0 1 11.25 5V7.25" }, { circle: [8, 11, 1], role: "dot", accent: true }] }, link: { "14": [{ d: "M6 3.5L7 2.5A3.18 3.18 0 0 1 11.5 7L10.5 8M3.5 6L2.5 7A3.18 3.18 0 0 0 7 11.5L8 10.5" }, { line: [5, 9, 9, 5], accent: true }], "16": [{ d: "M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" }, { line: [5.5, 10.5, 10.5, 5.5], accent: true }] }, warning: { "14": [{ poly: [[7, 1.75], [12, 11.25], [2, 11.25]], r: 0.75, fill: true }, { circle: [7, 7.5, 1], role: "dot", accent: true }], "16": [{ poly: [[8, 2], [14, 13.25], [2, 13.25]], r: 1, fill: true }, { line: [7.75, 5.75, 7.75, 7.25], accent: true }, { circle: [8, 10.5, 1], role: "dot", accent: true }] }, user: { "14": [{ circle: [7, 4, 1.75], fill: true, accent: true }, { d: "M2.75 11.25C2.75 6.75 11.25 6.75 11.25 11.25" }], "16": [{ circle: [8, 4.5, 2], fill: true, accent: true }, { d: "M2.75 13.25C2.75 7 13.25 7 13.25 13.25" }] }, home: { "14": [{ d: "M2.75 6.75L7 2.5L11.25 6.75V10.25Q11.25 11.25 10.25 11.25H3.75Q2.75 11.25 2.75 10.25Z", fill: true }, { line: [6.75, 11.25, 6.75, 8.75], accent: true }], "16": [{ d: "M2.75 7.75L8 2.5L13.25 7.75V12.25Q13.25 13.25 12.25 13.25H3.75Q2.75 13.25 2.75 12.25Z", fill: true }, { d: "M6.75 13.25V9.75H9.25V13.25", accent: true }] }, list: { "14": [{ circle: [2.5, 3, 1], role: "dot", accent: true }, { circle: [2.5, 7, 1], role: "dot", accent: true }, { circle: [2.5, 11, 1], role: "dot", accent: true }, { d: "M6.75 2.75H11.25M6.75 6.75H11.25M6.75 11.25H11.25" }], "16": [{ circle: [3, 4, 1], role: "dot", accent: true }, { circle: [3, 8, 1], role: "dot", accent: true }, { circle: [3, 12, 1], role: "dot", accent: true }, { d: "M7.75 3.75H13.25M7.75 7.75H13.25M7.75 12.25H13.25" }] }, file: { "14": [{ d: "M7.75 1.75H4.75Q3.75 1.75 3.75 2.75V11.25Q3.75 12.25 4.75 12.25H9.25Q10.25 12.25 10.25 11.25V4.25Z", fill: true }, { d: "M7.75 1.75V4.25H10.25", accent: true }], "16": [{ d: "M9.75 1.75H5.25Q3.75 1.75 3.75 3.25V12.75Q3.75 14.25 5.25 14.25H10.75Q12.25 14.25 12.25 12.75V4.25Z", fill: true }, { d: "M9.75 1.75V4.25H12.25", accent: true }, { line: [6.75, 9.75, 9.25, 9.75] }] }, "chevron-up": { "14": [{ d: "M3.5 8.5L7 5L10.5 8.5", accent: true }], "16": [{ d: "M4 10L8 6L12 10", accent: true }] }, "more-horizontal": { "14": [{ circle: [2, 7, 1], role: "dot" }, { circle: [7, 7, 1], role: "dot", accent: true }, { circle: [12, 7, 1], role: "dot" }], "16": [{ circle: [3, 8, 1], role: "dot" }, { circle: [8, 8, 1], role: "dot", accent: true }, { circle: [13, 8, 1], role: "dot" }] }, tag: { "14": [{ poly: [[1.75, 1.75], [6.75, 1.75], [12, 7], [7, 12], [1.75, 6.75]], r: 0.6, fill: true }, { circle: [5, 5, 1], role: "dot", accent: true }], "16": [{ poly: [[2.75, 2.75], [8, 2.75], [13.5, 8.25], [8.25, 13.5], [2.75, 8]], r: 0.75, fill: true }, { circle: [6, 6, 1], role: "dot", accent: true }] }, calendar: { "14": [{ rect: [2.75, 4.75, 8.5, 6.5, 2], fill: true }, { d: "M4.75 2.75V5.25M9.25 2.75V5.25", accent: true }], "16": [{ rect: [2.75, 4.75, 10.5, 8.5, 2.5], fill: true }, { d: "M2.75 8.75H13.25M5.75 2.75V5.25M10.25 2.75V5.25", accent: true }] }, filter: { "14": [{ poly: [[1.75, 1.75], [12.25, 1.75], [8.25, 7.75], [8.25, 11.25], [5.75, 12.25], [5.75, 7.75]], r: 0.5, fill: true, accent: true }], "16": [{ poly: [[2.75, 2.75], [13.25, 2.75], [9.25, 8.75], [9.25, 12.25], [6.75, 13.25], [6.75, 8.75]], r: 0.6, fill: true, accent: true }] }, clock: { "14": [{ circle: [7, 7, 5.25], fill: true }, { d: "M6.75 3.75V7.25H9.25", accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { d: "M7.75 4.75V8.25H10.25", accent: true }] }, command: { "14": [{ d: "M5.25 5.25V3.25A1.5 1.5 0 1 0 3.75 4.75H10.25A1.5 1.5 0 1 0 8.75 3.25V10.25A1.5 1.5 0 1 0 10.25 8.75H3.25A1.5 1.5 0 1 0 4.75 10.25V5.25Z", accent: true }], "16": [{ d: "M5.75 5.75V3.75A2 2 0 1 0 3.75 5.75H12.25A2 2 0 1 0 10.25 3.75V12.25A2 2 0 1 0 12.25 10.25H3.75A2 2 0 1 0 5.75 12.25Z", accent: true }] }, eye: { "14": [{ d: "M1.75 7C4.25 2 9.75 2 12.25 7C9.75 12 4.25 12 1.75 7Z", fill: true }, { circle: [7, 7, 1.75], accent: true }], "16": [{ d: "M1.75 8C4.75 1.75 11.25 1.75 14.25 8C11.25 14.25 4.75 14.25 1.75 8Z", fill: true }, { circle: [8, 8, 2.25], accent: true }] }, "external-link": { "14": [{ d: "M5.25 2.75H4.25Q2.75 2.75 2.75 4.25V9.75Q2.75 11.25 4.25 11.25H9.75Q11.25 11.25 11.25 9.75V8.75" }, { d: "M8.75 2.75H11.25V5.25M11 3L6 8", accent: true }], "16": [{ d: "M6.25 2.75H5.25Q2.75 2.75 2.75 5.25V10.75Q2.75 13.25 5.25 13.25H10.75Q13.25 13.25 13.25 10.75V9.75" }, { d: "M9.75 2.75H13.25V6.25M13 3L7 9", accent: true }] }, minus: { "14": [{ line: [2.75, 6.75, 11.25, 6.75], accent: true }], "16": [{ line: [2.75, 7.75, 13.25, 7.75], accent: true }] }, folder: { "14": [{ d: "M2.75 5.75V4.25Q2.75 2.75 4.25 2.75H5L7 4.75H9.75Q11.25 4.75 11.25 6.25V9.75Q11.25 11.25 9.75 11.25H4.25Q2.75 11.25 2.75 9.75Z", fill: true }], "16": [{ d: "M2.75 6.75V4.75Q2.75 2.75 4.75 2.75H6L8 4.75H11.25Q13.25 4.75 13.25 6.75V11.25Q13.25 13.25 11.25 13.25H4.75Q2.75 13.25 2.75 11.25Z", fill: true }] }, "chevron-left": { "14": [{ d: "M8.5 3.5L5 7L8.5 10.5", accent: true }], "16": [{ d: "M10 4L6 8L10 12", accent: true }] }, menu: { "14": [{ line: [2.75, 2.75, 11.25, 2.75] }, { line: [2.75, 6.75, 11.25, 6.75], accent: true }, { line: [2.75, 11.25, 11.25, 11.25] }], "16": [{ line: [2.75, 3.75, 13.25, 3.75] }, { line: [2.75, 7.75, 13.25, 7.75], accent: true }, { line: [2.75, 12.25, 13.25, 12.25] }] }, "check-circle": { "14": [{ circle: [7, 7, 5.25], fill: true }, { d: "M4 7L6 9L10 5", accent: true }], "16": [{ circle: [8, 8, 6.25], fill: true }, { d: "M4.5 8L7 10.5L11.5 6", accent: true }] }, edit: { "14": [{ poly: [[2.5, 9], [9, 2.5], [11.5, 5], [5, 11.5], [2.75, 11.25]], r: 0.4, fill: true }, { line: [7.5, 4, 10, 6.5], accent: true }], "16": [{ poly: [[3, 10], [10, 3], [13, 6], [6, 13], [2.75, 13.25]], r: 0.5, fill: true }, { line: [8.5, 4.5, 11.5, 7.5], accent: true }] }, trash: { "14": [{ d: "M3.75 6.75L4.25 10.25Q4.3 11.25 5.25 11.25H8.75Q9.7 11.25 9.75 10.25L10.25 6.75", fill: true }, { d: "M2.75 5.75H11.25M5.75 5.75V2.75H8.25V5.75", accent: true }], "16": [{ d: "M3.75 6.75L4.25 12.25Q4.3 13.25 5.75 13.25H10.25Q11.7 13.25 11.75 12.25L12.25 6.75", fill: true }, { d: "M2.75 5.75H13.25M5.75 5.75V2.75H10.25V5.75", accent: true }, { line: [7.75, 8.75, 7.75, 10.25] }] }, star: { "14": [{ poly: [[7, 1.75], [8.5, 5], [12, 5.5], [9.5, 8], [10.1, 11.5], [7, 9.9], [3.9, 11.5], [4.5, 8], [2, 5.5], [5.5, 5]], r: 0.4, fill: true, accent: true }], "16": [{ poly: [[8, 2], [9.8, 5.7], [14, 6.3], [11, 9.2], [11.7, 13.3], [8, 11.4], [4.3, 13.3], [5, 9.2], [2, 6.3], [6.2, 5.7]], r: 0.5, fill: true, accent: true }] }, upload: { "14": [{ d: "M2.75 9.75V10.25Q2.75 11.25 3.75 11.25H10.25Q11.25 11.25 11.25 10.25V9.75" }, { d: "M6.75 7.25V2.75M4.5 5L6.75 2.75L9 5", accent: true }], "16": [{ d: "M2.75 10.75V11.75Q2.75 13.25 4.25 13.25H11.75Q13.25 13.25 13.25 11.75V10.75" }, { d: "M7.75 8.75V2.75M5.5 5L7.75 2.75L10 5", accent: true }] } };
 
 // src/icons/icons.ts
 var ICON_NAMES = Object.keys(pack_default);
@@ -20232,8 +20232,8 @@ var switchC = {
   render(pr) {
     const attrs = { type: "button", role: "switch", "aria-checked": String(pr.checked) };
     if (pr.disabled) attrs.disabled = true;
-    const sw = n("button", pr.checked ? [w.root, w.on] : [w.root], [n("span", pr.checked ? [w.thumb, w.thumbOn] : [w.thumb], [])], attrs);
-    return n("label", [w.row], [sw, pr.label], { "data-p8": "toggle" });
+    const sw2 = n("button", pr.checked ? [w.root, w.on] : [w.root], [n("span", pr.checked ? [w.thumb, w.thumbOn] : [w.thumb], [])], attrs);
+    return n("label", [w.row], [sw2, pr.label], { "data-p8": "toggle" });
   }
 };
 
@@ -21709,6 +21709,372 @@ function copyButtonNode(code) {
   return b2;
 }
 
+// src/components/pickers.ts
+var monthLabel = (y, m2) => new Intl.DateTimeFormat("en", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(y, m2, 1)));
+function monthGrid(y, m2, weekStart) {
+  const off = (new Date(Date.UTC(y, m2, 1)).getUTCDay() - weekStart + 7) % 7;
+  return Array.from({ length: 42 }, (_, i2) => {
+    const d2 = new Date(Date.UTC(y, m2, 1 - off + i2));
+    return { iso: d2.toISOString().slice(0, 10), n: d2.getUTCDate(), out: d2.getUTCMonth() !== m2 };
+  });
+}
+var DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+var ISO = /^\d{4}-\d{2}-\d{2}$/;
+var validDate = (value) => ISO.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+var cal = { root: `${p}-datepicker`, field: `${p}-datepicker__field`, trigger: `${p}-datepicker__trigger`, head: `${p}-cal__head`, label: `${p}-cal__label`, grid: `${p}-cal__grid`, dow: `${p}-cal__dow`, day: `${p}-cal__day`, on: `${p}-cal__day--on`, out: `${p}-cal__day--out` };
+var datePicker = {
+  id: "date-picker",
+  name: "Date Picker",
+  description: "A date field with a calendar popover.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "Type a date as YYYY-MM-DD or pick one. Prev/next change the month; choosing a day fills the field and closes the calendar.",
+  composition: "A Text Input plus an Icon Button trigger; the calendar sits in a Popover.",
+  props: [
+    P.text("value", "", "Selected date, YYYY-MM-DD. Empty for none."),
+    P.text("month", "2026-11", "Month the calendar opens on, YYYY-MM (used when no value)."),
+    P.select("weekStart", ["sun", "mon"], "sun", "First day of the week."),
+    P.text("placeholder", "YYYY-MM-DD", "Placeholder."),
+    P.bool("open", true, "Initially open."),
+    P.bool("disabled", false, "Disables the field.")
+  ],
+  rules: [
+    ...popRules,
+    { cls: cal.root, base: { position: "relative", display: "inline-block", width: v("size-500"), "max-width": "100%" } },
+    { cls: cal.field, base: { ...controlBase, width: "100%", "padding-inline-end": v("space-32") }, hover: { background: v("color-control-strong") }, focus: fieldFocus, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" }, placeholder: { color: v("color-placeholder") } },
+    { cls: cal.trigger, base: { position: "absolute", top: "50%", translate: "0 -50%", "inset-inline-end": v("space-4") } },
+    { cls: cal.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12"), "margin-bottom": v("space-8") } },
+    { cls: cal.label, base: { ...text("sm"), "font-weight": v("type-weight-strong") } },
+    { cls: cal.grid, base: { display: "grid", "grid-template-columns": "repeat(7, 1fr)", gap: v("space-4"), "text-align": "center" } },
+    { cls: cal.dow, base: { color: v("color-ink-muted"), ...text("sm") } },
+    { cls: cal.day, base: { display: "inline-flex", "align-items": "center", "justify-content": "center", width: v("size-32"), height: v("size-32"), padding: "0", border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus },
+    { cls: cal.out, base: { color: v("color-ink-muted") } },
+    { cls: cal.on, base: { background: v("color-ink"), color: v("color-ink-inverse") }, hover: { background: v("color-ink") } },
+    iconRule
+  ],
+  render(pr) {
+    const value = validDate(String(pr.value)) ? String(pr.value) : "";
+    const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(String(pr.month)) ? String(pr.month) : "2026-11";
+    const [y, m2] = (value ? value.slice(0, 7) : month).split("-").map(Number);
+    const ws = pr.weekStart === "mon" ? 1 : 0;
+    const days = [...DOW.slice(ws), ...DOW.slice(0, ws)];
+    const grid = monthGrid(y, m2 - 1, ws);
+    const arrow = (icon, dir, label) => {
+      const b2 = iconButton.render({ icon, label, size: "14", variant: "ghost-flat", disabled: false });
+      return { ...b2, attrs: { ...b2.attrs, "data-dir": dir, ...pr.disabled ? { disabled: true } : {} } };
+    };
+    const panel = n("div", pr.open ? [po.panel] : [po.panel], [
+      n("div", [cal.head], [arrow("chevron-left", "-1", "Previous month"), n("span", [cal.label], [monthLabel(y, m2 - 1)], { "aria-live": "polite", "data-label": true }), arrow("chevron-right", "1", "Next month")]),
+      n("div", [cal.grid], [
+        ...days.map((d2) => n("span", [cal.dow], [d2], { "aria-hidden": "true" })),
+        ...grid.map((g2) => n("button", [cal.day, ...g2.out ? [cal.out] : [], ...g2.iso === value ? [cal.on] : []], [String(g2.n)], { type: "button", ...pr.disabled ? { disabled: true } : {}, "data-date": g2.iso, "aria-label": g2.iso, "aria-pressed": String(g2.iso === value) }))
+      ], { role: "group", "aria-label": "Calendar", "data-grid": true })
+    ], pr.open && !pr.disabled ? { "data-panel": true, role: "dialog", "aria-label": "Choose date" } : { "data-panel": true, role: "dialog", "aria-label": "Choose date", hidden: true });
+    const attrs = { type: "text", inputmode: "numeric", placeholder: pr.placeholder, "aria-label": "Date", "data-input": true };
+    if (value) attrs.value = value;
+    if (pr.disabled) attrs.disabled = true;
+    const trig = iconButton.render({ icon: "calendar", label: "Choose date", size: "16", variant: "ghost-flat", ...pr.disabled ? { disabled: true } : {} });
+    return n("div", [po.root, cal.root], [
+      n("input", [cal.field], void 0, attrs),
+      { ...trig, cls: [...trig.cls ?? [], cal.trigger], attrs: { ...trig.attrs, "data-trigger": true, "aria-expanded": String(Boolean(pr.open) && !pr.disabled), "aria-haspopup": "dialog" } },
+      panel
+    ], { "data-p8": "popover calendar", "data-week": String(ws), "data-month": `${y}-${String(m2).padStart(2, "0")}` });
+  }
+};
+var tp = { root: `${p}-timepicker`, part: `${p}-timepicker__part`, sep: `${p}-timepicker__sep` };
+var timePicker = {
+  id: "time-picker",
+  name: "Time Picker",
+  description: "Hour and minute selects, 12 or 24 hour.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "Built from native selects, so it works with the keyboard, on phones and without scripts. Value is HH:MM in 24-hour time.",
+  composition: "Made of Select controls.",
+  props: [
+    P.text("value", "09:30", "Selected time, HH:MM (24-hour)."),
+    P.select("format", ["24h", "12h"], "24h", "24-hour or 12-hour with AM/PM."),
+    P.select("minuteStep", ["1", "5", "15", "30"], "5", "Minutes between options."),
+    P.bool("disabled", false, "Disables the selects.")
+  ],
+  rules: [
+    { cls: tp.root, base: { display: "inline-flex", "align-items": "center", gap: v("space-8") } },
+    { cls: tp.part, base: { width: v("size-72") } },
+    { cls: tp.sep, base: { color: v("color-ink-muted"), ...text("sm") } }
+  ],
+  render(pr) {
+    const [h24, mm] = String(pr.value).split(":").map((x) => parseInt(x, 10));
+    const hour = Number.isFinite(h24) ? h24 : 9;
+    const minute = Number.isFinite(mm) ? mm : 0;
+    const twelve = pr.format === "12h";
+    const step = Number(pr.minuteStep);
+    const mins = Array.from({ length: Math.ceil(60 / step) }, (_, i2) => i2 * step);
+    const hours = twelve ? Array.from({ length: 12 }, (_, i2) => i2 + 1) : Array.from({ length: 24 }, (_, i2) => i2);
+    const curHour = twelve ? hour % 12 === 0 ? 12 : hour % 12 : hour;
+    const pad = (x) => String(x).padStart(2, "0");
+    const part = (label, options, current) => {
+      const attrs = { "aria-label": label };
+      if (pr.disabled) attrs.disabled = true;
+      return n("div", [tp.part, s.wrap], [
+        n("select", [s.root], options.map((o2) => n("option", [], [o2], o2 === current ? { selected: true } : void 0)), attrs),
+        { ...iconNode("chevron-down", 16), cls: [c.icon, s.icon, ...pr.disabled ? [s.iconOff] : []] }
+      ]);
+    };
+    const kids = [part("Hour", hours.map(pad), pad(curHour)), n("span", [tp.sep], [":"], { "aria-hidden": "true" }), part("Minute", mins.map(pad), pad(mins.reduce((a2, b2) => Math.abs(b2 - minute) < Math.abs(a2 - minute) ? b2 : a2, mins[0])))];
+    if (twelve) kids.push(part("AM or PM", ["AM", "PM"], hour >= 12 ? "PM" : "AM"));
+    return n("div", [tp.root], kids, { role: "group", "aria-label": "Time" });
+  }
+};
+var ms = { root: `${p}-multi`, box: `${p}-multi__box`, chips: `${p}-multi__chips`, input: `${p}-multi__input`, list: `${p}-multi__list`, opt: `${p}-multi__option`, on: `${p}-multi__option--active`, check: `${p}-multi__check` };
+var multiSelect = {
+  id: "multi-select",
+  name: "Multi-select",
+  description: "Pick several options; the picks show as removable chips.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "Type to filter, arrows to move, Enter or click to toggle, Backspace on an empty field removes the last chip, Escape closes.",
+  composition: "Chips are Tags; the list works like a Combobox.",
+  props: [
+    P.area("options", "Design\nEngineering\nResearch\nSupport", "Options one per line.", "string (one per line)"),
+    P.area("value", "Design", "Selected options one per line.", "string (one per line)"),
+    P.text("placeholder", "Add\u2026", "Placeholder when typing."),
+    P.bool("open", true, "Initially open."),
+    P.bool("disabled", false, "Disables the field.")
+  ],
+  rules: [
+    { cls: ms.root, base: { position: "relative", width: v("size-500"), "max-width": "100%" } },
+    { cls: ms.box, base: { "min-height": `calc(${v("type-line-sm")} + ${v("space-8")} * 3)`, display: "flex", "flex-wrap": "wrap", "align-items": "center", gap: v("space-8"), "box-sizing": "border-box", "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), background: v("color-control") }, hover: { background: v("color-control-strong") } },
+    { cls: ms.chips, base: { display: "contents" } },
+    { cls: ms.input, base: { flex: "1", "min-width": v("size-72"), padding: "0", border: "none", background: "transparent", color: v("color-ink"), ...text("sm") }, focus: { outline: "none" }, placeholder: { color: v("color-placeholder") }, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" } },
+    { cls: ms.list, base: { position: "absolute", top: "100%", left: "0", right: "0", "margin-top": v("space-8"), "z-index": "40", display: "flex", "flex-direction": "column", gap: v("space-4"), "box-sizing": "border-box", padding: v("space-4"), "border-radius": v("radius-8"), background: v("color-canvas"), color: v("color-ink"), ...ringDecl }, nested: [hiddenRule] },
+    {
+      cls: ms.opt,
+      base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12"), "text-align": "left", "padding-block": v("space-8"), "padding-inline": v("space-12"), border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") },
+      hover: { background: v("color-control") },
+      focus,
+      nested: [hiddenRule, { sel: '[aria-selected="false"] .' + ms.check, decls: { opacity: "0" } }]
+    },
+    { cls: ms.on, base: { background: v("color-control-strong") } },
+    { cls: ms.check, base: { display: "inline-flex" } },
+    iconRule
+  ],
+  render(pr) {
+    const options = lines(pr.options), chosen = lines(pr.value).filter((x) => options.includes(x));
+    const chip = (label) => {
+      const t3 = tag.render({ label, removable: true, variant: "default" });
+      const { "data-p8": _d, ...rest2 } = t3.attrs ?? {};
+      return { ...t3, attrs: { ...rest2, "data-chip": label }, children: t3.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...pr.disabled ? { disabled: true } : {} } } : c3) };
+    };
+    const opts = options.map((o2, i2) => n("button", i2 === 0 ? [ms.opt, ms.on] : [ms.opt], [o2, n("span", [ms.check], [iconNode("check", 14)])], { type: "button", ...pr.disabled ? { disabled: true } : {}, role: "option", tabindex: "-1", "aria-selected": String(chosen.includes(o2)) }));
+    const inAttrs = { type: "text", role: "combobox", "aria-expanded": String(Boolean(pr.open) && !pr.disabled), "aria-controls": "multi-list", "aria-label": "Add option", placeholder: pr.placeholder };
+    if (pr.disabled) inAttrs.disabled = true;
+    return n("div", [ms.root], [
+      n("div", [ms.box], [n("span", [ms.chips], chosen.map(chip), { "data-chips": true }), n("input", [ms.input], void 0, inAttrs)]),
+      n("div", [ms.list], opts, pr.open && !pr.disabled ? { role: "listbox", id: "multi-list", "aria-multiselectable": "true" } : { role: "listbox", id: "multi-list", "aria-multiselectable": "true", hidden: true }),
+      n("template", [], [chip("__label__")], { "data-chip-template": true })
+    ], { "data-p8": "multi" });
+  }
+};
+var up = { root: `${p}-upload`, zone: `${p}-upload__zone`, over: `${p}-upload__zone--over`, input: `${p}-upload__input`, hint: `${p}-upload__hint`, list: `${p}-upload__list`, item: `${p}-upload__item`, name: `${p}-upload__name`, size: `${p}-upload__size` };
+var fileUpload = {
+  id: "file-upload",
+  name: "File Upload",
+  description: "A dropzone with a list of the chosen files.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: 'Click, press Enter on the focused zone, or drop files. Each chosen file is listed with its size and a remove button. The real <input type="file"> carries the files, so it works inside a normal form.',
+  props: [
+    P.text("label", "Drop files here or click to browse", "Zone text."),
+    P.text("accept", "", "Accepted types, e.g. image/*,.pdf. Empty for any."),
+    P.bool("multiple", true, "Allow several files."),
+    P.bool("disabled", false, "Disables the zone.")
+  ],
+  rules: [
+    { cls: up.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", ...text("sm"), color: v("color-ink") } },
+    { cls: up.zone, base: { position: "relative", display: "flex", "flex-direction": "column", "align-items": "center", gap: v("space-8"), "box-sizing": "border-box", "padding-block": v("space-24"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), background: v("color-surface"), ...ringDecl, "text-align": "center", cursor: "pointer" }, hover: { background: v("color-control") }, nested: [{ sel: ":focus-within", decls: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` } }] },
+    { cls: up.over, base: { background: v("color-control-strong") } },
+    { cls: up.input, base: { position: "absolute", inset: "0", width: "100%", height: "100%", opacity: "0", cursor: "pointer" }, disabled: { cursor: "not-allowed" } },
+    { cls: up.hint, base: { color: v("color-ink-muted") } },
+    { cls: up.list, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), margin: "0", padding: "0", "list-style": "none" }, nested: [hiddenRule] },
+    { cls: up.item, base: { display: "flex", "align-items": "center", gap: v("space-12"), "padding-block": v("space-4"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), background: v("color-control") } },
+    { cls: up.name, base: { flex: "1", "min-width": "0", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    { cls: up.size, base: { color: v("color-ink-muted"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    iconRule
+  ],
+  render(pr) {
+    const attrs = { type: "file", "aria-label": pr.label };
+    if (pr.accept) attrs.accept = pr.accept;
+    if (pr.multiple) attrs.multiple = true;
+    if (pr.disabled) attrs.disabled = true;
+    const rm = iconButton.render({ icon: "close", label: "Remove file", size: "14", variant: "ghost-flat", disabled: false });
+    const item = n("li", [up.item], [iconNode("file", 16), n("span", [up.name], ["__name__"]), n("span", [up.size], ["__size__"]), { ...rm, attrs: { ...rm.attrs, "data-remove": true } }]);
+    return n("div", [up.root], [
+      n("div", [up.zone], [iconNode("upload", 16), n("span", [], [pr.label]), ...pr.accept ? [n("span", [up.hint], [pr.accept])] : [], n("input", [up.input], void 0, attrs)], { "data-zone": true }),
+      n("ul", [up.list], [], { "data-files": true, "aria-label": "Chosen files", "aria-live": "polite" }),
+      n("template", [], [item], { "data-file-template": true })
+    ], { "data-p8": "upload" });
+  }
+};
+var sw = { root: `${p}-swatches`, item: `${p}-swatch`, on: `${p}-swatch--on` };
+var TOKENS = Object.keys(theme.color.light).filter((k2) => !/ring|backdrop|syntax/.test(k2));
+var swatchPicker = {
+  id: "swatch-picker",
+  name: "Swatch Picker",
+  description: "Pick one colour from a row of swatches.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "List theme colour names (ink, canvas, control\u2026) or any #hex, one per line. Arrow keys move the selection like a radio group.",
+  props: [
+    P.area("colors", "ink\nink-muted\ncontrol-strong\ncontrol\ncanvas", "Colours one per line: a theme colour name or a #hex.", "string (one per line)"),
+    P.text("value", "ink", "Selected colour (name or hex).")
+  ],
+  rules: [
+    { cls: sw.root, base: { display: "inline-flex", gap: v("space-12") } },
+    { cls: sw.item, base: { width: v("size-24"), height: v("size-24"), padding: "0", "box-sizing": "border-box", "border-radius": v("radius-full"), border: "none", background: v("color-control"), cursor: "pointer", ...ringDecl }, focus: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` }, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" } },
+    { cls: sw.on, base: { outline: `${v("border-focus")} solid ${v("color-ink")}`, "outline-offset": v("space-2") } },
+    ...TOKENS.map((t3) => ({ cls: `${sw.item}--${t3}`, base: { background: v(`color-${t3}`) } }))
+  ],
+  render(pr) {
+    const colors = lines(pr.colors).filter((c3) => TOKENS.includes(c3) || /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(c3));
+    const selected = colors.includes(String(pr.value)) ? pr.value : colors[0];
+    const items = colors.map((c3) => {
+      const hex4 = /^#[0-9a-fA-F]{3,8}$/.test(c3);
+      const known = TOKENS.includes(c3);
+      if (!hex4 && !known) return null;
+      const on = c3 === selected;
+      const attrs = { type: "button", role: "radio", "aria-checked": String(on), "aria-label": c3, tabindex: on ? "0" : "-1" };
+      if (hex4) attrs.style = `background: ${c3}`;
+      return n("button", [sw.item, ...known ? [`${sw.item}--${c3}`] : [], ...on ? [sw.on] : []], [], attrs);
+    }).filter((x) => x !== null);
+    return n("div", [sw.root], items, { role: "radiogroup", "aria-label": "Colour", "data-p8": "group" });
+  }
+};
+
+// src/components/extras2.ts
+var ca = { root: `${p}-carousel`, track: `${p}-carousel__track`, slide: `${p}-carousel__slide`, nav: `${p}-carousel__nav` };
+var carousel = {
+  id: "carousel",
+  name: "Carousel",
+  description: "A swipeable row of slides with previous and next buttons.",
+  tags: ["layout", "content"],
+  status: "stable",
+  usage: "Swipe, scroll, use the arrow buttons or the Left/Right keys on the track. Slides snap into place. Slides are placeholders; put your own cards inside.",
+  composition: "Previous and next are Icon Buttons.",
+  props: [P.select("slides", ["3", "5", "8"], "5", "Number of placeholder slides."), P.select("perView", ["1", "2"], "1", "Slides visible at once.")],
+  rules: [
+    { cls: ca.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-400"), "max-width": "100%" } },
+    {
+      cls: ca.track,
+      base: { display: "flex", gap: v("space-12"), "overflow-x": "auto", "scroll-snap-type": "x mandatory", "scrollbar-width": "none", "border-radius": v("radius-8") },
+      focus,
+      nested: [{ sel: "::-webkit-scrollbar", decls: { display: "none" } }]
+    },
+    { cls: ca.slide, base: { flex: "0 0 100%", "scroll-snap-align": "start", display: "flex", "align-items": "center", "justify-content": "center", "box-sizing": "border-box", "min-height": v("size-160"), "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), color: v("color-ink"), ...ringDecl, ...text("sm") } },
+    { cls: `${ca.slide}--half`, base: { flex: `0 0 calc((100% - ${v("space-12")}) / 2)` } },
+    { cls: ca.nav, base: { display: "flex", "justify-content": "flex-end", gap: v("space-8") } }
+  ],
+  render(pr) {
+    const half = pr.perView === "2";
+    const slides = Array.from({ length: Number(pr.slides) }, (_, i2) => n("div", half ? [ca.slide, `${ca.slide}--half`] : [ca.slide], [`Slide ${i2 + 1}`], { role: "group", "aria-roledescription": "slide", "aria-label": `${i2 + 1} of ${pr.slides}` }));
+    const btn2 = (icon, dir, label) => {
+      const b2 = iconButton.render({ icon, label, size: "16", variant: "default", disabled: dir === "-1" });
+      return { ...b2, attrs: { ...b2.attrs, "data-dir": dir } };
+    };
+    return n("div", [ca.root], [
+      n("div", [ca.track], slides, { "data-track": true, tabindex: "0", "aria-label": "Slides" }),
+      n("div", [ca.nav], [btn2("chevron-left", "-1", "Previous slide"), btn2("chevron-right", "1", "Next slide")])
+    ], { role: "region", "aria-roledescription": "carousel", "aria-label": "Carousel", "data-p8": "carousel" });
+  }
+};
+var tl2 = { root: `${p}-timeline`, item: `${p}-timeline__item`, dot: `${p}-timeline__dot`, body: `${p}-timeline__body`, title: `${p}-timeline__title`, time: `${p}-timeline__time`, detail: `${p}-timeline__detail` };
+var timeline = {
+  id: "timeline",
+  name: "Timeline",
+  description: "Events in order, like an activity feed.",
+  tags: ["content", "data"],
+  status: "stable",
+  usage: 'Write each event as "Title | Time | Detail" (detail is optional). Newest first or oldest first is up to you; the list is read in the order written.',
+  props: [P.area("items", "Created | 09:00\nReviewed | 10:30 | Two comments\nPublished | 12:00", "One event per line: Title | Time | Detail.", "string (one per line)")],
+  rules: [
+    { cls: tl2.root, base: { display: "flex", "flex-direction": "column", margin: "0", padding: "0", "list-style": "none", width: v("size-400"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: tl2.item, base: { display: "flex", gap: v("space-12"), "padding-bottom": v("space-12") } },
+    {
+      cls: tl2.dot,
+      base: { "flex-shrink": "0", width: v("size-16"), display: "flex", "flex-direction": "column", "align-items": "center" },
+      nested: [{ sel: "::before", decls: { content: "''", width: v("space-8"), height: v("space-8"), "margin-top": v("space-4"), "border-radius": v("radius-full"), background: v("color-ink") } }, { sel: "::after", decls: { content: "''", flex: "1", "border-left": `${v("border-hairline")} solid ${v("color-ring")}`, "margin-top": v("space-4") } }]
+    },
+    { cls: tl2.body, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), "min-width": "0" } },
+    { cls: tl2.title, base: { "font-weight": v("type-weight-strong") } },
+    { cls: tl2.time, base: { color: v("color-ink-muted"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    { cls: tl2.detail, base: { color: v("color-ink-muted") } },
+    { cls: `${tl2.item}--last`, base: { "padding-bottom": "0" }, nested: [{ sel: ` .${tl2.dot}::after`, decls: { display: "none" } }] }
+  ],
+  render(pr) {
+    const rows = lines(pr.items).map((l2) => l2.split("|").map((x) => x.trim()));
+    return n("ol", [tl2.root], rows.map(([title, time3, detail2], i2) => n("li", i2 === rows.length - 1 ? [tl2.item, `${tl2.item}--last`] : [tl2.item], [
+      n("span", [tl2.dot], [], { "aria-hidden": "true" }),
+      n("div", [tl2.body], [n("span", [tl2.title], [title]), ...time3 ? [n("span", [tl2.time], [time3])] : [], ...detail2 ? [n("span", [tl2.detail], [detail2])] : []])
+    ])));
+  }
+};
+var cx = { root: `${p}-context`, area: `${p}-context__area`, panel: `${p}-context__panel` };
+var contextMenu = {
+  id: "context-menu",
+  name: "Context Menu",
+  description: "The right-click menu.",
+  tags: ["overlay", "navigation"],
+  status: "stable",
+  usage: "Right-click (or press the Menu key / Shift+F10) in the area. The menu opens at the pointer; arrows move, Enter chooses, Escape or an outside click closes it.",
+  composition: "The panel is a Menu.",
+  props: [
+    P.text("label", "Right-click here", "Text in the target area."),
+    P.area("items", "Copy | \u2318C\nPaste | \u2318V\n---\nDelete | \u232B", 'Menu items; add " | shortcut" for a hint.', "string (one per line)"),
+    P.bool("open", true, "Show the menu initially (at the top-left of the area).")
+  ],
+  rules: [
+    { cls: cx.root, base: { position: "relative", display: "inline-block", width: v("size-400"), "max-width": "100%" } },
+    { cls: cx.area, base: { display: "flex", "align-items": "center", "justify-content": "center", "box-sizing": "border-box", "min-height": v("size-160"), "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), color: v("color-ink-muted"), ...ringDecl, ...text("sm") }, focus },
+    { cls: cx.panel, base: { position: "absolute", left: v("space-24"), top: v("space-24"), "z-index": "40" }, nested: [hiddenRule] }
+  ],
+  render(pr) {
+    const panel = n("div", [cx.panel], [menu.render({ items: pr.items, active: "" })], pr.open ? { "data-panel": true } : { "data-panel": true, hidden: true });
+    return n("div", [cx.root], [n("div", [cx.area], [pr.label], { "data-area": true, tabindex: "0", "aria-haspopup": "menu", "aria-expanded": String(Boolean(pr.open)) }), panel], { "data-p8": "context" });
+  }
+};
+var hc = { root: `${p}-hovercard`, trigger: `${p}-hovercard__trigger`, wrap: `${p}-hovercard__wrap`, card: `${p}-hovercard__card`, text: `${p}-hovercard__text`, title: `${p}-hovercard__title`, body: `${p}-hovercard__body`, open: `${p}-hovercard__wrap--open` };
+var hoverCard = {
+  id: "hover-card",
+  name: "Hover Card",
+  description: "A richer tooltip: a small preview card on hover or focus.",
+  tags: ["overlay", "content"],
+  status: "stable",
+  usage: "Shows on hover and keyboard focus and stays open while the pointer is over the card. Use it for previews (a person, a link), not for essential information.",
+  composition: "Contains an Avatar.",
+  props: [
+    P.text("trigger", "@primitive", "The link text that opens the card."),
+    P.text("title", "Primitive 8", "Card heading (also the avatar initials)."),
+    P.area("body", "A short preview of what this link points to.", "Card body."),
+    P.bool("open", false, "Keep the card visible.")
+  ],
+  rules: [
+    { cls: hc.root, base: { position: "relative", display: "inline-block" } },
+    { cls: hc.trigger, base: { color: v("color-ink"), "text-decoration": "underline", ...text("sm") }, focus },
+    { cls: hc.wrap, base: { position: "absolute", top: "100%", left: "0", "padding-top": v("space-8"), "z-index": "40", opacity: "0", "pointer-events": "none", transition: `opacity ${motion}` }, parent: { cls: hc.root, hover: { opacity: "1", "pointer-events": "auto" } } },
+    { cls: hc.open, base: { opacity: "1", "pointer-events": "auto" } },
+    { cls: hc.card, base: { display: "flex", gap: v("space-12"), "box-sizing": "border-box", width: v("size-320"), "max-width": "100vw", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-canvas"), color: v("color-ink"), ...ringDecl, ...text("sm") } },
+    { cls: hc.text, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), "min-width": "0" } },
+    { cls: hc.title, base: { "font-weight": v("type-weight-strong") } },
+    { cls: hc.body, base: { color: v("color-ink-muted") } },
+    iconRule
+  ],
+  render(pr) {
+    const av = avatar.render({ name: pr.title, src: "", size: "40" });
+    return n("span", [hc.root], [
+      n("a", [hc.trigger], [pr.trigger], { href: "#" }),
+      n("span", pr.open ? [hc.wrap, hc.open] : [hc.wrap], [n("span", [hc.card], [av, n("span", [hc.text], [n("span", [hc.title], [pr.title]), n("span", [hc.body], [pr.body])])], { role: "tooltip" })])
+    ]);
+  }
+};
+
 // src/components/guidelines.ts
 var GUIDELINES = {
   button: { do: ["Use one primary button per view or dialog.", 'Start labels with a verb: "Save", "Invite".', "Use ghost for secondary actions next to a primary."], dont: ["Do not put two primary buttons side by side.", "Do not use an icon with no label here; use Icon Button."] },
@@ -21762,6 +22128,15 @@ var GUIDELINES = {
   "stat-card": { do: ["Show a change when the direction matters."], dont: ["Do not rely on color; the arrow carries direction."] },
   "avatar-group": { do: ["Use to show who is involved."], dont: ["Do not show more than five."] },
   "progress-ring": { do: ["Use where a bar would not fit."], dont: ["Do not use for more than one metric at a time."] },
+  "date-picker": { do: ["Accept typing as well as picking.", "Show the expected format in the placeholder."], dont: ["Do not use for birthdays far in the past; use three selects.", "Do not restrict dates silently; explain the limit."] },
+  "time-picker": { do: ["Match the user's 12 or 24 hour habit.", "Use a minute step that fits the task (5 or 15)."], dont: ["Do not use for durations; use Number Input."] },
+  "multi-select": { do: ["Use for tags, topics and assignees.", "Show the picks as chips so they can be removed."], dont: ["Do not use for two or three options; use Checkboxes.", "Do not allow more picks than the product can handle."] },
+  "file-upload": { do: ["Say which types and sizes are accepted.", "List each file with a way to remove it."], dont: ["Do not hide the real input; it carries the files in a form.", "Do not upload automatically without telling the user."] },
+  "swatch-picker": { do: ["Use theme colour names so swatches follow the theme.", "Label every swatch (aria-label)."], dont: ["Do not use more than about eight swatches.", "Do not rely on colour alone to name the choice."] },
+  carousel: { do: ["Show that more slides exist.", "Keep slides the same size."], dont: ["Do not auto-advance.", "Do not hide essential content in later slides."] },
+  timeline: { do: ["Keep titles to a few words.", "Put the time in a consistent format."], dont: ["Do not use for steps the user must complete; use Stepper."] },
+  "context-menu": { do: ["Offer the same actions elsewhere (a menu button).", "Keep to seven items."], dont: ["Do not hide the only way to do something in a right-click."] },
+  "hover-card": { do: ["Use for previews of people or links.", "Make the trigger a real link."], dont: ["Do not put essential information in it; touch users cannot hover.", "Do not put buttons in it that are not reachable another way."] },
   "tree-view": { do: ["Use for hierarchies with two to four levels.", "Pre-select the current item."], dont: ["Do not use for flat lists; use List Row or Sidebar Nav.", "Do not nest deeper than five levels."] },
   "scroll-area": { do: ["Give it a fixed height.", "Keep it focusable so the keyboard can scroll it."], dont: ["Do not nest scroll areas.", "Do not hide important actions below the fold of a scroll area."] },
   timer: { do: ["Use a countdown for deadlines and a stopwatch for elapsed time.", "Listen for p8-timer-done to react when it ends."], dont: ["Do not announce every second to screen readers.", "Do not use for dates; show a date instead."] },
@@ -21792,12 +22167,21 @@ var MARKS = {
   popover: { since: "0.6.0" },
   "dropdown-menu": { since: "0.6.0" },
   sheet: { since: "0.6.0", mark: "refined" },
-  "tree-view": { since: "0.8.0", mark: "new" },
-  "scroll-area": { since: "0.8.0", mark: "new" },
-  timer: { since: "0.8.0", mark: "new" },
-  "inline-edit": { since: "0.8.0", mark: "new" },
-  "code-block": { since: "0.8.0", mark: "new" },
+  "tree-view": { since: "0.8.0" },
+  "scroll-area": { since: "0.8.0" },
+  timer: { since: "0.8.0" },
+  "inline-edit": { since: "0.8.0" },
+  "code-block": { since: "0.8.0" },
   slider: { since: "0.4.0", mark: "refined" },
+  "date-picker": { since: "0.9.0", mark: "new" },
+  "time-picker": { since: "0.9.0", mark: "new" },
+  "multi-select": { since: "0.9.0", mark: "new" },
+  "file-upload": { since: "0.9.0", mark: "new" },
+  "swatch-picker": { since: "0.9.0", mark: "new" },
+  carousel: { since: "0.9.0", mark: "new" },
+  timeline: { since: "0.9.0", mark: "new" },
+  "context-menu": { since: "0.9.0", mark: "new" },
+  "hover-card": { since: "0.9.0", mark: "new" },
   combobox: { since: "0.7.0" },
   "number-input": { since: "0.7.0" },
   "otp-input": { since: "0.7.0" },
@@ -21889,7 +22273,16 @@ var components = [
   scrollArea,
   timer,
   inlineEdit,
-  codeBlock
+  codeBlock,
+  datePicker,
+  timePicker,
+  multiSelect,
+  fileUpload,
+  swatchPicker,
+  carousel,
+  timeline,
+  contextMenu,
+  hoverCard
 ];
 for (const c3 of components) {
   c3.guidelines = GUIDELINES[c3.id];
@@ -21932,6 +22325,10 @@ var EXCEPTIONS = [
   { rule: "surface-padding", target: "p8-menu", reason: "Wrapper around menu items: 4px inset around items that carry their own 6/4 padding." },
   { rule: "surface-padding", target: "p8-palette", reason: "Wrapper around an input and options that carry their own control padding." },
   { rule: "surface-padding", target: "p8-combobox__list", reason: "Option list wrapper: 4px inset around options that carry their own 12px control padding." },
+  { rule: "surface-padding", target: "p8-multi__list", reason: "Option list wrapper: 4px inset around options that carry their own 12px control padding." },
+  { rule: "control-padding", target: "p8-cal__day", reason: "Fixed 32px calendar cell with no padding; digits are centered in the square." },
+  { rule: "control-padding", target: "p8-swatch", reason: "Fixed 24px colour swatch with no padding." },
+  { rule: "control-padding", target: "p8-rating__star", reason: "Fixed 24px star target with no padding." },
   { rule: "surface-padding", target: "p8-sheet", reason: "Full-height drawer uses 16px on all sides." },
   { rule: "control-padding", target: "p8-menu__item", reason: "Menu item exception: 6px left/right, 4px top/bottom." },
   { rule: "control-padding", target: "p8-pager__btn", reason: "Fixed-width page number button; 12px side padding inside a 32px minimum width." },
@@ -22056,7 +22453,7 @@ var KINDS = {
   root.addEventListener('click', function (e) {
     var tr = cl(e, '[data-trigger]');
     var p = tr && tr.closest('[data-p8~="popover"]');
-    if (p) { pSet(p, p.querySelector('[data-panel]').hidden); return; }
+    if (p && !tr.disabled) { pSet(p, p.querySelector('[data-panel]').hidden); return; }
     var item = cl(e, '[data-select-closes] [role="menuitem"]');
     if (item) { var host = item.closest('[data-p8~="popover"]'); pSet(host, false); host.querySelector('[data-trigger]').focus(); }
   }, ${SIG});
@@ -22319,6 +22716,201 @@ var KINDS = {
     var inp = cl(e, '[data-p8~="inline"] [data-edit]');
     if (inp) iDone(inp.closest('[data-p8~="inline"]'), true);
   }, ${SIG});`,
+  calendar: `
+  var CFMT = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function cCells(y, m, ws) {
+    var off = (new Date(Date.UTC(y, m, 1)).getUTCDay() - ws + 7) % 7, out = [];
+    for (var i = 0; i < 42; i++) { var d = new Date(Date.UTC(y, m, 1 - off + i)); out.push({ iso: d.toISOString().slice(0, 10), n: d.getUTCDate(), out: d.getUTCMonth() !== m }); }
+    return out;
+  }
+  function cYM(c) { var p = c.getAttribute('data-month').split('-'); return [Number(p[0]), Number(p[1]) - 1]; }
+  function cPaint(c) {
+    var ym = cYM(c), cells = cCells(ym[0], ym[1], Number(c.getAttribute('data-week')));
+    var sel = c.querySelector('[data-input]').value;
+    Array.from(c.querySelectorAll('[data-grid] [data-date]')).forEach(function (b, i) {
+      var x = cells[i], on = x.iso === sel;
+      b.setAttribute('data-date', x.iso); b.setAttribute('aria-label', x.iso); b.textContent = String(x.n);
+      b.classList.toggle('p8-cal__day--out', x.out); b.classList.toggle('p8-cal__day--on', on); b.setAttribute('aria-pressed', String(on));
+    });
+    c.querySelector('[data-label]').textContent = CFMT.format(new Date(Date.UTC(ym[0], ym[1], 1)));
+  }
+  function cShift(c, d) {
+    var ym = cYM(c), dt = new Date(Date.UTC(ym[0], ym[1] + d, 1));
+    c.setAttribute('data-month', dt.getUTCFullYear() + '-' + ('0' + (dt.getUTCMonth() + 1)).slice(-2));
+    cPaint(c);
+  }
+  root.addEventListener('click', function (e) {
+    var c = cl(e, '[data-p8~="calendar"]');
+    if (!c || c.querySelector('[data-input]').disabled) return;
+    var dir = cl(e, '[data-p8~="calendar"] [data-dir]'), day = cl(e, '[data-p8~="calendar"] [data-date]');
+    if (dir) { cShift(c, Number(dir.getAttribute('data-dir'))); return; }
+    if (day) {
+      var inp = c.querySelector('[data-input]');
+      inp.value = day.getAttribute('data-date');
+      inp.dispatchEvent(new Event('change', { bubbles: true }));
+      cPaint(c);
+      c.dispatchEvent(new CustomEvent('p8-close', { bubbles: true }));
+    }
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var c = cl(e, '[data-p8~="calendar"]');
+    if (!c || !e.target.hasAttribute('data-input')) return;
+    var v = e.target.value;
+    if (/^\\d{4}-\\d{2}-\\d{2}$/.test(v) && !isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v) { c.setAttribute('data-month', v.slice(0, 7)); cPaint(c); }
+  }, ${SIG});`,
+  multi: `
+  all('[data-p8~="multi"]').forEach(function (m) {
+    var id = 'p8-multi-' + crypto.randomUUID(), list = m.querySelector('[role="listbox"]');
+    list.id = id; m.querySelector('input').setAttribute('aria-controls', id);
+    Array.from(list.children).forEach(function (opt, i) { opt.id = id + '-' + i; });
+  });
+  function mOpts(m) { return Array.from(m.querySelectorAll('[role="option"]')); }
+  function mVis(m) { return mOpts(m).filter(function (x) { return !x.hidden; }); }
+  function mOpen(m, o) { if (m.querySelector('input').disabled) o = false; m.querySelector('[role="listbox"]').hidden = !o; m.querySelector('[role="combobox"]').setAttribute('aria-expanded', String(o)); }
+  function mLabel(opt) { return opt.firstChild.textContent.trim(); }
+  function mMark(m, it) { mOpts(m).forEach(function (x) { setOn(x, x === it); }); var input = m.querySelector('input'); if (it) input.setAttribute('aria-activedescendant', it.id); else input.removeAttribute('aria-activedescendant'); }
+  function mChip(m, label) {
+    var tpl = m.querySelector('template[data-chip-template]');
+    var src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild;
+    var chip = src.cloneNode(true);
+    chip.setAttribute('data-chip', label);
+    chip.firstChild.textContent = label;
+    chip.querySelector('[data-close]').setAttribute('aria-label', 'Remove ' + label);
+    m.querySelector('[data-chips]').appendChild(chip);
+  }
+  function mUnchip(m, label) { Array.from(m.querySelectorAll('[data-chips] [data-chip]')).forEach(function (c) { if (c.getAttribute('data-chip') === label) c.remove(); }); }
+  function mSet(m, opt, on) {
+    opt.setAttribute('aria-selected', String(on));
+    var label = mLabel(opt);
+    mUnchip(m, label);
+    if (on) mChip(m, label);
+    m.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: Array.from(m.querySelectorAll('[data-chips] [data-chip]')).map(function (c) { return c.getAttribute('data-chip'); }) } }));
+  }
+  root.addEventListener('focusin', function (e) { var m = cl(e, '[data-p8~="multi"]'); if (m && e.target.tagName === 'INPUT') mOpen(m, true); }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var m = cl(e, '[data-p8~="multi"]');
+    if (!m || m.querySelector('input').disabled) return;
+    var opt = cl(e, '[data-p8~="multi"] [role="option"]'), close = cl(e, '[data-p8~="multi"] [data-chip] [data-close]');
+    if (opt) { mSet(m, opt, opt.getAttribute('aria-selected') !== 'true'); m.querySelector('input').focus(); return; }
+    if (close) { var chip = close.closest('[data-chip]'), label = chip.getAttribute('data-chip'); mOpts(m).forEach(function (o) { if (mLabel(o) === label) o.setAttribute('aria-selected', 'false'); }); mUnchip(m, label); m.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: Array.from(m.querySelectorAll('[data-chips] [data-chip]')).map(function (c) { return c.getAttribute('data-chip'); }) } })); return; }
+    if (e.target.tagName === 'INPUT' || e.target.closest('[data-chips]') === null) mOpen(m, true);
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var m = cl(e, '[data-p8~="multi"]');
+    if (!m) return;
+    var q = e.target.value.toLowerCase();
+    mOpts(m).forEach(function (x) { x.hidden = mLabel(x).toLowerCase().indexOf(q) < 0; });
+    mOpen(m, true);
+    mMark(m, mVis(m)[0]);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var m = cl(e, '[data-p8~="multi"]');
+    if (!m || e.target.disabled || e.target.tagName !== 'INPUT') return;
+    var list = mVis(m), cur = list.findIndex(function (x) { return x.classList.contains('p8-multi__option--active'); });
+    if (e.key === 'ArrowDown') { mOpen(m, true); cur = (cur + 1) % list.length; }
+    else if (e.key === 'ArrowUp') { mOpen(m, true); cur = (cur - 1 + list.length) % list.length; }
+    else if (e.key === 'Enter') { if (list[cur]) { e.preventDefault(); mSet(m, list[cur], list[cur].getAttribute('aria-selected') !== 'true'); } return; }
+    else if (e.key === 'Escape') { mOpen(m, false); return; }
+    else if (e.key === 'Backspace' && !e.target.value) { var chips = m.querySelectorAll('[data-chips] [data-chip]'), last = chips[chips.length - 1]; if (last) last.querySelector('[data-close]').click(); return; }
+    else return;
+    e.preventDefault();
+    mMark(m, list[cur]);
+  }, ${SIG});
+  doc.addEventListener('click', function (e) { all('[data-p8~="multi"]').forEach(function (m) { if (!m.contains(e.target)) mOpen(m, false); }); }, ${SIG});`,
+  upload: `
+  function uSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
+  function uFiles(u) { return u.__files || Array.from(u.querySelector('input[type="file"]').files || []); }
+  function uRender(u) {
+    var list = u.querySelector('[data-files]'), tpl = u.querySelector('template[data-file-template]');
+    var src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild;
+    list.textContent = '';
+    uFiles(u).forEach(function (f, i) {
+      var li = src.cloneNode(true), spans = li.querySelectorAll('span');
+      spans[0].textContent = f.name; spans[1].textContent = uSize(f.size);
+      var b = li.querySelector('[data-remove]'); b.setAttribute('data-index', String(i)); b.setAttribute('aria-label', 'Remove ' + f.name);
+      list.appendChild(li);
+    });
+  }
+  root.addEventListener('change', function (e) {
+    var u = cl(e, '[data-p8~="upload"]');
+    if (!u || e.target.type !== 'file') return;
+    u.__files = null; uRender(u);
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="upload"] [data-remove]');
+    if (!b) return;
+    var u = b.closest('[data-p8~="upload"]'), idx = Number(b.getAttribute('data-index'));
+    u.__files = uFiles(u).filter(function (f, i) { return i !== idx; });
+    try { var dt = new DataTransfer(); u.__files.forEach(function (f) { dt.items.add(f); }); u.querySelector('input[type="file"]').files = dt.files; } catch (err) { }
+    uRender(u);
+  }, ${SIG});
+  ['dragenter', 'dragover'].forEach(function (t) { root.addEventListener(t, function (e) {
+    var z = cl(e, '[data-p8~="upload"] [data-zone]');
+    if (!z) return;
+    e.preventDefault();
+    if (!z.querySelector('input').disabled) z.classList.add('p8-upload__zone--over');
+  }, ${SIG}); });
+  root.addEventListener('dragleave', function (e) { var z = cl(e, '[data-p8~="upload"] [data-zone]'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('p8-upload__zone--over'); }, ${SIG});
+  root.addEventListener('drop', function (e) {
+    var z = cl(e, '[data-p8~="upload"] [data-zone]');
+    if (!z) return;
+    e.preventDefault(); z.classList.remove('p8-upload__zone--over');
+    var inp = z.querySelector('input');
+    if (inp.disabled || !e.dataTransfer) return;
+    var files = Array.from(e.dataTransfer.files), accept = inp.accept.toLowerCase().split(',').map(function (v) { return v.trim(); }).filter(Boolean);
+    files = files.filter(function (f) { return !accept.length || accept.some(function (a) { return a[0] === '.' ? f.name.toLowerCase().endsWith(a) : a.endsWith('/*') ? f.type.toLowerCase().startsWith(a.slice(0, -1)) : f.type.toLowerCase() === a; }); });
+    if (!inp.multiple) files = files.slice(0, 1);
+    var dt = new DataTransfer(); files.forEach(function (f) { dt.items.add(f); }); inp.files = dt.files;
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
+  }, ${SIG});`,
+  carousel: `
+  all('[data-p8~="carousel"]').forEach(function (c) {
+    var tr = c.querySelector('[data-track]'), prev = c.querySelector('[data-dir="-1"]'), next = c.querySelector('[data-dir="1"]');
+    function upd() { prev.disabled = tr.scrollLeft <= 1; next.disabled = tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 1; }
+    tr.addEventListener('scroll', upd, ${SIG});
+    upd();
+  });
+  function cGo(c, dir) { var tr = c.querySelector('[data-track]'); if (tr.scrollBy) tr.scrollBy({ left: dir * tr.clientWidth, behavior: 'smooth' }); else tr.scrollLeft += dir * tr.clientWidth; }
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="carousel"] [data-dir]');
+    if (b && !b.disabled) cGo(b.closest('[data-p8~="carousel"]'), Number(b.getAttribute('data-dir')));
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var tr = cl(e, '[data-p8~="carousel"] [data-track]');
+    if (!tr || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    e.preventDefault();
+    cGo(tr.closest('[data-p8~="carousel"]'), e.key === 'ArrowRight' ? 1 : -1);
+  }, ${SIG});`,
+  context: `
+  function xPanel(c) { return c.querySelector('[data-panel]'); }
+  function xClose(c) { xPanel(c).hidden = true; c.querySelector('[data-area]').setAttribute('aria-expanded', 'false'); }
+  function xOpen(c, x, y) {
+    var p = xPanel(c), r = c.getBoundingClientRect();
+    p.style.left = (x - r.left) + 'px'; p.style.top = (y - r.top) + 'px'; p.hidden = false; c.querySelector('[data-area]').setAttribute('aria-expanded', 'true');
+    var f = p.querySelector('[role="menuitem"]'); if (f) f.focus();
+  }
+  root.addEventListener('contextmenu', function (e) {
+    var a = cl(e, '[data-p8~="context"] [data-area]');
+    if (!a) return;
+    e.preventDefault();
+    xOpen(a.closest('[data-p8~="context"]'), e.clientX, e.clientY);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var a = cl(e, '[data-p8~="context"] [data-area]');
+    if (!a || !(e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) return;
+    e.preventDefault();
+    var r = a.getBoundingClientRect();
+    xOpen(a.closest('[data-p8~="context"]'), r.left + r.width / 2, r.top + r.height / 2);
+  }, ${SIG});
+  root.addEventListener('p8-close', function (e) {
+    var c = cl(e, '[data-p8~="context"]');
+    if (c) { xClose(c); c.querySelector('[data-area]').focus(); }
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var item = cl(e, '[data-p8~="context"] [role="menuitem"]');
+    if (item) xClose(item.closest('[data-p8~="context"]'));
+  }, ${SIG});
+  doc.addEventListener('click', function (e) { all('[data-p8~="context"]').forEach(function (c) { if (!c.contains(e.target)) xClose(c); }); }, ${SIG});`,
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
@@ -22346,7 +22938,7 @@ function hasBehavior(node2) {
 function runtime(node2) {
   const kinds = [...kindsIn(node2)].filter((k2) => KINDS[k2]);
   const used = new Set(kinds);
-  const needsPairs = ["toggle", "group", "menu", "palette", "pager", "copy", "combobox", "rating"].some((k2) => used.has(k2));
+  const needsPairs = ["toggle", "group", "menu", "palette", "pager", "copy", "combobox", "rating", "multi"].some((k2) => used.has(k2));
   const body = kinds.map((k2) => KINDS[k2]).join("\n");
   return `function initP8(root, opts) {
   opts = opts || {};
@@ -22595,6 +23187,16 @@ function reactify(node2) {
   }
   return { ...node2, attrs, children };
 }
+function styleToObject(css2) {
+  const out = {};
+  for (const part of css2.split(";")) {
+    const i2 = part.indexOf(":");
+    if (i2 < 0) continue;
+    const k2 = part.slice(0, i2).trim();
+    out[k2.startsWith("--") ? k2 : k2.replace(/-(\w)/g, (_, c3) => c3.toUpperCase())] = part.slice(i2 + 1).trim();
+  }
+  return out;
+}
 
 // src/codegen/index.ts
 var FRAMEWORKS = ["p8", "astro", "react", "svelte", "tailwind", "html", "scss"];
@@ -22709,12 +23311,17 @@ function attrString(node2, mode) {
     const t3 = [...cls.filter(isPair), tailwindClasses(cls.filter((k2) => !isMod(k2)))].filter(Boolean).join(" ");
     if (t3) parts.push(`class="${t3}"`);
   } else {
-    const base2 = declLines(mergedDecls(cls.filter((k2) => !isMod(k2)), "base")).join(" ").replace(/;$/, "");
+    const base2 = [declLines(mergedDecls(cls.filter((k2) => !isMod(k2)), "base")).join(" ").replace(/;$/, ""), typeof node2.attrs?.style === "string" ? node2.attrs.style : ""].filter(Boolean).join("; ");
     const stateful = cls.filter((k2) => isPair(k2) || STATES.some((s2) => ruleMap.get(k2)?.[s2]) || ruleMap.get(k2)?.parent || ruleMap.get(k2)?.nested);
     if (stateful.length) parts.push(`class="${stateful.join(" ")}"`);
     if (base2) parts.push(`style="${base2}"`);
   }
   for (const [k2, val] of Object.entries(node2.attrs ?? {})) {
+    if (k2 === "style" && mode === "inline") continue;
+    if (k2 === "style" && mode === "react" && typeof val === "string") {
+      parts.push(`style={${JSON.stringify(styleToObject(val)).replace(/"([A-Za-z_$][\w$]*)":/g, "$1: ").replace(/^\{/, "{ ").replace(/\}$/, " }")}}`);
+      continue;
+    }
     const name = mode === "react" ? k2 === "for" ? "htmlFor" : k2 === "tabindex" ? "tabIndex" : camel(k2) : k2;
     parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }

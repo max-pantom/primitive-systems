@@ -5,6 +5,7 @@ import { site } from '../config/site';
 import { EXCEPTIONS, GAPS, GRID_SPACE, RADII, RULES } from '../rules/rulebook';
 import { buildTheme } from '../tokens/builder';
 import { lintSpacing } from '../lint/spacing';
+import { RELEASES } from '../changelog';
 import { a11yReport } from '../rules/a11y';
 import { FRAMEWORKS, generate } from '../codegen';
 import { flatTokens } from '../tokens/theme';
@@ -148,9 +149,13 @@ export function lintCode(input: unknown) {
   return { ok: issues.every((i) => i.severity !== 'error'), issues };
 }
 
+export const getChangelog = () => ({
+  releases: RELEASES.map((r) => ({ ...r, components: components.filter((c) => c.since === r.version).map((c) => ({ id: c.id, name: c.name, mark: c.mark ?? null })) })),
+});
+
 export const getInstall = () => ({
   mcp: { remote: `${site.url}/mcp`, stdio: 'git clone <repo> && pnpm install && pnpm mcp' },
-  http: { base: `${site.url}/api`, endpoints: ['GET /components', 'GET /components/:id', 'POST /code', 'POST /compose', 'GET /search?q=', 'GET /tokens', 'GET /rules', 'POST /theme', 'POST /lint'] },
+  http: { base: `${site.url}/api`, endpoints: ['GET /components', 'GET /components/:id', 'POST /code', 'POST /compose', 'GET /search?q=', 'GET /tokens', 'GET /rules', 'GET /changelog', 'POST /theme', 'POST /lint'] },
   cli: [`npx ${site.cli} add button --framework react`, `npx ${site.cli} lint src`, `npx ${site.cli} theme --ink "#111111" --canvas "#FFFFFF" --radius 8`],
   runtime: { script: `<script src="${site.url}/p8.js"></script>`, example: '<p8-button variant="primary">Save</p8-button>' },
   skill: `${site.url}/skill/SKILL.md`,
@@ -168,6 +173,7 @@ export function route(method: string, path: string, body?: unknown, query?: Reco
     const m = path.match(/^\/api\/components\/([^/]+)$/);
     if (method === 'GET' && m) return { status: 200, body: getComponent(decodeURIComponent(m[1])) };
     if (method === 'GET' && path === '/api/tokens') return { status: 200, body: getTokens() };
+    if (method === 'GET' && path === '/api/changelog') return { status: 200, body: getChangelog() };
     if (method === 'GET' && path === '/api/rules') return { status: 200, body: getRules() };
     if (method === 'GET' && path === '/api/install') return { status: 200, body: getInstall() };
     if (method === 'GET' && path === '/api/search') return { status: 200, body: searchComponents(String(query?.q ?? ''), Number(query?.limit ?? 8)) };

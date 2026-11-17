@@ -5,13 +5,13 @@ import { P, focus, hiddenRule, n, p, ringDecl, text } from './shared';
 import { iconButton } from './bits';
 import type { ComponentDef, Node, Props, Rule } from './types';
 
-const btnNode = (label: string, extra: Node['attrs']): Node => {
+export const btnNode = (label: string, extra: Node['attrs']): Node => {
   const b = button.render({ label, variant: 'default', size: 'md', icon: 'none', iconSize: '14', iconPosition: 'start', fullWidth: false, disabled: false });
   return { ...b, attrs: { ...b.attrs, ...extra } };
 };
 
-const po = { root: `${p}-popover`, panel: `${p}-popover__panel`, end: `${p}-popover__panel--end`, bare: `${p}-popover__panel--bare` };
-const popRules: Rule[] = [
+export const po = { root: `${p}-popover`, panel: `${p}-popover__panel`, end: `${p}-popover__panel--end`, bare: `${p}-popover__panel--bare` };
+export const popRules: Rule[] = [
   { cls: po.root, base: { position: 'relative', display: 'inline-block' } },
   { cls: po.panel, base: { position: 'absolute', top: '100%', left: '0', 'margin-top': v('space-8'), 'z-index': '40', 'box-sizing': 'border-box', 'min-width': v('size-240'), 'padding-block': v('space-12'), 'padding-inline': v('space-16'), 'border-radius': v('radius-8'), background: v('color-canvas'), color: v('color-ink'), ...ringDecl, ...text('sm') }, nested: [hiddenRule] },
   { cls: po.end, base: { left: 'auto', right: '0' } },

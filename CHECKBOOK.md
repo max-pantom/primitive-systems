@@ -83,3 +83,12 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Timer | `timer` | pass | pass | yes |
 | Inline Edit | `inline-edit` | pass | pass | yes |
 | Code Block | `code-block` | pass | pass | yes |
+| Date Picker | `date-picker` | pass | pass | yes |
+| Time Picker | `time-picker` | pass | pass | yes |
+| Multi-select | `multi-select` | pass | pass | yes |
+| File Upload | `file-upload` | pass | pass | yes |
+| Swatch Picker | `swatch-picker` | pass | pass | yes |
+| Carousel | `carousel` | pass | pass | yes |
+| Timeline | `timeline` | pass | pass | yes |
+| Context Menu | `context-menu` | pass | pass | yes |
+| Hover Card | `hover-card` | pass | pass | yes |

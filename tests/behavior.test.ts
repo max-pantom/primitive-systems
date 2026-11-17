@@ -291,7 +291,8 @@ describe('generated behavior', () => {
     mount('inline-edit', { value: 'Old', label: 'Title' });
     const view = $('[data-view]'), input = $('[data-edit]') as HTMLInputElement;
     const changed = vi.fn();
-    document.addEventListener('p8-change', (e) => changed((e as CustomEvent).detail.value));
+    const onChange = (e: Event) => changed((e as CustomEvent).detail.value);
+    document.addEventListener('p8-change', onChange);
     click(view);
     expect(input.hidden).toBe(false);
     expect(view.hidden).toBe(true);
@@ -305,6 +306,7 @@ describe('generated behavior', () => {
     key(input, 'Escape');
     expect(view.textContent).toContain('New name');
     expect(input.value).toBe('New name');
+    document.removeEventListener('p8-change', onChange);
   });
 
   it('code block copies exactly the code shown', () => {
@@ -314,5 +316,80 @@ describe('generated behavior', () => {
     expect($('pre').textContent).toBe('<p8-button>Hi</p8-button>');
     click($('[data-p8~=copy]'));
     expect(writeText).toHaveBeenCalledWith('<p8-button>Hi</p8-button>');
+  });
+});
+
+describe('0.9 interactions', () => {
+  it('calendar follows typed dates, changes month, selects and closes', () => {
+    mount('date-picker');
+    const input = $('[data-input]') as HTMLInputElement;
+    input.value = '2028-02-29';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect($('[data-label]').textContent).toBe('February 2028');
+    expect($('[data-date="2028-02-29"]').getAttribute('aria-pressed')).toBe('true');
+    click($('[data-dir="1"]'));
+    expect($('[data-label]').textContent).toBe('March 2028');
+    click($('[data-date="2028-03-12"]'));
+    expect(input.value).toBe('2028-03-12');
+    expect($('[data-panel]').hidden).toBe(true);
+  });
+
+  it('invalid date props fall back safely and impossible typed dates do not change the calendar', () => {
+    expect(() => mount('date-picker', { month: 'bad', value: '2026-99-99' })).not.toThrow();
+    const input = $('[data-input]') as HTMLInputElement;
+    input.value = '2026-02-31';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect($('[data-label]').textContent).toBe('November 2026');
+  });
+
+  it('disabled calendar cannot open or select dates', () => {
+    mount('date-picker', { disabled: true });
+    click($('[data-trigger]'));
+    click($('[data-date="2026-11-12"]'));
+    expect($('[data-panel]').hidden).toBe(true);
+    expect(($('[data-input]') as HTMLInputElement).value).toBe('');
+  });
+
+  it('multi-select filters, selects with the keyboard, removes and closes', () => {
+    mount('multi-select');
+    const input = $('input') as HTMLInputElement;
+    input.value = 'Engineering';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect($$('[role=option]').filter((o) => !o.hidden)).toHaveLength(1);
+    key(input, 'Enter');
+    expect($('[data-chips]').textContent).toContain('Engineering');
+    input.value = '';
+    key(input, 'Backspace');
+    expect($('[data-chips]').textContent).not.toContain('Engineering');
+    key(input, 'Escape');
+    expect($('[role=listbox]').hidden).toBe(true);
+  });
+
+  it('disabled multi-select cannot remove chips or select options', () => {
+    mount('multi-select', { disabled: true });
+    click($('[role=option]'));
+    click($('[data-close]'));
+    expect($('[data-chip]').getAttribute('data-chip')).toBe('Design');
+    expect($('[role=listbox]').hidden).toBe(true);
+    expect(($('[data-close]') as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('swatches keep a tab stop for an unknown value and support arrow keys', () => {
+    mount('swatch-picker', { value: 'unknown' });
+    const radios = $$('[role=radio]');
+    expect(radios[0].tabIndex).toBe(0);
+    key(radios[0], 'ArrowRight');
+    expect(radios[1].getAttribute('aria-checked')).toBe('true');
+    expect(document.activeElement).toBe(radios[1]);
+  });
+
+  it('context menu opens with the keyboard and Escape restores focus', () => {
+    mount('context-menu', { open: false });
+    key($('[data-area]'), 'F10', { shiftKey: true });
+    expect($('[data-panel]').hidden).toBe(false);
+    expect(document.activeElement?.getAttribute('role')).toBe('menuitem');
+    key($('[role=menuitem]'), 'Escape');
+    expect($('[data-panel]').hidden).toBe(true);
+    expect(document.activeElement).toBe($('[data-area]'));
   });
 });

@@ -92,7 +92,7 @@ export const textarea: ComponentDef = {
 };
 
 /* ---------- Select ---------- */
-const s = { wrap: `${p}-select`, root: `${p}-select__control`, icon: `${p}-select__icon`, iconOff: `${p}-select__icon--disabled` };
+export const s = { wrap: `${p}-select`, root: `${p}-select__control`, icon: `${p}-select__icon`, iconOff: `${p}-select__icon--disabled` };
 export const select: ComponentDef = {
   id: 'select', name: 'Select', description: 'Native select styled as a control.', tags: ['control', 'form'], status: 'stable',
   usage: 'Native <select> so keyboard, mobile pickers and accessibility work out of the box.',
