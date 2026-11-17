@@ -1,8 +1,8 @@
 import { v } from '../tokens/theme';
 import { button, c as bc, iconNode, iconRule } from './button';
 import { divider } from './forms';
-import { focus, lines, motion, n, p, noRing, ringDecl, text } from './shared';
-import type { ComponentDef, Node, Props } from './types';
+import { P, focus, hiddenRule, lines, motion, n, noRing, overlayBase, p, ringDecl, text } from './shared';
+import type { ComponentDef, Node, Props, Rule } from './types';
 
 const btn = (label: string, variant: string, icon = 'none'): Node =>
   button.render({ label, variant, size: 'md', icon, iconSize: '14', iconPosition: 'start', fullWidth: false, disabled: false });
@@ -11,6 +11,7 @@ const surface = { background: v('color-surface'), color: v('color-ink'), ...ring
 
 /* ---------- Menu ---------- */
 const m = { root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
+export const menuClasses = m;
 export const menu: ComponentDef = {
   id: 'menu', name: 'Menu', description: 'A list of actions. Items use 6px side padding, 4px top/bottom.', tags: ['navigation', 'overlay-content'], status: 'stable',
   usage: 'Menu item horizontal padding is 6px, the one documented exception to the 4/8 grid. Use "---" on its own line for a divider.',
@@ -20,14 +21,14 @@ export const menu: ComponentDef = {
     { name: 'active', type: 'string', default: '', description: 'Label of the highlighted item.', control: { kind: 'text' } },
   ],
   rules: [
-    { cls: m.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'box-sizing': 'border-box', padding: v('space-4'), 'min-width': v('size-320'), ...surface, 'border-radius': v('radius-12') } },
+    { cls: m.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'box-sizing': 'border-box', padding: v('space-4'), 'min-width': v('size-240'), ...surface, 'border-radius': v('radius-12') } },
     { cls: m.item, base: { 'box-sizing': 'border-box', 'text-align': 'left', width: '100%', 'padding-block': v('space-4'), 'padding-inline': v('space-6'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus },
     { cls: m.active, base: { background: v('color-control-strong') } },
   ],
   render(pr: Props): Node {
     const kids = lines(pr.items).map((l) =>
       l === '---' ? dividerNode() : n('button', l === pr.active ? [m.item, m.active] : [m.item], [l], { type: 'button', role: 'menuitem' }));
-    return n('div', [m.root], kids, { role: 'menu' });
+    return n('div', [m.root], kids, { role: 'menu', 'data-p8': 'menu' });
   },
 };
 
@@ -47,32 +48,38 @@ export const tabs: ComponentDef = {
     { cls: t.on, base: { background: v('color-control-strong'), color: v('color-ink') } },
   ],
   render(pr: Props): Node {
-    const tabsN = lines(pr.tabs).map((l) => n('button', l === pr.active ? [t.tab, t.on] : [t.tab], [l], { type: 'button', role: 'tab', 'aria-selected': String(l === pr.active) }));
-    return n('div', [t.root], [n('div', [t.list], tabsN, { role: 'tablist' })]);
+    const tabsN = lines(pr.tabs).map((l) => n('button', l === pr.active ? [t.tab, t.on] : [t.tab], [l], { type: 'button', role: 'tab', 'aria-selected': String(l === pr.active), tabindex: l === pr.active ? '0' : '-1' }));
+    return n('div', [t.root], [n('div', [t.list], tabsN, { role: 'tablist', 'data-p8': 'group' })]);
   },
 };
 
 /* ---------- Disclosure ---------- */
 const d = { root: `${p}-disclosure`, summary: `${p}-disclosure__summary`, body: `${p}-disclosure__body`, icon: `${p}-disclosure__icon` };
 export const disclosure: ComponentDef = {
-  id: 'disclosure', name: 'Disclosure', description: 'Show and hide a section of content (native details/summary).', tags: ['layout', 'content'], status: 'stable',
-  usage: 'Uses <details>, so it works without JavaScript and is keyboard accessible.',
+  id: 'disclosure', name: 'Disclosure', description: 'Show and hide a section of content (native details/summary), animated.', tags: ['layout', 'content'], status: 'stable',
+  usage: 'Uses <details>, so it works without JavaScript and is keyboard accessible. The height animates in browsers that support ::details-content; others open instantly.',
   props: [
     { name: 'summary', type: 'string', default: 'Summary', description: 'Always-visible heading.', control: { kind: 'text' } },
     { name: 'content', type: 'string', default: 'Hidden content revealed when open.', description: 'Content inside.', control: { kind: 'textarea' } },
     { name: 'open', type: 'boolean', default: true, description: 'Initially open.', control: { kind: 'boolean' } },
   ],
   rules: [
-    { cls: d.root, base: { 'box-sizing': 'border-box', padding: v('space-12'), ...surface, 'min-width': v('size-320') } },
+    { cls: d.root, base: { 'box-sizing': 'border-box', padding: v('space-12'), ...surface, 'min-width': v('size-320'), 'interpolate-size': 'allow-keywords' },
+      nested: [
+        { sel: '::details-content', decls: { height: '0', overflow: 'clip', transition: `height ${motion}, content-visibility ${motion} allow-discrete` } },
+        { sel: '[open]::details-content', decls: { height: 'auto' } },
+        { sel: `[open] .${d.icon}`, decls: { rotate: '90deg' } },
+      ] },
     { cls: d.summary, base: { display: 'flex', 'align-items': 'center', gap: v('space-8'), cursor: 'pointer', 'list-style': 'none', ...text('sm'), 'font-weight': v('type-weight-strong') }, focus },
     { cls: d.body, base: { 'padding-top': v('space-8'), ...text('sm'), color: v('color-ink-muted') } },
+    { cls: d.icon, base: { transition: `rotate ${motion}` } },
     iconRule,
   ],
   render(pr: Props): Node {
     const attrs: Node['attrs'] = {};
     if (pr.open) attrs.open = true;
     return n('details', [d.root], [
-      n('summary', [d.summary], [iconNode(pr.open ? 'chevron-down' : 'chevron-right', 14), pr.summary as string]),
+      n('summary', [d.summary], [{ ...iconNode('chevron-right', 14), cls: [bc.icon, d.icon] }, pr.summary as string]),
       n('div', [d.body], [pr.content as string]),
     ], attrs);
   },
@@ -133,7 +140,7 @@ export const badge: ComponentDef = {
 const tt = { root: `${p}-tooltip`, bubble: `${p}-tooltip__bubble`, top: `${p}-tooltip__bubble--top`, bottom: `${p}-tooltip__bubble--bottom`, open: `${p}-tooltip__bubble--open` };
 export const tooltip: ComponentDef = {
   id: 'tooltip', content: 'trigger', name: 'Tooltip', description: 'Short hint that appears on hover or focus.', tags: ['overlay', 'content'], status: 'stable',
-  usage: 'CSS only: the bubble shows while the trigger is hovered or focused. Turn on open to keep it visible for review.',
+  usage: 'The bubble shows while the trigger is hovered or focused. A small script flips it to the other side or nudges it sideways so it never leaves the viewport. Turn on open to keep it visible for review.',
   composition: 'Wraps a Button as the trigger.',
   props: [
     { name: 'text', type: 'string', default: 'Helpful hint', description: 'Bubble text.', control: { kind: 'text' } },
@@ -151,51 +158,69 @@ export const tooltip: ComponentDef = {
   render(pr: Props): Node {
     const cls = [tt.bubble, pr.placement === 'bottom' ? tt.bottom : tt.top];
     if (pr.open) cls.push(tt.open);
-    return n('span', [tt.root], [btn(pr.trigger as string, 'default'), n('span', cls, [pr.text as string], { role: 'tooltip' })]);
+    return n('span', [tt.root], [btn(pr.trigger as string, 'default'), n('span', cls, [pr.text as string], { role: 'tooltip' })], { 'data-p8': 'tooltip', 'data-placement': pr.placement as string });
   },
 };
 
+/* ---------- Overlay (shared by dialog, sheet, palette) ---------- */
+export const ov = { root: `${p}-overlay`, end: `${p}-overlay--end`, start: `${p}-overlay--start`, bottom: `${p}-overlay--bottom` };
+export const overlayRules: Rule[] = [
+  { cls: ov.root, base: { ...overlayBase }, nested: [hiddenRule] },
+  { cls: ov.end, base: { 'justify-content': 'flex-end', padding: '0' } },
+  { cls: ov.start, base: { 'justify-content': 'flex-start', padding: '0' } },
+  { cls: ov.bottom, base: { 'align-items': 'flex-end', padding: '0' } },
+];
+
 /* ---------- Dialog ---------- */
 const g = { root: `${p}-dialog`, title: `${p}-dialog__title`, body: `${p}-dialog__body`, foot: `${p}-dialog__footer` };
+const withClose = (nd: Node): Node => ({ ...nd, attrs: { ...nd.attrs, 'data-close': true } });
 export const dialog: ComponentDef = {
-  id: 'dialog', name: 'Dialog', description: 'A focused panel that asks for a decision.', tags: ['overlay'], status: 'stable',
-  usage: 'This is the panel only. Add your own backdrop, focus trap and Escape handling. Uses role="dialog" with aria-modal.',
+  id: 'dialog', name: 'Dialog', description: 'A focused panel that asks for a decision, with backdrop.', tags: ['overlay'], status: 'stable',
+  usage: 'Backdrop click, Escape and the Cancel button close it (sets hidden). Tab stays inside while it is open. Set backdrop off to get just the panel.',
   composition: 'Footer actions are Buttons: ghost for cancel, primary for confirm.',
   props: [
-    { name: 'title', type: 'string', default: 'Dialog title', description: 'Heading.', control: { kind: 'text' } },
-    { name: 'body', type: 'string', default: 'Explain what happens when the user confirms.', description: 'Body text.', control: { kind: 'textarea' } },
-    { name: 'confirmLabel', type: 'string', default: 'Confirm', description: 'Primary action label.', control: { kind: 'text' } },
-    { name: 'cancelLabel', type: 'string', default: 'Cancel', description: 'Secondary action label. Empty to omit.', control: { kind: 'text' } },
+    P.text('title', 'Dialog title', 'Heading.'),
+    P.area('body', 'Explain what happens when the user confirms.', 'Body text.'),
+    P.text('confirmLabel', 'Confirm', 'Primary action label.'),
+    P.text('cancelLabel', 'Cancel', 'Secondary action label. Empty to omit.'),
+    P.bool('backdrop', true, 'Wrap in a full-screen dimmed backdrop with Escape and focus trap.'),
   ],
   rules: [
-    { cls: g.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-16'), 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', padding: v('space-16'), ...surface } },
+    ...overlayRules,
+    { cls: g.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-16'), 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', padding: v('space-16'), ...surface, background: v('color-canvas') } },
     { cls: g.title, base: { margin: '0', ...text('md'), 'font-weight': v('type-weight-strong') } },
     { cls: g.body, base: { margin: '0', ...text('sm'), color: v('color-ink-muted') } },
     { cls: g.foot, base: { display: 'flex', 'justify-content': 'flex-end', gap: v('space-12') } },
   ],
   render(pr: Props): Node {
     const foot: Node[] = [];
-    if (pr.cancelLabel) foot.push(btn(pr.cancelLabel as string, 'ghost'));
-    foot.push(btn(pr.confirmLabel as string, 'primary'));
-    const kids: Node[] = [];
-    kids.push(n('div', [], [n('h2', [g.title], [pr.title as string]), ...(pr.body ? [n('p', [g.body], [pr.body as string])] : [])]));
-    kids.push(n('div', [g.foot], foot));
-    return n('div', [g.root], kids, { role: 'dialog', 'aria-modal': 'true' });
+    if (pr.cancelLabel) foot.push(withClose(btn(pr.cancelLabel as string, 'ghost')));
+    foot.push(withClose(btn(pr.confirmLabel as string, 'primary')));
+    const kids: Node[] = [n('div', [], [n('h2', [g.title], [pr.title as string]), ...(pr.body ? [n('p', [g.body], [pr.body as string])] : [])]), n('div', [g.foot], foot)];
+    const panel = n('div', [g.root], kids, { role: 'dialog', 'aria-modal': 'true' });
+    return pr.backdrop ? n('div', [ov.root], [panel], { 'data-p8': 'overlay' }) : panel;
   },
 };
 
 /* ---------- Toast ---------- */
-const o = { root: `${p}-toast`, inv: `${p}-toast--inverted`, msg: `${p}-toast__message`, action: `${p}-toast__action`, close: `${p}-toast__close` };
+const o = { stack: `${p}-toast-stack`, tl: `${p}-toast-stack--tl`, tr: `${p}-toast-stack--tr`, bl: `${p}-toast-stack--bl`, root: `${p}-toast`, inv: `${p}-toast--inverted`, msg: `${p}-toast__message`, action: `${p}-toast__action`, close: `${p}-toast__close` };
 export const toast: ComponentDef = {
-  id: 'toast', name: 'Toast', description: 'Brief, non-blocking message.', tags: ['feedback', 'overlay'], status: 'stable',
-  usage: 'Position and auto-dismiss in your app. Uses role="status" so it is announced politely.',
+  id: 'toast', name: 'Toast', description: 'Brief, non-blocking messages stacked in a corner.', tags: ['feedback', 'overlay'], status: 'stable',
+  usage: 'Toasts live in a corner stack, auto-dismiss after the duration (0 keeps them) and close with the X. role="status" announces them politely.',
   props: [
-    { name: 'message', type: 'string', default: 'Changes saved.', description: 'Message.', control: { kind: 'text' } },
-    { name: 'variant', type: "'default' | 'inverted'", default: 'default', description: 'Surface or inverted ink.', control: { kind: 'select', options: ['default', 'inverted'] } },
-    { name: 'action', type: 'string', default: '', description: 'Optional action label.', control: { kind: 'text' } },
-    { name: 'dismissible', type: 'boolean', default: true, description: 'Show a close button.', control: { kind: 'boolean' } },
+    P.text('message', 'Changes saved.', 'Message.'),
+    P.select('variant', ['default', 'inverted'], 'default', 'Surface or inverted ink.'),
+    P.text('action', '', 'Optional action label.'),
+    P.bool('dismissible', true, 'Show a close button.'),
+    P.select('duration', ['4000', '8000', '0'], '4000', 'Auto-dismiss after this many ms. 0 keeps the toast.'),
+    P.select('count', ['1', '2', '3'], '1', 'How many toasts are in the stack.'),
+    P.select('position', ['bottom-right', 'bottom-left', 'top-right', 'top-left'], 'bottom-right', 'Which corner the stack sits in.'),
   ],
   rules: [
+    { cls: o.stack, base: { position: 'fixed', right: v('space-24'), bottom: v('space-24'), 'z-index': '60', display: 'flex', 'flex-direction': 'column', gap: v('space-8') } },
+    { cls: o.tl, base: { left: v('space-24'), top: v('space-24'), right: 'auto', bottom: 'auto' } },
+    { cls: o.tr, base: { top: v('space-24'), bottom: 'auto' } },
+    { cls: o.bl, base: { left: v('space-24'), right: 'auto' } },
     { cls: o.root, base: { display: 'flex', 'align-items': 'center', gap: v('space-12'), 'box-sizing': 'border-box', 'min-width': v('size-320'), 'padding-block': v('space-12'), 'padding-inline': v('space-16'), ...surface, ...text('sm') } },
     { cls: o.inv, base: { background: v('color-ink'), color: v('color-ink-inverse'), ...noRing } },
     { cls: o.msg, base: { flex: '1' } },
@@ -204,10 +229,14 @@ export const toast: ComponentDef = {
     iconRule,
   ],
   render(pr: Props): Node {
-    const kids: Node[] = [n('span', [o.msg], [pr.message as string])];
-    if (pr.action) kids.push(n('button', [o.action], [pr.action as string], { type: 'button' }));
-    if (pr.dismissible) kids.push(n('button', [o.close], [iconNode('close', 16)], { type: 'button', 'aria-label': 'Dismiss' }));
-    return n('div', pr.variant === 'inverted' ? [o.root, o.inv] : [o.root], kids, { role: 'status' });
+    const one = (): Node => {
+      const kids: Node[] = [n('span', [o.msg], [pr.message as string])];
+      if (pr.action) kids.push(n('button', [o.action], [pr.action as string], { type: 'button' }));
+      if (pr.dismissible) kids.push(n('button', [o.close], [iconNode('close', 16)], { type: 'button', 'aria-label': 'Dismiss', 'data-close': true }));
+      return n('div', pr.variant === 'inverted' ? [o.root, o.inv] : [o.root], kids, { role: 'status', 'data-duration': pr.duration as string });
+    };
+    const pos = pr.position === 'top-left' ? [o.tl] : pr.position === 'top-right' ? [o.tr] : pr.position === 'bottom-left' ? [o.bl] : [];
+    return n('div', [o.stack, ...pos], Array.from({ length: Number(pr.count) }, one), { 'data-p8': 'toast', role: 'region', 'aria-label': 'Notifications' });
   },
 };
 

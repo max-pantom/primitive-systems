@@ -1,6 +1,6 @@
 import { site } from '../config/site';
 import { v } from '../tokens/theme';
-import type { Decls, Node, Rule } from './types';
+import type { Decls, Node, PropMeta, Rule } from './types';
 
 export const p = site.cssPrefix;
 /** The seed hairline, drawn as an inset outline: pixel-snapped on every side, no layout impact. */
@@ -22,3 +22,15 @@ export const controlBase: Decls = {
 export const lines = (s: unknown) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
 export const n = (tag: string, cls: string[], children?: (Node | string)[], attrs?: Node['attrs']): Node => ({ tag, cls, attrs, children });
 export type { Rule };
+
+/** Prop declaration helpers. */
+const q = (o: string[]) => o.map((x) => `'${x}'`).join(' | ');
+export const P = {
+  text: (name: string, def: string, description: string): PropMeta => ({ name, type: 'string', default: def, description, control: { kind: 'text' } }),
+  area: (name: string, def: string, description: string, type = 'string'): PropMeta => ({ name, type, default: def, description, control: { kind: 'textarea' } }),
+  bool: (name: string, def: boolean, description: string): PropMeta => ({ name, type: 'boolean', default: def, description, control: { kind: 'boolean' } }),
+  select: (name: string, options: string[], def: string, description: string): PropMeta => ({ name, type: q(options), default: def, description, control: { kind: 'select', options } }),
+};
+/** Decls for an absolutely positioned overlay root that fills the viewport (and the docs preview). */
+export const overlayBase: Decls = { position: 'fixed', inset: '0', display: 'flex', 'align-items': 'center', 'justify-content': 'center', 'z-index': '50', background: v('color-backdrop'), 'box-sizing': 'border-box', padding: v('space-24') };
+export const hiddenRule = { sel: '[hidden]', decls: { display: 'none' } };

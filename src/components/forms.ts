@@ -30,7 +30,7 @@ export const divider: ComponentDef = {
 };
 
 /* ---------- Field wrapper shared by input / textarea / select ---------- */
-const f = { root: `${p}-field`, label: `${p}-field__label` };
+export const f = { root: `${p}-field`, label: `${p}-field__label` };
 const fieldRules: Rule[] = [
   { cls: f.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'font-family': v('type-family'), width: v('size-500'), 'max-width': '100%' } },
   { cls: f.label, base: { ...text('sm'), 'font-weight': v('type-weight-strong'), color: v('color-ink') } },
@@ -43,7 +43,7 @@ const labelled = (pr: Props, id: string, control: Node): Node => {
 };
 
 /* ---------- Text input ---------- */
-const i = { root: `${p}-input`, lg: `${p}-input--lg` };
+export const i = { root: `${p}-input`, lg: `${p}-input--lg` };
 const inputRules: Rule[] = [
   { cls: i.root, base: { ...controlBase, width: '100%' }, hover: { background: v('color-control-strong') }, focus: fieldFocus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' }, placeholder: { color: v('color-placeholder') } },
   { cls: i.lg, base: { 'padding-block': v('space-12'), 'font-size': v('type-size-md'), 'line-height': v('type-line-md') } },
@@ -118,11 +118,11 @@ export const select: ComponentDef = {
 };
 
 /* ---------- Checkbox ---------- */
-const k = { row: `${p}-check`, box: `${p}-check__box`, on: `${p}-check__box--on` };
+export const k = { row: `${p}-check`, box: `${p}-check__box`, on: `${p}-check__box--on`, icon: `${p}-check__icon`, iconOn: `${p}-check__icon--on` };
 const rowBase = { display: 'flex', width: 'max-content', 'align-items': 'center', gap: v('space-8'), ...text('sm'), color: v('color-ink'), cursor: 'pointer' };
 export const checkbox: ComponentDef = {
   id: 'checkbox', content: 'label', name: 'Checkbox', description: 'Two-state choice with a label.', tags: ['control', 'form'], status: 'stable',
-  usage: 'Rendered as role="checkbox" with aria-checked; toggle aria-checked and the --on class in your handler.',
+  usage: 'role="checkbox" with aria-checked. Click, label click and Space toggle it; the generated script/hook keeps aria-checked and the --on classes in sync.',
   props: [
     { name: 'label', type: 'string', default: 'Label', description: 'Text next to the box.', control: { kind: 'text' } },
     { name: 'checked', type: 'boolean', default: true, description: 'Checked state.', control: { kind: 'boolean' } },
@@ -132,13 +132,15 @@ export const checkbox: ComponentDef = {
     { cls: k.row, base: rowBase },
     { cls: k.box, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'flex-shrink': '0', width: v('size-16'), height: v('size-16'), padding: '0', 'box-sizing': 'border-box', 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink-inverse'), ...ringDecl, cursor: 'inherit' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
     { cls: k.on, base: { background: v('color-ink') }, hover: { background: v('color-ink'), opacity: v('opacity-hover') } },
+    { cls: k.icon, base: { opacity: '0', transition: `opacity ${motion}` } },
+    { cls: k.iconOn, base: { opacity: '1' } },
     iconRule,
   ],
   render(pr: Props): Node {
     const attrs: Node['attrs'] = { type: 'button', role: 'checkbox', 'aria-checked': String(pr.checked) };
     if (pr.disabled) attrs.disabled = true;
-    const box = n('button', pr.checked ? [k.box, k.on] : [k.box], pr.checked ? [{ ...iconNode('check', 14) }] : [], attrs);
-    return n('label', [k.row], [box, pr.label as string]);
+    const box = n('button', pr.checked ? [k.box, k.on] : [k.box], [{ ...iconNode('check', 14), cls: pr.checked ? [bc.icon, k.icon, k.iconOn] : [bc.icon, k.icon] }], attrs);
+    return n('label', [k.row], [box, pr.label as string], { 'data-p8': 'toggle' });
   },
 };
 
@@ -147,7 +149,7 @@ const w = { row: `${p}-switch-row`, root: `${p}-switch`, on: `${p}-switch--on`, 
 const edge = (thumb: string) => `calc(100% - ${v(thumb)} - ${v('space-2')})`;
 export const switchC: ComponentDef = {
   id: 'switch', content: 'label', name: 'Switch', description: 'On/off toggle. The thumb stretches while pressed.', tags: ['control', 'form'], status: 'stable',
-  usage: 'role="switch" with aria-checked. Toggle aria-checked and the --on classes in your handler. Press and hold to see the stretch.',
+  usage: 'role="switch" with aria-checked. Click and Space toggle it. Press and hold to see the stretch.',
   props: [
     { name: 'label', type: 'string', default: 'Label', description: 'Text next to the switch.', control: { kind: 'text' } },
     { name: 'checked', type: 'boolean', default: true, description: 'On/off.', control: { kind: 'boolean' } },
@@ -164,6 +166,6 @@ export const switchC: ComponentDef = {
     const attrs: Node['attrs'] = { type: 'button', role: 'switch', 'aria-checked': String(pr.checked) };
     if (pr.disabled) attrs.disabled = true;
     const sw = n('button', pr.checked ? [w.root, w.on] : [w.root], [n('span', pr.checked ? [w.thumb, w.thumbOn] : [w.thumb], [])], attrs);
-    return n('label', [w.row], [sw, pr.label as string]);
+    return n('label', [w.row], [sw, pr.label as string], { 'data-p8': 'toggle' });
   },
 };

@@ -1,10 +1,15 @@
 # Progress
 
-## Next slice (planned, not started): make components actually work
+## Behavior + 25 new components — done
 
-Known gaps: Checkbox, Switch, Tabs, Menu, Tooltip, Disclosure ship as markup only (no click behavior in generated code; the docs preview wires up checkbox/switch/tabs/menu itself). Dialog, Toast, Tooltip are just the panel.
-Plan: Checkbox/Switch toggle (click + keys); Tabs switch panels (click + arrows); Menu open/close, arrows/Enter/Escape/outside click; Disclosure animates; Tooltip positions next to its trigger without clipping; Dialog gets backdrop, Escape, focus trap; Toast gets a stack, auto-dismiss, close. Delivered in all outputs: small scripts for HTML/Astro/Tailwind/SCSS, built-in state for React/Svelte.
-Then new components, most-used first: (1) Radio group, Field (label/hint/error), Search input, Segmented control, Slider; (2) Spinner, Skeleton, Progress, Alert; (3) Sidebar nav, Breadcrumbs, Pagination, Command palette; (4) List row, Table, Key-value row, Stack, Toolbar; (5) Popover, Dropdown menu, Sheet; (6) Icon button, Kbd, Tag/chip, Copy button.
+- **Behavior runtime** (`src/codegen/behavior.ts`): one small `initP8(root)` generated per component, containing only the handlers its markup needs (`data-p8` hooks). Plain HTML/Tailwind/SCSS include a `<script>`; Astro a `<script>`; React a `useEffect`+ref; Svelte `onMount`+`bind:this`. The docs preview runs the same runtime, so what you click is what ships.
+- Working: Checkbox, Switch (click, label, Space), Tabs/Radio/Segmented (click + arrows/Home/End, roving tabindex), Menu (arrows, Escape), Dropdown + Popover (open/close, outside click, Escape, focus return), Dialog/Sheet/Palette (backdrop, Escape, Tab trap, Cmd/Ctrl+K for the palette), Toast stack (auto-dismiss, close, 4 corners), Tooltip (hover/focus, viewport-aware flip/nudge), Pagination, Tag/Alert dismiss, Copy button, Disclosure (CSS height + chevron animation).
+- New components: Radio Group, Field, Search Input, Segmented Control, Slider, Spinner, Skeleton, Progress, Alert, Sidebar Nav, Breadcrumbs, Pagination, Command Palette, List Row, Table, Key-Value Row, Stack, Toolbar, Popover, Dropdown Menu, Sheet, Icon Button, Kbd, Tag, Copy Button. 42 components total.
+- Codegen: `Rule.nested` (pseudo/vendor selectors), toggled `--on/--active` classes kept real in HTML/Tailwind outputs, per-framework script embedding.
+- Tests: 749 Vitest (incl. 17 jsdom behavior tests run against the generated HTML), 12 Playwright (incl. a layout-shift guard over every interactive element).
+- Docs: usage/composition/props shown as a table in the right sidebar.
+
+Caveats: the script is attached with `initP8(document)` (HTML/Astro) so it is page-global; React/Svelte scope it to the component root. Disclosure height animation needs Chrome 131+/Safari 18.4+ (`::details-content`); elsewhere it opens instantly. Tooltip flipping and Skeleton/Spinner animation are not covered by jsdom tests (no layout/SMIL).
 
 ## Feedback round 2 — done
 

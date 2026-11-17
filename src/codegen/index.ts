@@ -1,6 +1,7 @@
 import { site } from '../config/site';
 import { getDef, ruleMap, usedClasses, parseProps, defaultsOf } from '../components';
 import { reactify } from './react-node';
+import { hasBehavior, runtime } from './behavior';
 import type { ComponentDef, Decls, Node, Props, Rule } from '../components';
 
 export const FRAMEWORKS = ['p8', 'astro', 'react', 'svelte', 'tailwind', 'html', 'scss'] as const;
@@ -38,6 +39,11 @@ const PSTATES = ['hover', 'active'] as const;
 /** Parent classes that need a Tailwind `group/name` marker for the current output. */
 let ctxParents = new Set<string>();
 
+/** `X--on` / `X--active` modifiers are toggled by the behavior script, so they must stay real classes with real CSS. */
+const isMod = (k: string) => /--(on|active)$/.test(k);
+const isPair = (k: string) => isMod(k) || ruleMap.has(`${k}--on`) || ruleMap.has(`${k}--active`);
+const modRules = (rules: Rule[]) => rules.filter((r) => isMod(r.cls));
+
 const pascal = (s: string) => s.replace(/(^|[-_ ])(\w)/g, (_, __, ch) => ch.toUpperCase());
 const rulesFor = (node: Node): Rule[] => usedClasses(node).map((k) => ruleMap.get(k)).filter(Boolean) as Rule[];
 const declLines = (d: Decls, important = false) => Object.entries(d).map(([k, val]) => `${k}: ${val}${important ? ' !important' : ''};`);
@@ -52,6 +58,7 @@ export function css(rules: Rule[], opts: { onlyStates?: boolean; important?: boo
       const d = r[s];
       if (d) out.push(`.${r.cls}${stateSel[s]} {\n${declLines(d, opts.important).map((l) => `  ${l}`).join('\n')}\n}`);
     }
+    for (const nx of r.nested ?? []) out.push(`.${r.cls}${nx.sel} {\n${declLines(nx.decls, opts.important).map((l) => `  ${l}`).join('\n')}\n}`);
     for (const ps of PSTATES) {
       const d = r.parent?.[ps];
       if (d) out.push(`${PARENT[ps].css(r.parent!.cls, r.cls)} {\n${declLines(d, opts.important).map((l) => `  ${l}`).join('\n')}\n}`);
@@ -68,6 +75,7 @@ export function scss(rules: Rule[]): string {
         const d = r[s];
         if (d) lines.push(`  &${stateSel[s]} {\n${declLines(d).map((l) => `    ${l}`).join('\n')}\n  }`);
       }
+      for (const nx of r.nested ?? []) lines.push(`  &${nx.sel} {\n${declLines(nx.decls).map((l) => `    ${l}`).join('\n')}\n  }`);
       for (const ps of PSTATES) {
         const d = r.parent?.[ps];
         if (d) lines.push(`  ${PARENT[ps].scss(r.parent!.cls)} {\n${declLines(d).map((l) => `    ${l}`).join('\n')}\n  }`);
@@ -103,6 +111,9 @@ function tailwindClasses(cls: string[]): string {
     const variants = PARENT[ps].tw(parent).split(':').filter(Boolean);
     for (const [p, val] of Object.entries(merged)) for (const vr of variants) out.push(arb(p, val, `${vr}:`));
   }
+  const nested = new Map<string, Decls>();
+  for (const k of cls) for (const nx of ruleMap.get(k)?.nested ?? []) nested.set(nx.sel, { ...(nested.get(nx.sel) ?? {}), ...nx.decls });
+  for (const [sel, decls] of nested) for (const [p, val] of Object.entries(decls)) out.push(arb(p, val, `[&${sel.replace(/ /g, '_')}]:`));
   const groups = cls.filter((k) => ctxParents.has(k)).map((k) => `group/${k}`);
   return [...groups, ...out].join(' ');
 }
@@ -113,7 +124,7 @@ const esc = (t: string, braces: boolean) => {
   if (braces) s = s.replace(/[{}]/g, (ch) => `{'${ch}'}`);
   return s;
 };
-const VOID = new Set(['input', 'img', 'hr', 'br', 'path', 'line', 'circle', 'rect']);
+const VOID = new Set(['input', 'img', 'hr', 'br', 'path', 'line', 'circle', 'rect', 'polygon', 'animate', 'animateTransform']);
 const escAttr = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const camel = (k: string) => (/^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, ch) => ch.toUpperCase()));
 
@@ -125,16 +136,16 @@ function attrString(node: Node, mode: Mode): string {
   } else if (mode === 'class') {
     if (cls.length) parts.push(`class="${cls.join(' ')}"`);
   } else if (mode === 'tailwind') {
-    const t = tailwindClasses(cls);
+    const t = [...cls.filter(isPair), tailwindClasses(cls.filter((k) => !isMod(k)))].filter(Boolean).join(' ');
     if (t) parts.push(`class="${t}"`);
   } else {
-    const base = declLines(mergedDecls(cls, 'base')).join(' ').replace(/;$/, '');
-    const stateful = cls.filter((k) => STATES.some((s) => ruleMap.get(k)?.[s]) || ruleMap.get(k)?.parent);
+    const base = declLines(mergedDecls(cls.filter((k) => !isMod(k)), 'base')).join(' ').replace(/;$/, '');
+    const stateful = cls.filter((k) => isPair(k) || STATES.some((s) => ruleMap.get(k)?.[s]) || ruleMap.get(k)?.parent || ruleMap.get(k)?.nested);
     if (stateful.length) parts.push(`class="${stateful.join(' ')}"`);
     if (base) parts.push(`style="${base}"`);
   }
   for (const [k, val] of Object.entries(node.attrs ?? {})) {
-    const name = mode === 'react' ? (k === 'for' ? 'htmlFor' : camel(k)) : k;
+    const name = mode === 'react' ? (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : camel(k)) : k;
     parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }
   return parts.length ? ' ' + parts.join(' ') : '';
@@ -160,6 +171,8 @@ export function generate(def: ComponentDef, input: unknown, framework: Framework
   const rules = rulesFor(node);
   ctxParents = new Set(rules.flatMap((r) => (r.parent ? [r.parent.cls] : [])));
   const name = pascal(def.id);
+  const js = hasBehavior(node) ? runtime(node) : '';
+  const withRef = (m: string, attr: string) => m.replace(/^(\s*<[A-Za-z0-9-]+)/, `$1 ${attr}`);
   let code: string, language: string, filename: string;
 
   switch (framework) {
@@ -179,34 +192,38 @@ export function generate(def: ComponentDef, input: unknown, framework: Framework
     case 'react':
       language = 'tsx';
       filename = `${name}.tsx`;
-      code = `// ${filename} — ${note}\nimport './${def.id}.css';\n\nexport function ${name}() {\n  return (\n${markup(node, 'react', 2)}\n  );\n}\n\n/* ${def.id}.css */\n${css(rules)}\n`;
+      code = js
+        ? `// ${filename} — ${note}\nimport { useEffect, useRef } from 'react';\nimport './${def.id}.css';\n\nexport function ${name}() {\n  const ref = useRef<any>(null);\n  useEffect(() => initP8(ref.current), []);\n  return (\n${withRef(markup(node, 'react', 2), 'ref={ref}')}\n  );\n}\n\n/* ${def.id}.css */\n${css(rules)}\n\n// ---behavior---\n${js}\n`
+        : `// ${filename} — ${note}\nimport './${def.id}.css';\n\nexport function ${name}() {\n  return (\n${markup(node, 'react', 2)}\n  );\n}\n\n/* ${def.id}.css */\n${css(rules)}\n`;
       break;
     case 'astro':
       language = 'astro';
       filename = `${name}.astro`;
-      code = `---\n// ${note}\n---\n\n${markup(node, 'class')}\n\n<style>\n${indent(css(rules), 1)}\n</style>\n`;
+      code = `---\n// ${note}\n---\n\n${markup(node, 'class')}\n\n<style>\n${indent(css(rules), 1)}\n</style>\n${js ? `\n<script>\n${js}\ninitP8(document);\n</script>\n` : ''}`;
       break;
     case 'svelte':
       language = 'svelte';
       filename = `${name}.svelte`;
-      code = `<!-- ${note} -->\n${markup(node, 'class')}\n\n<style>\n${indent(css(rules), 1)}\n</style>\n`;
+      code = `${js ? `<script>\n  import { onMount } from 'svelte';\n  let el;\n  onMount(() => initP8(el));\n${indent(js, 1)}\n</script>\n\n` : ''}<!-- ${note} -->\n${js ? withRef(markup(node, 'class'), 'bind:this={el}') : markup(node, 'class')}\n\n<style>\n${indent(css(rules), 1)}\n</style>\n`;
       break;
     case 'tailwind':
       language = 'html';
       filename = `${def.id}.html`;
-      code = `<!-- ${note} Tailwind v4 arbitrary properties over named tokens. -->\n${markup(node, 'tailwind')}\n`;
+      const twMods = css(modRules(rules));
+      code = `<!-- ${note} Tailwind v4 arbitrary properties over named tokens. -->\n${twMods ? `<style>\n${indent(twMods, 1)}\n</style>\n` : ''}${markup(node, 'tailwind')}\n${js ? `\n<script>\n${js}\ninitP8(document);\n</script>\n` : ''}`;
       break;
     case 'html': {
       language = 'html';
       filename = `${def.id}.html`;
-      const states = css(rules, { onlyStates: true, important: true });
-      code = `<!-- ${note} -->\n${states ? `<style>\n${indent(states, 1)}\n</style>\n` : ''}${markup(node, 'inline')}\n`;
+      const mods = modRules(rules);
+      const states = [css(rules.filter((r) => !isMod(r.cls)), { onlyStates: true, important: true }), css(mods, { important: true })].filter(Boolean).join('\n\n');
+      code = `<!-- ${note} -->\n${states ? `<style>\n${indent(states, 1)}\n</style>\n` : ''}${markup(node, 'inline')}\n${js ? `\n<script>\n${js}\ninitP8(document);\n</script>\n` : ''}`;
       break;
     }
     case 'scss':
       language = 'scss';
       filename = `_${def.id}.scss`;
-      code = `// ${filename} — ${note}\n${scss(rules)}\n\n// Markup\n${markup(node, 'class').split('\n').map((l) => `// ${l}`).join('\n')}\n`;
+      code = `// ${filename} — ${note}\n${scss(rules)}\n\n// Markup\n${markup(node, 'class').split('\n').map((l) => `// ${l}`).join('\n')}\n${js ? `\n// Behavior (JS)\n${js.split('\n').map((l) => `// ${l}`).join('\n')}\n// initP8(document);\n` : ''}`;
       break;
   }
   return { component: def.id, framework, language, filename, props, code };

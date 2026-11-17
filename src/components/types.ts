@@ -11,6 +11,8 @@ export interface Rule {
   placeholder?: Decls;
   /** Styles applied to this element while an ancestor `parent` class is hovered/focused/active. */
   parent?: { cls: string; hover?: Decls; active?: Decls };
+  /** Extra selectors appended to the class: `[hidden]`, `::details-content`, `[open] .x`, vendor pseudos. */
+  nested?: { sel: string; decls: Decls }[];
 }
 /** Framework-agnostic structure. `cls` are semantic class names (rules are looked up by them). */
 export interface Node {

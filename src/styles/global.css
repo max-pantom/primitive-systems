@@ -30,7 +30,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .link { display: inline-flex; align-items: center; gap: var(--p8-space-8); background: none; border: 0; padding: 0; font: inherit; color: var(--p8-color-ink-muted); cursor: pointer; }
 .link:hover { color: var(--p8-color-ink); }
 
-.preview { flex: 1 1 0; min-height: 200px; overflow: auto; display: flex; align-items: center; justify-content: center; padding: var(--p8-space-32); border: var(--p8-border-hairline) solid var(--p8-color-ring); border-radius: var(--p8-radius-8); }
+.preview { position: relative; flex: 1 1 0; min-height: 200px; overflow: auto; display: flex; align-items: center; justify-content: center; padding: var(--p8-space-32); border: var(--p8-border-hairline) solid var(--p8-color-ring); border-radius: var(--p8-radius-8); }
 
 .panel-head { display: flex; justify-content: space-between; align-items: center; }
 .control { display: flex; flex-direction: column; gap: var(--p8-space-4); }
@@ -66,3 +66,12 @@ pre.code { margin: 0; padding: var(--p8-space-16); overflow: auto; flex: 1; min-
 .hl-v { color: var(--p8-color-syntax-3); }
 .hl-p, .hl-c { color: var(--p8-color-syntax-4); }
 .center > * { flex-shrink: 0; }
+
+/* Overlays fill the preview box instead of the whole page. */
+.preview .p8-overlay, .preview .p8-toast-stack { position: absolute; }
+table.props { width: 100%; border-collapse: collapse; }
+table.props th { text-align: left; font-weight: var(--p8-type-weight); color: var(--p8-color-ink-muted); padding: 0 var(--p8-space-12) var(--p8-space-8) 0; border-bottom: var(--p8-border-hairline) solid var(--p8-color-ring); }
+table.props td { vertical-align: top; padding: var(--p8-space-8) var(--p8-space-12) 0 0; }
+table.props tr.head td { padding-top: var(--p8-space-12); }
+table.props tr.desc td { padding: var(--p8-space-4) 0 var(--p8-space-12); border-bottom: var(--p8-border-hairline) solid var(--p8-color-ring); }
+.nowrap { white-space: nowrap; }

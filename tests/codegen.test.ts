@@ -38,7 +38,7 @@ describe('codegen snapshots', () => {
 /** Same props → same DOM shape and class structure in every framework output. */
 describe('cross-framework parity', () => {
   const stripNonMarkup = (code: string) =>
-    code.replace(/<style[\s\S]*?<\/style>/g, '').replace(/^---[\s\S]*?---/m, '').replace(/<!--[\s\S]*?-->/g, '').replace(/^\/\/.*$/gm, '').replace(/\/\*[\s\S]*$/m, '');
+    code.replace(/useRef<any>/g, '').replace(/\/\/ ---behavior---[\s\S]*$/, '').replace(/<script[\s\S]*?<\/script>/g, '').replace(/\/\/ Behavior \(JS\)[\s\S]*$/, '').replace(/<style[\s\S]*?<\/style>/g, '').replace(/^---[\s\S]*?---/m, '').replace(/<!--[\s\S]*?-->/g, '').replace(/^\/\/.*$/gm, '').replace(/\/\*[\s\S]*$/m, '');
   const tags = (code: string) => [...stripNonMarkup(code).matchAll(/<([a-z0-9]+)[\s>/]/g)].map((m) => m[1]);
   const classes = (code: string) => [...code.matchAll(/class(?:Name)?="([^"]*)"/g)].map((m) => m[1]);
 
@@ -47,7 +47,7 @@ describe('cross-framework parity', () => {
       it(`${def.id} #${i}`, () => {
         const out = Object.fromEntries(SIX.map((fw) => [fw, generate(def, props, fw).code]));
         // scss ships markup as comments; compare against its commented markup
-        const scssMarkup = out.scss.split('// Markup\n')[1].replace(/^\/\/ ?/gm, '');
+        const scssMarkup = out.scss.split('// Markup\n')[1].split('\n// Behavior (JS)')[0].replace(/^\/\/ ?/gm, '');
         const ref = tags(out.astro);
         for (const fw of ['react', 'svelte', 'tailwind', 'html'] as const) expect(tags(out[fw]), fw).toEqual(ref);
         expect(tags(scssMarkup)).toEqual(ref);

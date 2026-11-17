@@ -1,33 +1,24 @@
-import { createElement, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Fragment, createElement, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Agentation } from 'agentation';
 import { site } from '../config/site';
 import { FRAMEWORKS, FRAMEWORK_LABELS, generate, type Framework } from '../codegen';
 import { reactify } from '../codegen/react-node';
+import { hasBehavior, runtime } from '../codegen/behavior';
 import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { iconElements } from '../icons/icons';
 import { highlight } from './highlight';
 
-const camel = (k: string) => (k === 'for' ? 'htmlFor' : /^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, c) => c.toUpperCase()));
+const camel = (k: string) => (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : /^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, c) => c.toUpperCase()));
 
-interface Ctx { props: Props; set: (name: string, value: string | boolean) => void }
-
-/** Render the framework-agnostic node tree as live React. Styles come from the same rules the codegen uses. */
-function toReact(node: Node | string, ctx: Ctx, key?: number): ReactNode {
+/** Render the framework-agnostic node tree as live React. Behavior comes from the same generated runtime the code output ships. */
+function toReact(node: Node | string, key?: number): ReactNode {
   if (typeof node === 'string') return node;
   const r = reactify(node);
   const attrs: Record<string, unknown> = { key };
   if (r.cls?.length) attrs.className = r.cls.join(' ');
   for (const [k, v] of Object.entries(r.attrs ?? {})) attrs[camel(k)] = v;
-  if (r.tag === 'button') {
-    const role = r.attrs?.role;
-    const label = r.children?.find((c) => typeof c === 'string') as string | undefined;
-    attrs.onClick = (e: { preventDefault(): void }) => {
-      e.preventDefault();
-      if (role === 'checkbox' || role === 'switch') ctx.set('checked', !ctx.props.checked);
-      else if ((role === 'tab' || role === 'menuitem') && label) ctx.set('active', label);
-    };
-  }
-  return createElement(r.tag, attrs, ...(r.children ?? []).map((c, i) => toReact(c, ctx, i)));
+  if (r.tag === 'a') attrs.onClick = (e: { preventDefault(): void }) => e.preventDefault();
+  return createElement(r.tag, attrs, ...(r.children ?? []).map((c, i) => toReact(c, i)));
 }
 
 function Icon({ name }: { name: 'moon' | 'sun' }) {
@@ -56,14 +47,17 @@ function Docs({ def }: { def: ComponentDef }) {
       {def.composition && <section><h2>Composition</h2><p>{def.composition}</p></section>}
       <section>
         <h2>Props</h2>
-        <dl className="proplist" data-testid="props-table">
-          {def.props.map((p) => (
-            <div key={p.name}>
-              <dt><code>{p.name}</code> <span className="muted">{p.type}</span></dt>
-              <dd>{p.description} <span className="muted">Default: <code>{JSON.stringify(p.default)}</code></span></dd>
-            </div>
-          ))}
-        </dl>
+        <table className="props" data-testid="props-table">
+          <thead><tr><th>Prop</th><th>Type</th><th>Default</th></tr></thead>
+          <tbody>
+            {def.props.map((p) => (
+              <Fragment key={p.name}>
+                <tr className="head"><td><code>{p.name}</code></td><td className="nowrap">{p.type.replace(/ \(.*\)$/, '')}</td><td><code>{JSON.stringify(p.default)}</code></td></tr>
+                <tr className="desc"><td colSpan={3} className="muted">{p.description}</td></tr>
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
       </section>
     </div>
   );
@@ -77,8 +71,13 @@ function Workbench({ def }: { def: ComponentDef }) {
   const result = useMemo(() => generate(def, props, fw), [def, props, fw]);
   const tree = useMemo(() => def.render(props), [def, props]);
   const html = useMemo(() => highlight(result.code), [result]);
-  // checked/active change by interacting with the preview; keep the DOM so transitions can play.
-  const { checked: _c, active: _a, ...stable } = props;
+  const previewRef = useRef<HTMLDivElement>(null);
+  const key = JSON.stringify(props);
+  useEffect(() => {
+    if (!previewRef.current || !hasBehavior(tree)) return;
+    const init = new Function(`${runtime(tree)}\nreturn initP8;`)() as (root: Element, opts?: object) => () => void;
+    return init(previewRef.current, { noTimers: true });
+  }, [key, tree]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(result.code);
@@ -99,7 +98,7 @@ function Workbench({ def }: { def: ComponentDef }) {
           <p className="muted">{def.description}</p>
         </header>
         <div data-testid="preview" className="preview">
-          <div key={JSON.stringify(stable)} style={{ width: props.fullWidth ? '100%' : undefined }}>{toReact(tree, { props, set })}</div>
+          <div key={key} ref={previewRef} style={{ width: props.fullWidth ? '100%' : undefined }}>{toReact(tree)}</div>
         </div>
         <div className="codebox">
           <div className="tabs" role="tablist" aria-label="Framework" onKeyDown={onTabKey}>

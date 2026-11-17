@@ -2,9 +2,17 @@ import { button } from './button';
 import { card } from './card';
 import { divider, input, textarea, select, checkbox, switchC } from './forms';
 import { menu, tabs, disclosure, dataList, badge, tooltip, dialog, toast, avatar } from './display';
+import { radioGroup, field, search, segmented, slider } from './forms2';
+import { spinner, skeleton, progress, alert } from './feedback';
+import { sidebarNav, breadcrumbs, pagination, commandPalette } from './nav';
+import { listRow, table, keyValue, stack, toolbar } from './data';
+import { popover, dropdown, sheet } from './overlay';
+import { iconButton, kbd, tag, copyButton } from './bits';
 import type { ComponentDef, Node, Rule } from './types';
 
-export const components: ComponentDef[] = [button, card, input, textarea, divider, menu, tabs, disclosure, dataList, select, checkbox, switchC, badge, tooltip, dialog, toast, avatar];
+export const components: ComponentDef[] = [button, card, input, textarea, divider, menu, tabs, disclosure, dataList, select, checkbox, switchC, badge, tooltip, dialog, toast, avatar,
+  radioGroup, field, search, segmented, slider, spinner, skeleton, progress, alert, sidebarNav, breadcrumbs, pagination, commandPalette,
+  listRow, table, keyValue, stack, toolbar, popover, dropdown, sheet, iconButton, kbd, tag, copyButton];
 export const getDef = (id: string) => components.find((c) => c.id === id);
 
 /** Every rule across the library, keyed by class (first definition wins; button rules are reused by card). */
