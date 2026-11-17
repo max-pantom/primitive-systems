@@ -1,0 +1,24 @@
+<!-- Requires the Primitive Systems theme variables (theme.css). -->
+<style>
+  .p8-button:hover:not(:disabled) {
+    background: var(--p8-color-control-strong) !important;
+  }
+
+  .p8-button:focus-visible {
+    outline: var(--p8-border-focus) solid var(--p8-color-ink) !important;
+    outline-offset: var(--p8-border-focus-offset) !important;
+  }
+
+  .p8-button:disabled {
+    opacity: var(--p8-opacity-disabled) !important;
+    cursor: not-allowed !important;
+  }
+</style>
+<div style="display: flex; flex-direction: column; gap: var(--p8-space-12); padding-block: var(--p8-space-16); padding-inline: var(--p8-space-16); border-radius: var(--p8-radius-8); background: var(--p8-color-surface); color: var(--p8-color-ink); box-shadow: none; font-family: var(--p8-type-family)">
+  <div style="display: flex; flex-direction: column; gap: var(--p8-space-4)">
+    <p style="font-size: var(--p8-type-size-sm); line-height: var(--p8-type-line-sm); font-weight: var(--p8-type-weight)">Supporting text for the card.</p>
+  </div>
+  <div style="display: flex; gap: var(--p8-space-12)">
+    <button class="p8-button" style="display: inline-flex; align-items: center; justify-content: center; gap: var(--p8-space-8); padding-block: var(--p8-space-8); padding-inline: var(--p8-space-12); border-radius: var(--p8-radius-8); border: none; box-shadow: none; background: var(--p8-color-control); color: var(--p8-color-ink); font-family: var(--p8-type-family); font-size: var(--p8-type-size-sm); line-height: var(--p8-type-line-sm); font-weight: var(--p8-type-weight); cursor: pointer" type="button">Go</button>
+  </div>
+</div>

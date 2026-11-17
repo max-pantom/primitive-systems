@@ -1,0 +1,33 @@
+// _button.scss — Requires the Primitive Systems theme variables (theme.css).
+.p8-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--p8-space-8);
+  padding-block: var(--p8-space-8);
+  padding-inline: var(--p8-space-12);
+  border-radius: var(--p8-radius-8);
+  border: none;
+  box-shadow: none;
+  background: var(--p8-color-control);
+  color: var(--p8-color-ink);
+  font-family: var(--p8-type-family);
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+  cursor: pointer;
+  &:hover:not(:disabled) {
+    background: var(--p8-color-control-strong);
+  }
+  &:focus-visible {
+    outline: var(--p8-border-focus) solid var(--p8-color-ink);
+    outline-offset: var(--p8-border-focus-offset);
+  }
+  &:disabled {
+    opacity: var(--p8-opacity-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// Markup
+// <button class="p8-button" type="button">Button</button>

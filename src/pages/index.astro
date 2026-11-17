@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../config/site';
+import { components } from '../components';
+---
+<Layout title="Catalog">
+  <h1 class="m-0 text-xl font-medium">{site.name}</h1>
+  <p class="muted mt-2 mb-8">{site.tagline} {site.description}</p>
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
+    {components.map((c) => (
+      <a href={`/components/${c.id}`} class="hairline rounded-lg p-4 flex flex-col gap-1">
+        <span class="font-medium">{c.name}</span>
+        <span class="muted">{c.description}</span>
+      </a>
+    ))}
+  </div>
+</Layout>

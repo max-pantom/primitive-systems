@@ -1,0 +1,7 @@
+<!-- Requires the Primitive Systems theme variables (theme.css). Tailwind v4 arbitrary properties over named tokens. -->
+<div class="[display:flex] [flex-direction:column] [gap:var(--p8-space-12)] [padding-block:var(--p8-space-12)] [padding-inline:var(--p8-space-16)] [border-radius:var(--p8-radius-8)] [background:var(--p8-color-surface)] [color:var(--p8-color-ink)] [box-shadow:0_0_0_var(--p8-border-hairline)_var(--p8-color-ring)] [font-family:var(--p8-type-family)]">
+  <div class="[display:flex] [flex-direction:column] [gap:var(--p8-space-4)]">
+    <div class="[font-size:var(--p8-type-size-md)] [line-height:var(--p8-type-line-md)] [font-weight:var(--p8-type-weight-strong)]">Card title</div>
+    <p class="[font-size:var(--p8-type-size-sm)] [line-height:var(--p8-type-line-sm)] [font-weight:var(--p8-type-weight)]">Supporting text for the card.</p>
+  </div>
+</div>

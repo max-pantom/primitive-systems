@@ -1,0 +1,39 @@
+// _card.scss — Requires the Primitive Systems theme variables (theme.css).
+.p8-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-12);
+  padding-block: var(--p8-space-12);
+  padding-inline: var(--p8-space-16);
+  border-radius: var(--p8-radius-8);
+  background: var(--p8-color-surface);
+  color: var(--p8-color-ink);
+  box-shadow: 0 0 0 var(--p8-border-hairline) var(--p8-color-ring);
+  font-family: var(--p8-type-family);
+}
+
+.p8-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-4);
+}
+
+.p8-card__title {
+  font-size: var(--p8-type-size-md);
+  line-height: var(--p8-type-line-md);
+  font-weight: var(--p8-type-weight-strong);
+}
+
+.p8-card__body {
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+}
+
+// Markup
+// <div class="p8-card">
+//   <div class="p8-card__text">
+//     <div class="p8-card__title">Card title</div>
+//     <p class="p8-card__body">Supporting text for the card.</p>
+//   </div>
+// </div>

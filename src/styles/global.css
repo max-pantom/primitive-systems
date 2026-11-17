@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* Docs chrome only. Colors come from the theme tokens. */
+html { background: var(--p8-color-canvas); color: var(--p8-color-ink); font-family: var(--p8-type-family); font-size: var(--p8-type-size-sm); line-height: var(--p8-type-line-sm); }
+body { margin: 0; }
+a { color: inherit; text-decoration: none; }
+.hairline { box-shadow: 0 0 0 var(--p8-border-hairline) var(--p8-color-ring); }
+.muted { color: color-mix(in srgb, var(--p8-color-ink) 55%, transparent); }
+.field { background: var(--p8-color-control); color: var(--p8-color-ink); border: 0; border-radius: var(--p8-radius-8); padding: var(--p8-space-8) var(--p8-space-12); font: inherit; width: 100%; box-sizing: border-box; }
+.field:focus-visible { outline: var(--p8-border-focus) solid var(--p8-color-ink); outline-offset: var(--p8-border-focus-offset); }
+.tab { background: transparent; border: 0; color: color-mix(in srgb, var(--p8-color-ink) 55%, transparent); font: inherit; padding: var(--p8-space-8) var(--p8-space-12); cursor: pointer; border-radius: var(--p8-radius-8); }
+.tab[aria-selected="true"], .tab.solid { color: var(--p8-color-ink); background: var(--p8-color-control); }
+.tab:focus-visible, .nav a:focus-visible, .icon-btn:focus-visible { outline: var(--p8-border-focus) solid var(--p8-color-ink); outline-offset: var(--p8-border-focus-offset); }
+.nav a { display: block; padding: var(--p8-space-8) var(--p8-space-12); border-radius: var(--p8-radius-8); }
+.nav a[aria-current="page"] { background: var(--p8-color-control); }
+.icon-btn { background: transparent; border: 0; color: inherit; cursor: pointer; padding: var(--p8-space-8); border-radius: var(--p8-radius-8); display: inline-flex; }
+.icon-btn:hover { background: var(--p8-color-control); }
+pre.code { margin: 0; padding: var(--p8-space-16); overflow: auto; max-height: 480px; font: 12px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+table.props { width: 100%; border-collapse: collapse; }
+table.props th, table.props td { text-align: left; vertical-align: top; padding: var(--p8-space-8) var(--p8-space-12) var(--p8-space-8) 0; border-bottom: var(--p8-border-hairline) solid var(--p8-color-ring); }
+table.props code { font: 12px ui-monospace, Menlo, monospace; }
