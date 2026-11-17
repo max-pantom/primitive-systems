@@ -7,7 +7,7 @@
 import { site } from '../config/site';
 import { allCss } from '../codegen';
 import { hasBehavior, runtime } from '../codegen/behavior';
-import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
+import { components, templates, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { themeToCss } from '../tokens/theme';
 
 const SVG = new Set(['svg', 'path', 'line', 'circle', 'rect', 'polygon', 'animate', 'animateTransform']);
@@ -67,7 +67,7 @@ function boot() {
     style.textContent = `${themeToCss()}\n${site.cssPrefix}-*{display:contents}\n${allCss()}`;
     document.head.prepend(style);
   }
-  components.forEach(define);
+  [...components, ...templates].forEach(define);
 }
 boot();
-(window as unknown as { P8: unknown }).P8 = { components: components.map((c) => c.id) };
+(window as unknown as { P8: unknown }).P8 = { components: [...components, ...templates].map((c) => c.id) };
