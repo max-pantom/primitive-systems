@@ -228,6 +228,7 @@ export default function App() {
             <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}{c.mark === 'new' && <span className="mark">New</span>}</a>
           ))}
         </nav>
+        <a className="link" href="/usage" data-testid="usage-link">Usage</a>
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
           {theme === 'dark' ? 'Light' : 'Dark'} mode

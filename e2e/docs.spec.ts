@@ -10,7 +10,7 @@ test('/ shows the first component immediately; no seeds banner', async ({ page }
 test('nav lists all components and switches in place', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(52);
+  await expect(nav.getByRole('link')).toHaveCount(57);
   await nav.getByRole('link', { name: 'Tabs' }).click();
   await expect(page.getByRole('heading', { name: 'Tabs', level: 1 })).toBeVisible();
   await expect(page).toHaveURL(/#tabs$/);
@@ -89,7 +89,7 @@ test('spacing rules hold in the rendered preview', async ({ page }) => {
 test('every component renders and has code in every tab', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(52);
+  await expect(nav.getByRole('link')).toHaveCount(57);
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   for (const name of names) {
     await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
@@ -126,7 +126,7 @@ test('dark mode toggle', async ({ page }) => {
 test('no layout shift when interacting with any component', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(52);
+  await expect(nav.getByRole('link')).toHaveCount(57);
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   const box = async () => {
     const root = page.getByTestId('preview').locator('> div > *').first();
@@ -138,7 +138,7 @@ test('no layout shift when interacting with any component', async ({ page }) => 
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(150);
     const before = await box();
-    const targets = page.getByTestId('preview').locator('button:not([data-close]), input, select, textarea');
+    const targets = page.getByTestId('preview').locator('button:not([data-close]):not([role=treeitem]), input, select, textarea');
     const count = await targets.count();
     for (let i = 0; i < count; i++) {
       const t = targets.nth(i);
@@ -198,4 +198,35 @@ test('accessibility panel shows contrast, keyboard and labels and follows the pr
   await expect(page.getByTestId('a11y-labels')).toContainText('aria-label');
   await page.goto('/#switch');
   await expect(page.getByTestId('a11y-keyboard')).toContainText('Space');
+});
+
+test('usage page shows what was pulled and the public MCP', async ({ page, request }) => {
+  await request.post('http://localhost:4322/api/code', { data: { component: 'stat-card', framework: 'react' }, headers: { 'user-agent': 'curl/8' } });
+  await page.goto('/usage');
+  await expect(page.getByRole('heading', { name: 'Usage', level: 1 })).toBeVisible();
+  await expect(page.getByTestId('usage-totals')).toContainText('Calls');
+  await expect(page.getByTestId('usage-components')).toContainText('stat-card');
+  await expect(page.getByTestId('usage-mcp')).toContainText('Online');
+  await expect(page.getByTestId('usage-mcp')).toContainText('search_components');
+  await expect(page.getByTestId('usage-store')).toBeVisible();
+  await page.goto('/');
+  await page.getByTestId('usage-link').click();
+  await expect(page).toHaveURL(/\/usage$/);
+});
+
+test('new components: slider thumb stretches while dragging; menu shows shortcuts', async ({ page }) => {
+  await page.goto('/#menu');
+  await expect(page.getByTestId('preview').getByRole('menuitem').first()).toContainText('⌘R');
+  await page.goto('/#slider');
+  const slider = page.getByTestId('preview').locator('input[type=range]');
+  const css = await page.evaluate(() => [...document.styleSheets].flatMap((sh) => { try { return [...sh.cssRules].map((r) => r.cssText); } catch { return []; } }).join('\n'));
+  expect(css).toMatch(/p8-slider:active:not\(:disabled\)::-webkit-slider-thumb\s*\{[^}]*width:\s*var\(--p8-size-24\)/);
+  const box = (await slider.boundingBox())!;
+  const rest = await slider.screenshot();
+  await page.mouse.move(box.x + box.width * 0.4, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(400);
+  const pressed = await slider.screenshot();
+  await page.mouse.up();
+  expect(pressed.equals(rest)).toBe(false);
 });

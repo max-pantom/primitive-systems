@@ -18,7 +18,7 @@ function derive(ink: string, canvas: string, mode: 'light' | 'dark') {
     canvas, surface: dark ? canvas : mix(canvas, ink, 0.06), control: mix(canvas, ink, dark ? 0.066 : 0.067), 'control-strong': strong,
     ink, 'ink-inverse': canvas, 'ink-muted': muted, placeholder: mix(ink, canvas, 0.75),
     backdrop: dark ? '#00000080' : '#00000033', ring: `${mix(ink, canvas, dark ? 0.5 : 0.57)}40`, 'ring-focus': `${mix(ink, canvas, dark ? 0.5 : 0.57)}4D`,
-    'syntax-1': ink, 'syntax-2': mix(ink, canvas, 0.3), 'syntax-3': mix(ink, canvas, 0.52), 'syntax-4': mix(ink, canvas, 0.67),
+    'syntax-1': ink, 'syntax-2': mix(ink, muted, 0.4), 'syntax-3': mix(ink, muted, 0.75), 'syntax-4': muted,
   };
 }
 

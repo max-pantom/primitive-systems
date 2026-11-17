@@ -1,23 +1,17 @@
 import { createServer } from 'node:http';
-import { route } from '../api/handlers';
 import { site } from '../config/site';
+import { handleApi, handleMcp } from './web';
 
 const port = Number(process.env.PORT ?? 4322);
 
+/** Local server with the same handlers Vercel runs: /api/* and /mcp. */
 createServer(async (req, res) => {
-  const headers = { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' };
-  if (req.method === 'OPTIONS') return void res.writeHead(204, headers).end();
-  let body: unknown;
-  if (req.method === 'POST') {
-    const chunks: Buffer[] = [];
-    for await (const ch of req) chunks.push(ch as Buffer);
-    try {
-      body = JSON.parse(Buffer.concat(chunks).toString() || '{}');
-    } catch {
-      return void res.writeHead(400, headers).end(JSON.stringify({ error: 'Invalid JSON' }));
-    }
-  }
-  const u = new URL(req.url ?? '/', 'http://localhost');
-  const out = route(req.method ?? 'GET', u.pathname, body, Object.fromEntries(u.searchParams));
-  res.writeHead(out.status, headers).end(JSON.stringify(out.body));
-}).listen(port, () => console.error(`${site.name} API on http://localhost:${port}`));
+  const chunks: Buffer[] = [];
+  for await (const ch of req) chunks.push(ch as Buffer);
+  const body = chunks.length ? Buffer.concat(chunks) : undefined;
+  const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
+  const request = new Request(url, { method: req.method, headers: req.headers as Record<string, string>, body: req.method === 'GET' || req.method === 'HEAD' ? undefined : body });
+  const response = url.pathname.startsWith('/mcp') || url.pathname.startsWith('/api/mcp') ? await handleMcp(request) : await handleApi(request);
+  res.writeHead(response.status, Object.fromEntries(response.headers));
+  res.end(Buffer.from(await response.arrayBuffer()));
+}).listen(port, () => console.error(`${site.name} API + MCP on http://localhost:${port}`));

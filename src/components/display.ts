@@ -10,24 +10,28 @@ const dividerNode = () => divider.render({ orientation: 'horizontal', spacing: '
 const surface = { background: v('color-surface'), color: v('color-ink'), ...ringDecl, 'border-radius': v('radius-8'), 'font-family': v('type-family') };
 
 /* ---------- Menu ---------- */
-const m = { root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
+const m = { hint: `${p}-menu__shortcut`, root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
 export const menuClasses = m;
 export const menu: ComponentDef = {
   id: 'menu', name: 'Menu', description: 'A list of actions. Items use 6px side padding, 4px top/bottom.', tags: ['navigation', 'overlay-content'], status: 'stable',
-  usage: 'Menu item horizontal padding is 6px, the one documented exception to the 4/8 grid. Use "---" on its own line for a divider.',
+  usage: 'Menu item horizontal padding is 6px, the one documented exception to the 4/8 grid. Use "---" on its own line for a divider and "Label | ⌘K" to show a shortcut hint on the right (exposed as aria-keyshortcuts).',
   composition: 'Dividers inside a menu are Divider components.',
   props: [
-    { name: 'items', type: 'string (one per line)', default: 'Rename\nDuplicate\n---\nDelete', description: 'Item labels, one per line. "---" inserts a divider.', control: { kind: 'textarea' } },
+    { name: 'items', type: 'string (one per line)', default: 'Rename | ⌘R\nDuplicate | ⌘D\n---\nDelete | ⌫', description: 'Item labels, one per line. Add " | shortcut" to show a keyboard hint on the right. "---" inserts a divider.', control: { kind: 'textarea' } },
     { name: 'active', type: 'string', default: '', description: 'Label of the highlighted item.', control: { kind: 'text' } },
   ],
   rules: [
     { cls: m.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'box-sizing': 'border-box', padding: v('space-4'), 'min-width': v('size-240'), ...surface, 'border-radius': v('radius-12') } },
-    { cls: m.item, base: { 'box-sizing': 'border-box', 'text-align': 'left', width: '100%', 'padding-block': v('space-4'), 'padding-inline': v('space-6'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus },
+    { cls: m.item, base: { display: 'flex', 'align-items': 'center', 'justify-content': 'space-between', gap: v('space-12'), 'box-sizing': 'border-box', 'text-align': 'left', width: '100%', 'padding-block': v('space-4'), 'padding-inline': v('space-6'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus },
     { cls: m.active, base: { background: v('color-control-strong') } },
+    { cls: m.hint, base: { color: v('color-ink-muted'), 'font-family': v('type-mono'), 'letter-spacing': v('type-tracking-mono') } },
   ],
   render(pr: Props): Node {
     const kids = lines(pr.items).map((l) =>
-      l === '---' ? dividerNode() : n('button', l === pr.active ? [m.item, m.active] : [m.item], [l], { type: 'button', role: 'menuitem' }));
+      l === '---' ? dividerNode() : (() => {
+        const [label, hint] = l.split('|').map((x) => x.trim());
+        return n('button', label === pr.active ? [m.item, m.active] : [m.item], hint ? [label, n('span', [m.hint], [hint], { 'aria-hidden': 'true' })] : [label], hint ? { type: 'button', role: 'menuitem', 'aria-keyshortcuts': hint } : { type: 'button', role: 'menuitem' });
+      })());
     return n('div', [m.root], kids, { role: 'menu', 'data-p8': 'menu' });
   },
 };

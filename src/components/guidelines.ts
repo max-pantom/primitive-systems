@@ -51,6 +51,11 @@ export const GUIDELINES: Record<string, { do: string[]; dont: string[] }> = {
   'stat-card': { do: ['Show a change when the direction matters.'], dont: ['Do not rely on color; the arrow carries direction.'] },
   'avatar-group': { do: ['Use to show who is involved.'], dont: ['Do not show more than five.'] },
   'progress-ring': { do: ['Use where a bar would not fit.'], dont: ['Do not use for more than one metric at a time.'] },
+  'tree-view': { do: ['Use for hierarchies with two to four levels.', 'Pre-select the current item.'], dont: ['Do not use for flat lists; use List Row or Sidebar Nav.', 'Do not nest deeper than five levels.'] },
+  'scroll-area': { do: ['Give it a fixed height.', 'Keep it focusable so the keyboard can scroll it.'], dont: ['Do not nest scroll areas.', 'Do not hide important actions below the fold of a scroll area.'] },
+  timer: { do: ['Use a countdown for deadlines and a stopwatch for elapsed time.', 'Listen for p8-timer-done to react when it ends.'], dont: ['Do not announce every second to screen readers.', 'Do not use for dates; show a date instead.'] },
+  'inline-edit': { do: ['Use for names and titles that change rarely.', 'Show a placeholder when empty.'], dont: ['Do not use inside forms that have a Save button.', 'Do not use for long text; use Textarea.'] },
+  'code-block': { do: ['Show a language label.', 'Keep snippets short enough to read at a glance.'], dont: ['Do not paste whole files.', 'Do not use for inline code in a sentence.'] },
   banner: { do: ['Use one banner per page.', 'Make it dismissible unless it is critical.'], dont: ['Do not stack banners.', 'Do not use for in-page notices; use Alert.'] },
 };
 
@@ -61,6 +66,8 @@ export const MARKS: Record<string, { since: string; mark?: 'new' | 'refined' }> 
   'data-list': { since: '0.3.0' }, select: { since: '0.4.0', mark: 'refined' }, checkbox: { since: '0.4.0', mark: 'refined' }, switch: { since: '0.4.0', mark: 'refined' },
   badge: { since: '0.4.0', mark: 'refined' }, tooltip: { since: '0.4.0', mark: 'refined' }, dialog: { since: '0.5.0', mark: 'refined' }, toast: { since: '0.5.0', mark: 'refined' }, avatar: { since: '0.5.0' },
   'icon-button': { since: '0.6.0', mark: 'refined' }, toolbar: { since: '0.6.0', mark: 'refined' }, popover: { since: '0.6.0' }, 'dropdown-menu': { since: '0.6.0' }, sheet: { since: '0.6.0', mark: 'refined' },
-  combobox: { since: '0.7.0', mark: 'new' }, 'number-input': { since: '0.7.0', mark: 'new' }, 'otp-input': { since: '0.7.0', mark: 'new' }, stepper: { since: '0.7.0', mark: 'new' }, rating: { since: '0.7.0', mark: 'new' },
-  accordion: { since: '0.7.0', mark: 'new' }, 'stat-card': { since: '0.7.0', mark: 'new' }, 'avatar-group': { since: '0.7.0', mark: 'new' }, 'progress-ring': { since: '0.7.0', mark: 'new' }, banner: { since: '0.7.0', mark: 'new' },
+  'tree-view': { since: '0.8.0', mark: 'new' }, 'scroll-area': { since: '0.8.0', mark: 'new' }, timer: { since: '0.8.0', mark: 'new' }, 'inline-edit': { since: '0.8.0', mark: 'new' }, 'code-block': { since: '0.8.0', mark: 'new' },
+  slider: { since: '0.4.0', mark: 'refined' },
+  combobox: { since: '0.7.0' }, 'number-input': { since: '0.7.0' }, 'otp-input': { since: '0.7.0' }, stepper: { since: '0.7.0' }, rating: { since: '0.7.0' },
+  accordion: { since: '0.7.0' }, 'stat-card': { since: '0.7.0' }, 'avatar-group': { since: '0.7.0' }, 'progress-ring': { since: '0.7.0' }, banner: { since: '0.7.0' },
 };

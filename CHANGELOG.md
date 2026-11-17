@@ -2,6 +2,12 @@
 
 Components are marked **New** or **Refined** in the catalog and in `list_components` (`mark`, `since`).
 
+## 0.8.0
+- **New:** Tree View, Scroll Area, Timer (countdown / stopwatch), Inline Edit, Code Block (grey highlighter + copy).
+- **Refined:** Slider (thumb stretches into a pill while dragging, like Switch), Menu (`Label | ⌘R` shows a keyboard shortcut on the right).
+- **Usage page** at `/usage`: what agents pull from the public MCP and API (aggregate counts only).
+- Code highlighter greys darkened so every shade passes 4.5:1; accessibility panel on every component page.
+
 ## 0.7.0 — agent release
 - **New:** Combobox, Number Input, OTP Input, Stepper, Rating, Accordion, Stat Card, Avatar Group, Progress Ring, Banner.
 - **Rule book and check book:** every design rule is data, enforced by tests (`pnpm rules`). Per-component do/don't guidelines.

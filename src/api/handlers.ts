@@ -74,7 +74,7 @@ const SYNONYMS: Record<string, string[]> = {
   modal: ['dialog'], popup: ['dialog', 'popover'], confirm: ['dialog'], drawer: ['sheet'], sidebar: ['sheet', 'sidebar-nav'], notification: ['toast', 'alert'], snackbar: ['toast'],
   toggle: ['switch', 'checkbox'], chip: ['tag'], pill: ['badge', 'tag'], label: ['badge', 'field'], dropdown: ['dropdown-menu', 'select'], autocomplete: ['combobox'], typeahead: ['combobox'],
   loading: ['spinner', 'skeleton', 'progress'], loader: ['spinner'], placeholder: ['skeleton'], percent: ['progress', 'progress-ring'], steps: ['stepper'], wizard: ['stepper'], onboarding: ['stepper'],
-  pin: ['otp-input'], code: ['otp-input', 'copy-button'], quantity: ['number-input'], stars: ['rating'], review: ['rating'], faq: ['accordion'], metric: ['stat-card'], kpi: ['stat-card'],
+  pin: ['otp-input'], otp: ['otp-input'], 'one-time': ['otp-input'], verification: ['otp-input'], code: ['otp-input', 'copy-button'], quantity: ['number-input'], stars: ['rating'], review: ['rating'], faq: ['accordion'], metric: ['stat-card'], kpi: ['stat-card'],
   team: ['avatar-group'], users: ['avatar-group', 'avatar'], announcement: ['banner'], menu: ['menu', 'dropdown-menu'], nav: ['sidebar-nav', 'tabs', 'breadcrumbs'], navigation: ['sidebar-nav', 'tabs', 'breadcrumbs'],
   input: ['text-input', 'field'], form: ['field', 'text-input', 'select', 'checkbox'], password: ['text-input'], search: ['search-input', 'command-palette', 'combobox'], list: ['list-row', 'data-list'], grid: ['stack'], layout: ['stack', 'card'],
   button: ['button', 'icon-button'], danger: ['dialog', 'alert'], error: ['alert', 'field'], help: ['tooltip', 'popover'], copy: ['copy-button'], shortcut: ['kbd', 'command-palette'], hotkey: ['kbd'],

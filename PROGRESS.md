@@ -1,5 +1,12 @@
 # Progress
 
+## 0.8.0 — done
+
+- Slider drag stretch; Menu shortcut hints; 5 new components (Tree View, Scroll Area, Timer, Inline Edit, Code Block) → 57 total.
+- **/usage:** aggregate counters for MCP + HTTP (tools, components, frameworks, clients, optional `?model=` / `x-p8-model`, 14-day chart) and a live overview of the public MCP. Store is Upstash Redis when `UPSTASH_REDIS_REST_*` / `KV_REST_API_*` exist, otherwise memory. **Not connected yet** — run `vercel integration add upstash` (needs you to accept the terms) for durable stats. MCP does not transmit the model, so "models" is self-reported.
+- Local dev: `pnpm api` now serves `/api/*` and `/mcp` exactly like Vercel; the docs dev server proxies to it.
+- Fixed by the checker: highlighter greys below 4.5:1; fixed by the layout-shift guard: Timer button/time widths, Inline Edit swap.
+
 ## Agent release (0.7.0) — done
 
 - **Rule book + check book:** `src/rules/rulebook.ts` → RULEBOOK.md / CHECKBOOK.md, enforced by `pnpm rules` and `pnpm test`. The checker caught real violations, including the Toolbar's Icon Buttons (8px side padding; now 12/8), plus Popover/Disclosure padding, Dialog gap, Stack gaps and muted-text contrast. Toolbar now passes.
@@ -13,7 +20,7 @@
 
 **Blocks** (explicitly later): sign-in, settings, pricing, onboarding, chat, empty dashboard, and then a generative "describe it" tool on top of them. Today `search_components` + `compose_code` cover the agent-driven version.
 
-**More components:** Date picker, Time picker, Multi-select with chips, File upload (dropzone + list), Color swatch picker, Carousel, Timeline / activity feed, Context menu, Hover card.
+**More components:** Date picker, Time picker, Multi-select with chips, File upload (dropzone + list), Color swatch picker, Carousel, Timeline / activity feed, Context menu, Hover card. (Done since: Tree View, Scroll Area, Timer, Inline Edit, Code Block, Shortcut hint.)
 
 **Bigger features:** Figma sync of tokens and components (needs the Figma connection); motion presets beyond the two motion tokens (enter / exit / press); accessibility *page* per component showing contrast / keyboard / labels (the automated checks exist, the docs UI for them does not); theme builder UI in the docs site (CLI, MCP and API exist); publish the CLI to npm so `npx primitive` works without the repo; changelog view in the docs site; per-framework live previews (Svelte island).
 

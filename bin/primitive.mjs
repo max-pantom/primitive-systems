@@ -19756,9 +19756,9 @@ var theme = {
       ring: "#91919140",
       "ring-focus": "#9191914D",
       "syntax-1": "#000000",
-      "syntax-2": "#4A4A4A",
-      "syntax-3": "#7A7A7A",
-      "syntax-4": "#A8A8A8"
+      "syntax-2": "#3A3A3A",
+      "syntax-3": "#595959",
+      "syntax-4": "#666666"
     },
     dark: {
       canvas: "#1D1D1D",
@@ -19773,9 +19773,9 @@ var theme = {
       ring: "#7A7A7A40",
       "ring-focus": "#7A7A7A4D",
       "syntax-1": "#F2F2F2",
-      "syntax-2": "#BDBDBD",
-      "syntax-3": "#8C8C8C",
-      "syntax-4": "#5E5E5E"
+      "syntax-2": "#CCCCCC",
+      "syntax-3": "#B4B4B4",
+      "syntax-4": "#A8A8A8"
     }
   },
   space: {
@@ -19792,7 +19792,7 @@ var theme = {
     "32": "32px"
   },
   radius: { "4": "4px", "8": "8px", "12": "12px", "16": "16px", full: "9999px" },
-  size: { "16": "16px", "20": "20px", "24": "24px", "28": "28px", "32": "32px", "40": "40px", "48": "48px", "240": "240px", "320": "320px", "400": "400px", "500": "500px" },
+  size: { "16": "16px", "20": "20px", "24": "24px", "28": "28px", "32": "32px", "40": "40px", "48": "48px", "64": "64px", "72": "72px", "160": "160px", "240": "240px", "320": "320px", "400": "400px", "500": "500px" },
   border: { hairline: "0.5px", focus: "2px", "focus-offset": "2px" },
   type: {
     family: '"Inter", system-ui, sans-serif',
@@ -20208,7 +20208,7 @@ var checkbox = {
   }
 };
 var w = { row: `${p}-switch-row`, root: `${p}-switch`, on: `${p}-switch--on`, thumb: `${p}-switch__thumb`, thumbOn: `${p}-switch__thumb--on` };
-var edge = (thumb2) => `calc(100% - ${v(thumb2)} - ${v("space-2")})`;
+var edge = (thumb3) => `calc(100% - ${v(thumb3)} - ${v("space-2")})`;
 var switchC = {
   id: "switch",
   content: "label",
@@ -20241,26 +20241,30 @@ var switchC = {
 var btn = (label, variant, icon = "none") => button.render({ label, variant, size: "md", icon, iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
 var dividerNode = () => divider.render({ orientation: "horizontal", spacing: "none" });
 var surface = { background: v("color-surface"), color: v("color-ink"), ...ringDecl, "border-radius": v("radius-8"), "font-family": v("type-family") };
-var m = { root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
+var m = { hint: `${p}-menu__shortcut`, root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
 var menu = {
   id: "menu",
   name: "Menu",
   description: "A list of actions. Items use 6px side padding, 4px top/bottom.",
   tags: ["navigation", "overlay-content"],
   status: "stable",
-  usage: 'Menu item horizontal padding is 6px, the one documented exception to the 4/8 grid. Use "---" on its own line for a divider.',
+  usage: 'Menu item horizontal padding is 6px, the one documented exception to the 4/8 grid. Use "---" on its own line for a divider and "Label | \u2318K" to show a shortcut hint on the right (exposed as aria-keyshortcuts).',
   composition: "Dividers inside a menu are Divider components.",
   props: [
-    { name: "items", type: "string (one per line)", default: "Rename\nDuplicate\n---\nDelete", description: 'Item labels, one per line. "---" inserts a divider.', control: { kind: "textarea" } },
+    { name: "items", type: "string (one per line)", default: "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", description: 'Item labels, one per line. Add " | shortcut" to show a keyboard hint on the right. "---" inserts a divider.', control: { kind: "textarea" } },
     { name: "active", type: "string", default: "", description: "Label of the highlighted item.", control: { kind: "text" } }
   ],
   rules: [
     { cls: m.root, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), "box-sizing": "border-box", padding: v("space-4"), "min-width": v("size-240"), ...surface, "border-radius": v("radius-12") } },
-    { cls: m.item, base: { "box-sizing": "border-box", "text-align": "left", width: "100%", "padding-block": v("space-4"), "padding-inline": v("space-6"), "border-radius": v("radius-8"), border: "none", background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus },
-    { cls: m.active, base: { background: v("color-control-strong") } }
+    { cls: m.item, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12"), "box-sizing": "border-box", "text-align": "left", width: "100%", "padding-block": v("space-4"), "padding-inline": v("space-6"), "border-radius": v("radius-8"), border: "none", background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus },
+    { cls: m.active, base: { background: v("color-control-strong") } },
+    { cls: m.hint, base: { color: v("color-ink-muted"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } }
   ],
   render(pr) {
-    const kids = lines(pr.items).map((l2) => l2 === "---" ? dividerNode() : n("button", l2 === pr.active ? [m.item, m.active] : [m.item], [l2], { type: "button", role: "menuitem" }));
+    const kids = lines(pr.items).map((l2) => l2 === "---" ? dividerNode() : (() => {
+      const [label, hint] = l2.split("|").map((x) => x.trim());
+      return n("button", label === pr.active ? [m.item, m.active] : [m.item], hint ? [label, n("span", [m.hint], [hint], { "aria-hidden": "true" })] : [label], hint ? { type: "button", role: "menuitem", "aria-keyshortcuts": hint } : { type: "button", role: "menuitem" });
+    })());
     return n("div", [m.root], kids, { role: "menu", "data-p8": "menu" });
   }
 };
@@ -20637,7 +20641,8 @@ var segmented = {
   }
 };
 var sl = { root: `${p}-slider` };
-var thumb = { "box-sizing": "border-box", width: v("size-16"), height: v("size-16"), "border-radius": v("radius-full"), border: "none", background: v("color-ink") };
+var thumb = { "box-sizing": "border-box", width: v("size-16"), height: v("size-16"), "border-radius": v("radius-full"), border: "none", background: v("color-ink"), transition: `width ${motion}` };
+var stretch = { width: v("size-24") };
 var track = { height: v("space-4"), "border-radius": v("radius-full"), background: v("color-control-strong") };
 var slider = {
   id: "slider",
@@ -20645,7 +20650,7 @@ var slider = {
   description: "Pick a value in a range (native range input).",
   tags: ["control", "form"],
   status: "stable",
-  usage: 'A native input type="range": arrow keys, Home/End and touch work without scripts.',
+  usage: 'A native input type="range": arrow keys, Home/End and touch work without scripts. The thumb stretches into a pill while you drag.',
   props: [
     P.text("label", "Value", "Accessible label."),
     P.text("value", "40", "Initial value."),
@@ -20665,6 +20670,8 @@ var slider = {
         { sel: "::-moz-range-track", decls: track },
         { sel: "::-webkit-slider-thumb", decls: { ...thumb, appearance: "none", "margin-top": `calc((${v("space-4")} - ${v("size-16")}) / 2)` } },
         { sel: "::-moz-range-thumb", decls: thumb },
+        { sel: ":active:not(:disabled)::-webkit-slider-thumb", decls: stretch },
+        { sel: ":active:not(:disabled)::-moz-range-thumb", decls: stretch },
         { sel: ":focus-visible::-webkit-slider-thumb", decls: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` } },
         { sel: ":focus-visible::-moz-range-thumb", decls: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` } }
       ]
@@ -21146,7 +21153,7 @@ var dropdown = {
   composition: "Trigger is a Button; the panel contains a Menu.",
   props: [
     P.text("trigger", "Actions", "Trigger label."),
-    P.area("items", "Rename\nDuplicate\n---\nDelete", 'Items one per line; "---" is a divider.', "string (one per line)"),
+    P.area("items", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", 'Items one per line; "---" is a divider.', "string (one per line)"),
     P.select("align", ["start", "end"], "start", "Which trigger edge the panel aligns to."),
     P.bool("open", true, "Initially open.")
   ],
@@ -21467,6 +21474,241 @@ var banner = {
   }
 };
 
+// src/lib/highlight.ts
+var RULES = [
+  [/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/y, "c"],
+  // comments
+  [/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/y, "s"],
+  // strings
+  [/<\/?[A-Za-z][\w.-]*/y, "t"],
+  // tags
+  [/--[\w-]+/y, "v"],
+  // css custom properties / tokens
+  [/\b(?:import|export|function|return|from|const)\b/y, "k"],
+  // js keywords
+  [/[\w:@-]+(?==)/y, "a"],
+  // attributes
+  [/[.#]?[\w-]+(?=\s*:)/y, "a"],
+  // css properties and selectors with pseudo
+  [/\b\d+(?:\.\d+)?(?:px|%|rem|em)?\b/y, "v"],
+  [/[{}()[\];,=<>/&:]+/y, "p"]
+  // punctuation
+];
+function tokenize(code) {
+  const out = [];
+  let i2 = 0;
+  let plain = "";
+  const flush = () => {
+    if (plain) {
+      out.push({ cls: "", text: plain });
+      plain = "";
+    }
+  };
+  while (i2 < code.length) {
+    let hit = false;
+    for (const [re, cls] of RULES) {
+      re.lastIndex = i2;
+      const m2 = re.exec(code);
+      if (m2 && m2[0].length) {
+        flush();
+        out.push({ cls, text: m2[0] });
+        i2 += m2[0].length;
+        hit = true;
+        break;
+      }
+    }
+    if (!hit) plain += code[i2++];
+  }
+  flush();
+  return out;
+}
+
+// src/components/extras.ts
+var tr = { root: `${p}-tree`, group: `${p}-tree__group`, item: `${p}-tree__item`, on: `${p}-tree__item--on`, active: `${p}-tree__item--active`, chev: `${p}-tree__chev`, icon: `${p}-tree__icon`, label: `${p}-tree__label` };
+var parseTree = (s2) => String(s2).split("\n").filter((l2) => l2.trim()).map((l2) => ({ label: l2.trim(), depth: Math.floor((l2.length - l2.trimStart().length) / 2) }));
+var treeView = {
+  id: "tree-view",
+  name: "Tree View",
+  description: "Folders and files you can expand and collapse.",
+  tags: ["navigation", "data"],
+  status: "stable",
+  usage: "Indent two spaces per level. Click or press Enter to open a folder; arrows move, Right opens or enters, Left closes or goes to the parent.",
+  props: [
+    P.area("items", "src\n  components\n    Button.tsx\n    Card.tsx\n  tokens\n    theme.ts\nREADME.md", "One entry per line; two spaces of indent per level.", "string (one per line)"),
+    P.text("selected", "Button.tsx", "Label of the selected item."),
+    P.select("expand", ["all", "none"], "all", "Whether folders start open.")
+  ],
+  rules: [
+    { cls: tr.root, base: { margin: "0", padding: "0", "list-style": "none", width: v("size-320"), "max-width": "100%", ...text("sm"), color: v("color-ink") } },
+    { cls: tr.group, base: { margin: "0", "margin-inline-start": v("space-16"), padding: "0", "list-style": "none" }, nested: [{ sel: "[hidden]", decls: { display: "none" } }] },
+    { cls: tr.item, base: { display: "flex", "align-items": "center", gap: v("space-8"), width: "100%", "box-sizing": "border-box", "padding-block": v("space-4"), "padding-inline": v("space-12"), border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), "text-align": "left", cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus },
+    { cls: tr.on, base: {}, nested: [{ sel: ` .${tr.chev}`, decls: { rotate: "90deg" } }] },
+    { cls: tr.active, base: { background: v("color-control-strong") } },
+    { cls: tr.chev, base: { display: "inline-flex", width: v("icon-sm"), height: v("icon-sm"), "flex-shrink": "0", color: v("color-ink-muted"), transition: `rotate ${motion}` } },
+    { cls: tr.icon, base: { display: "inline-flex", color: v("color-ink-muted") } },
+    { cls: tr.label, base: { "min-width": "0", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    iconRule
+  ],
+  render(pr) {
+    const rows = parseTree(pr.items);
+    const build = (from, depth) => {
+      const nodes = [];
+      let i2 = from;
+      while (i2 < rows.length && rows[i2].depth >= depth) {
+        if (rows[i2].depth > depth) {
+          i2++;
+          continue;
+        }
+        const row = rows[i2];
+        const hasKids = i2 + 1 < rows.length && rows[i2 + 1].depth > depth;
+        const kids = hasKids ? build(i2 + 1, depth + 1) : { nodes: [], next: i2 + 1 };
+        const open2 = hasKids && pr.expand === "all";
+        const active = row.label === pr.selected;
+        const cls = [tr.item, ...open2 ? [tr.on] : [], ...active ? [tr.active] : []];
+        const attrs = { type: "button", role: "treeitem", "aria-level": String(depth + 1), tabindex: active ? "0" : "-1" };
+        if (hasKids) attrs["aria-expanded"] = String(open2);
+        const item = n("button", cls, [
+          n("span", [tr.chev], hasKids ? [iconNode("chevron-right", 14)] : []),
+          n("span", [tr.icon], [iconNode(hasKids ? "folder" : "file", 16)]),
+          n("span", [tr.label], [row.label])
+        ], attrs);
+        const li = [item];
+        if (hasKids) li.push(n("ul", [tr.group], kids.nodes, open2 ? { role: "group" } : { role: "group", hidden: true }));
+        nodes.push(n("li", [], li, { role: "none" }));
+        i2 = kids.next;
+      }
+      return { nodes, next: i2 };
+    };
+    return n("ul", [tr.root], build(0, 0).nodes, { role: "tree", "aria-label": "Files", "data-p8": "tree" });
+  }
+};
+var sa = { root: `${p}-scroll`, row: `${p}-scroll__row` };
+var thumb2 = { background: v("color-ring-focus"), "border-radius": v("radius-full") };
+var scrollArea = {
+  id: "scroll-area",
+  name: "Scroll Area",
+  description: "A fixed-size region that scrolls, with thin quiet scrollbars.",
+  tags: ["layout", "container"],
+  status: "stable",
+  usage: "The region is focusable (tabindex 0) so keyboard users can scroll it with the arrow keys. Rows are placeholders; put your own content inside.",
+  props: [
+    P.select("height", ["160", "240", "320"], "160", "Height in px."),
+    P.select("direction", ["vertical", "horizontal"], "vertical", "Scroll axis."),
+    P.select("rows", ["12", "24", "48"], "24", "Number of placeholder rows.")
+  ],
+  rules: [
+    {
+      cls: sa.root,
+      base: { "box-sizing": "border-box", width: v("size-320"), "max-width": "100%", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), color: v("color-ink"), ...ringDecl, ...text("sm"), "overflow-y": "auto", "overflow-x": "hidden", "scrollbar-width": "thin", "scrollbar-color": `${v("color-ring-focus")} transparent` },
+      focus: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` },
+      nested: [{ sel: "::-webkit-scrollbar", decls: { width: v("space-8"), height: v("space-8") } }, { sel: "::-webkit-scrollbar-thumb", decls: thumb2 }, { sel: "::-webkit-scrollbar-track", decls: { background: "transparent" } }, { sel: "::-webkit-scrollbar-corner", decls: { background: "transparent" } }]
+    },
+    { cls: `${sa.root}--h160`, base: { height: v("size-160") } },
+    { cls: `${sa.root}--h240`, base: { height: v("size-240") } },
+    { cls: `${sa.root}--h320`, base: { height: v("size-320") } },
+    { cls: `${sa.root}--x`, base: { "overflow-x": "auto", "overflow-y": "hidden", display: "flex", gap: v("space-12") } },
+    { cls: sa.row, base: { "padding-block": v("space-4"), color: v("color-ink-muted"), "white-space": "nowrap" } }
+  ],
+  render(pr) {
+    const cls = [sa.root, `${sa.root}--h${pr.height}`, ...pr.direction === "horizontal" ? [`${sa.root}--x`] : []];
+    return n("div", cls, Array.from({ length: Number(pr.rows) }, (_, i2) => n("div", [sa.row], [`Row ${i2 + 1}`])), { role: "region", "aria-label": "Scrollable content", tabindex: "0" });
+  }
+};
+var tm = { root: `${p}-timer`, time: `${p}-timer__time`, done: `${p}-timer--done`, actions: `${p}-timer__actions` };
+var timer = {
+  id: "timer",
+  name: "Timer",
+  description: "A countdown or stopwatch with start, pause and reset.",
+  tags: ["content", "time"],
+  status: "stable",
+  usage: 'Countdown stops at 00:00 and fires a p8-timer-done event. Time shows as mm:ss, or h:mm:ss over an hour. role="timer" is not announced every second.',
+  composition: "Controls are ghost Buttons.",
+  props: [
+    P.select("mode", ["countdown", "stopwatch"], "countdown", "Count down from seconds, or count up from zero."),
+    P.text("seconds", "90", "Start value for a countdown, in seconds."),
+    P.bool("autostart", false, "Start running immediately."),
+    P.bool("controls", true, "Show Start/Pause and Reset.")
+  ],
+  rules: [
+    { cls: tm.root, base: { display: "inline-flex", "align-items": "center", gap: v("space-12"), color: v("color-ink"), ...text("md") } },
+    { cls: tm.time, base: { "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono"), "font-weight": v("type-weight-strong"), "font-variant-numeric": "tabular-nums", "min-width": v("size-64"), "text-align": "center" } },
+    { cls: tm.done, base: { color: v("color-ink-muted") } },
+    { cls: tm.actions, base: { display: "inline-flex", gap: v("space-8") } },
+    { cls: `${tm.root}__btn`, base: { "min-width": v("size-72") } }
+  ],
+  render(pr) {
+    const secs = Math.max(0, Math.floor(Number(pr.seconds) || 0));
+    const start = pr.mode === "stopwatch" ? 0 : secs;
+    const fmt = (s2) => s2 >= 3600 ? `${Math.floor(s2 / 3600)}:${String(Math.floor(s2 % 3600 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}` : `${String(Math.floor(s2 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}`;
+    const btn2 = (label, act) => {
+      const b2 = button.render({ label, variant: "ghost", size: "md", icon: "none", iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
+      return { ...b2, cls: [...b2.cls ?? [], `${tm.root}__btn`], attrs: { ...b2.attrs, "data-timer": act } };
+    };
+    const kids = [n("span", [tm.time], [fmt(start)], { "data-time": true })];
+    if (pr.controls) kids.push(n("span", [tm.actions], [btn2(pr.autostart ? "Pause" : "Start", "toggle"), btn2("Reset", "reset")]));
+    const attrs = { role: "timer", "aria-label": pr.mode === "stopwatch" ? "Stopwatch" : "Countdown", "data-p8": "timer", "data-mode": pr.mode, "data-seconds": String(secs) };
+    if (pr.autostart) attrs["data-autostart"] = true;
+    return n("div", [tm.root], kids, attrs);
+  }
+};
+var ie = { root: `${p}-inline`, view: `${p}-inline__view`, empty: `${p}-inline__view--empty`, pen: `${p}-inline__pen` };
+var inlineEdit = {
+  id: "inline-edit",
+  name: "Inline Edit",
+  description: "Text that turns into an input when you click it.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "Click or press Enter to edit; Enter or blur saves, Escape cancels. A p8-change event carries the new value.",
+  props: [P.text("value", "Click to edit", "Current text."), P.text("placeholder", "Add a title", "Shown when the value is empty."), P.text("label", "Title", "Accessible name of the input.")],
+  rules: [
+    { cls: ie.root, base: { display: "inline-grid", "max-width": "100%" } },
+    { cls: `${ie.root}__input`, base: { "grid-area": "1 / 1", "min-width": "0" }, nested: [{ sel: "[hidden]", decls: { display: "block", visibility: "hidden", "pointer-events": "none" } }] },
+    { cls: ie.view, base: { "grid-area": "1 / 1", display: "inline-flex", "align-items": "center", gap: v("space-8"), "padding-block": v("space-8"), "padding-inline": v("space-12"), border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), cursor: "text", ...text("sm") }, hover: { background: v("color-control") }, focus, nested: [{ sel: "[hidden]", decls: { visibility: "hidden", "pointer-events": "none" } }] },
+    { cls: ie.empty, base: { color: v("color-ink-muted") } },
+    { cls: ie.pen, base: { display: "inline-flex", color: v("color-ink-muted") } },
+    iconRule
+  ],
+  render(pr) {
+    const value = pr.value;
+    const view = n("button", value ? [ie.view] : [ie.view, ie.empty], [value || pr.placeholder, n("span", [ie.pen], [iconNode("edit", 14)])], { type: "button", "data-view": true, "aria-label": `${pr.label}: ${value || pr.placeholder}. Edit` });
+    const input3 = n("input", [i.root, `${ie.root}__input`], void 0, { type: "text", value, placeholder: pr.placeholder, "aria-label": pr.label, hidden: true, "data-edit": true });
+    return n("div", [ie.root], [view, input3], { "data-p8": "inline" });
+  }
+};
+var cd = { root: `${p}-code`, head: `${p}-code__head`, lang: `${p}-code__lang`, pre: `${p}-code__pre`, t: `${p}-code__tok-t`, k: `${p}-code__tok-k`, a: `${p}-code__tok-a`, s: `${p}-code__tok-s`, v: `${p}-code__tok-v`, p: `${p}-code__tok-p`, c: `${p}-code__tok-c` };
+var codeBlock = {
+  id: "code-block",
+  name: "Code Block",
+  description: "Code in the grey highlighter, with a copy button.",
+  tags: ["content", "code"],
+  status: "stable",
+  usage: "Highlights tags, attributes, strings, tokens and comments in greys only. The copy button copies exactly the code shown.",
+  composition: "Contains a Copy Button.",
+  props: [
+    P.area("code", '<p8-button variant="primary">Save</p8-button>', "The code to show."),
+    P.text("language", "html", "Label in the header. Empty to omit."),
+    P.bool("copy", true, "Show the copy button.")
+  ],
+  rules: [
+    { cls: cd.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", width: v("size-500"), "max-width": "100%", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), color: v("color-syntax-1"), ...ringDecl } },
+    { cls: cd.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: cd.lang, base: { color: v("color-ink-muted"), ...text("sm"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    { cls: cd.pre, base: { margin: "0", overflow: "auto", "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono"), "font-size": v("type-size-sm"), "line-height": v("type-line-sm"), "font-weight": v("type-weight"), color: v("color-syntax-1"), "scrollbar-width": "thin" }, focus },
+    ...["t", "k", "a", "s", "v", "p", "c"].map((k2) => ({ cls: cd[k2], base: { color: v(`color-syntax-${{ t: 1, k: 1, a: 2, s: 3, v: 3, p: 4, c: 4 }[k2]}`) } }))
+  ],
+  render(pr) {
+    const code = pr.code;
+    const toks = tokenize(code).map((t3) => t3.cls ? n("span", [cd[t3.cls]], [t3.text]) : t3.text);
+    const head = [n("span", [cd.lang], pr.language ? [pr.language] : [])];
+    if (pr.copy) head.push(copyButtonNode(code));
+    return n("div", [cd.root], [n("div", [cd.head], head), n("pre", [cd.pre], [n("code", [], toks)], { tabindex: "0", "aria-label": "Code" })], void 0);
+  }
+};
+function copyButtonNode(code) {
+  const b2 = copyButton.render({ text: code, label: "Copy", variant: "ghost" });
+  return b2;
+}
+
 // src/components/guidelines.ts
 var GUIDELINES = {
   button: { do: ["Use one primary button per view or dialog.", 'Start labels with a verb: "Save", "Invite".', "Use ghost for secondary actions next to a primary."], dont: ["Do not put two primary buttons side by side.", "Do not use an icon with no label here; use Icon Button."] },
@@ -21520,6 +21762,11 @@ var GUIDELINES = {
   "stat-card": { do: ["Show a change when the direction matters."], dont: ["Do not rely on color; the arrow carries direction."] },
   "avatar-group": { do: ["Use to show who is involved."], dont: ["Do not show more than five."] },
   "progress-ring": { do: ["Use where a bar would not fit."], dont: ["Do not use for more than one metric at a time."] },
+  "tree-view": { do: ["Use for hierarchies with two to four levels.", "Pre-select the current item."], dont: ["Do not use for flat lists; use List Row or Sidebar Nav.", "Do not nest deeper than five levels."] },
+  "scroll-area": { do: ["Give it a fixed height.", "Keep it focusable so the keyboard can scroll it."], dont: ["Do not nest scroll areas.", "Do not hide important actions below the fold of a scroll area."] },
+  timer: { do: ["Use a countdown for deadlines and a stopwatch for elapsed time.", "Listen for p8-timer-done to react when it ends."], dont: ["Do not announce every second to screen readers.", "Do not use for dates; show a date instead."] },
+  "inline-edit": { do: ["Use for names and titles that change rarely.", "Show a placeholder when empty."], dont: ["Do not use inside forms that have a Save button.", "Do not use for long text; use Textarea."] },
+  "code-block": { do: ["Show a language label.", "Keep snippets short enough to read at a glance."], dont: ["Do not paste whole files.", "Do not use for inline code in a sentence."] },
   banner: { do: ["Use one banner per page.", "Make it dismissible unless it is critical."], dont: ["Do not stack banners.", "Do not use for in-page notices; use Alert."] }
 };
 var MARKS = {
@@ -21545,16 +21792,22 @@ var MARKS = {
   popover: { since: "0.6.0" },
   "dropdown-menu": { since: "0.6.0" },
   sheet: { since: "0.6.0", mark: "refined" },
-  combobox: { since: "0.7.0", mark: "new" },
-  "number-input": { since: "0.7.0", mark: "new" },
-  "otp-input": { since: "0.7.0", mark: "new" },
-  stepper: { since: "0.7.0", mark: "new" },
-  rating: { since: "0.7.0", mark: "new" },
-  accordion: { since: "0.7.0", mark: "new" },
-  "stat-card": { since: "0.7.0", mark: "new" },
-  "avatar-group": { since: "0.7.0", mark: "new" },
-  "progress-ring": { since: "0.7.0", mark: "new" },
-  banner: { since: "0.7.0", mark: "new" }
+  "tree-view": { since: "0.8.0", mark: "new" },
+  "scroll-area": { since: "0.8.0", mark: "new" },
+  timer: { since: "0.8.0", mark: "new" },
+  "inline-edit": { since: "0.8.0", mark: "new" },
+  "code-block": { since: "0.8.0", mark: "new" },
+  slider: { since: "0.4.0", mark: "refined" },
+  combobox: { since: "0.7.0" },
+  "number-input": { since: "0.7.0" },
+  "otp-input": { since: "0.7.0" },
+  stepper: { since: "0.7.0" },
+  rating: { since: "0.7.0" },
+  accordion: { since: "0.7.0" },
+  "stat-card": { since: "0.7.0" },
+  "avatar-group": { since: "0.7.0" },
+  "progress-ring": { since: "0.7.0" },
+  banner: { since: "0.7.0" }
 };
 
 // src/components/types.ts
@@ -21631,7 +21884,12 @@ var components = [
   statCard,
   avatarGroup,
   progressRing,
-  banner
+  banner,
+  treeView,
+  scrollArea,
+  timer,
+  inlineEdit,
+  codeBlock
 ];
 for (const c3 of components) {
   c3.guidelines = GUIDELINES[c3.id];
@@ -21651,7 +21909,7 @@ function usedClasses(node2, acc = []) {
 var GRID_SPACE = ["space-4", "space-6", "space-8", "space-12", "space-16", "space-20", "space-24", "space-32"];
 var RADII = ["radius-4", "radius-8", "radius-12", "radius-16", "radius-full"];
 var GAPS2 = ["space-4", "space-8", "space-12"];
-var RULES = [
+var RULES2 = [
   { id: "tokens-only", title: "Named tokens only", statement: "Component styles never contain raw hex, rgb, px or rem values. Everything references a named token (var(--p8-\u2026)). Changing the theme file changes every app." },
   { id: "grid", title: "4 / 8 grid", statement: "padding, margin and gap use space-4, 8, 12, 16, 20, 24 or 32 (plus space-6 for menu items only). Radius is 4, 8, 12, 16 or full. space-2 exists only for insets (top/left) and is never used for padding, margin or gap." },
   { id: "control-padding", title: "Controls: 12px left and right", statement: "Every clickable control with horizontal padding (button, input, textarea, select, icon button, tab, segment, page button, list row\u2026) uses padding-inline: space-12. Top and bottom are space-8 (md) or space-12 (lg)." },
@@ -21983,6 +22241,84 @@ var KINDS = {
     rSet(g, items[i]);
     items[i].focus();
   }, ${SIG});`,
+  tree: `
+  function tItems(t) { return Array.from(t.querySelectorAll('[role="treeitem"]')).filter(function (x) { return !x.closest('[role="group"][hidden]'); }); }
+  function tGroup(it) { var g = it.nextElementSibling; return g && g.getAttribute('role') === 'group' ? g : null; }
+  function tOpen(it, open) { var g = tGroup(it); if (!g) return; g.hidden = !open; it.setAttribute('aria-expanded', String(open)); it.classList.toggle('p8-tree__item--on', open); }
+  function tSelect(t, it) { Array.from(t.querySelectorAll('[role="treeitem"]')).forEach(function (x) { x.classList.toggle('p8-tree__item--active', x === it); x.tabIndex = x === it ? 0 : -1; }); }
+  root.addEventListener('click', function (e) {
+    var it = cl(e, '[data-p8~="tree"] [role="treeitem"]');
+    if (!it) return;
+    if (tGroup(it)) tOpen(it, it.getAttribute('aria-expanded') !== 'true');
+    tSelect(it.closest('[data-p8~="tree"]'), it);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var it = cl(e, '[data-p8~="tree"] [role="treeitem"]');
+    if (!it) return;
+    var t = it.closest('[data-p8~="tree"]'), list = tItems(t), i = list.indexOf(it), k = e.key, g = tGroup(it), open = it.getAttribute('aria-expanded') === 'true';
+    if (k === 'ArrowDown') i = Math.min(list.length - 1, i + 1);
+    else if (k === 'ArrowUp') i = Math.max(0, i - 1);
+    else if (k === 'Home') i = 0;
+    else if (k === 'End') i = list.length - 1;
+    else if (k === 'ArrowRight') { if (g && !open) { tOpen(it, true); e.preventDefault(); return; } if (g && open) i = i + 1; else return; }
+    else if (k === 'ArrowLeft') { if (g && open) { tOpen(it, false); e.preventDefault(); return; } var par = it.closest('[role="group"]'); if (par && par.previousElementSibling) i = list.indexOf(par.previousElementSibling); else return; }
+    else return;
+    e.preventDefault();
+    if (list[i]) { list[i].focus(); tSelect(t, list[i]); }
+  }, ${SIG});`,
+  timer: `
+  function tFmt(s) { var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; var pad = function (n) { return (n < 10 ? '0' : '') + n; }; return h > 0 ? h + ':' + pad(m) + ':' + pad(x) : pad(m) + ':' + pad(x); }
+  all('[data-p8~="timer"]').forEach(function (t) {
+    var down = t.getAttribute('data-mode') !== 'stopwatch', start = Number(t.getAttribute('data-seconds')) || 0;
+    var cur = down ? start : 0, run = false, id = null, el = t.querySelector('[data-time]'), btn = t.querySelector('[data-timer="toggle"]');
+    function paint() { el.textContent = tFmt(cur); t.classList.toggle('p8-timer--done', down && cur === 0); }
+    function stop() { run = false; clearInterval(id); if (btn) btn.textContent = 'Start'; }
+    function tick() {
+      if (down) { cur = Math.max(0, cur - 1); if (cur === 0) { stop(); t.dispatchEvent(new CustomEvent('p8-timer-done', { bubbles: true })); } } else cur++;
+      paint();
+    }
+    function go() { if (run || (down && cur === 0)) return; run = true; id = setInterval(tick, 1000); timers.push(id); if (btn) btn.textContent = 'Pause'; }
+    t.__p8 = { toggle: function () { run ? stop() : go(); }, reset: function () { stop(); cur = down ? start : 0; paint(); } };
+    paint();
+    if (t.hasAttribute('data-autostart')) go();
+  });
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="timer"] [data-timer]');
+    if (!b) return;
+    var t = b.closest('[data-p8~="timer"]');
+    if (t.__p8) t.__p8[b.getAttribute('data-timer')]();
+  }, ${SIG});`,
+  inline: `
+  function iDone(w, save) {
+    var inp = w.querySelector('[data-edit]'), view = w.querySelector('[data-view]');
+    if (inp.hidden) return;
+    var label = inp.getAttribute('aria-label'), ph = inp.getAttribute('placeholder') || '';
+    if (save) {
+      var val = inp.value.trim();
+      view.firstChild.textContent = val || ph;
+      view.classList.toggle('p8-inline__view--empty', !val);
+      view.setAttribute('aria-label', label + ': ' + (val || ph) + '. Edit');
+      w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: val } }));
+    } else inp.value = inp.getAttribute('data-old') || '';
+    inp.hidden = true; view.hidden = false; view.focus();
+  }
+  root.addEventListener('click', function (e) {
+    var v = cl(e, '[data-p8~="inline"] [data-view]');
+    if (!v) return;
+    var w = v.closest('[data-p8~="inline"]'), inp = w.querySelector('[data-edit]');
+    inp.setAttribute('data-old', inp.value);
+    v.hidden = true; inp.hidden = false; inp.focus(); inp.select();
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var inp = cl(e, '[data-p8~="inline"] [data-edit]');
+    if (!inp) return;
+    if (e.key === 'Enter') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), true); }
+    else if (e.key === 'Escape') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), false); }
+  }, ${SIG});
+  root.addEventListener('focusout', function (e) {
+    var inp = cl(e, '[data-p8~="inline"] [data-edit]');
+    if (inp) iDone(inp.closest('[data-p8~="inline"]'), true);
+  }, ${SIG});`,
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
@@ -22021,7 +22357,7 @@ function runtime(node2) {
 ${needsPairs ? `  var PAIRS = ${JSON.stringify(pairs().filter(([b2]) => ruleMapHasAny(b2, node2)))};
   function setOn(el, on) { PAIRS.forEach(function (p) { if (el.classList && el.classList.contains(p[0])) el.classList.toggle(p[0] + p[1], on); }); }` : ""}
 ${body}
-  return function () { ac.abort(); timers.forEach(clearTimeout); };
+  return function () { ac.abort(); timers.forEach(function (x) { clearTimeout(x); clearInterval(x); }); };
 }`;
 }
 function ruleMapHasAny(base2, node2) {
@@ -22163,9 +22499,9 @@ function derive(ink, canvas, mode) {
     ring: `${mix(ink, canvas, dark ? 0.5 : 0.57)}40`,
     "ring-focus": `${mix(ink, canvas, dark ? 0.5 : 0.57)}4D`,
     "syntax-1": ink,
-    "syntax-2": mix(ink, canvas, 0.3),
-    "syntax-3": mix(ink, canvas, 0.52),
-    "syntax-4": mix(ink, canvas, 0.67)
+    "syntax-2": mix(ink, muted, 0.4),
+    "syntax-3": mix(ink, muted, 0.75),
+    "syntax-4": muted
   };
 }
 function buildTheme(input3 = {}) {
@@ -22384,10 +22720,17 @@ function attrString(node2, mode) {
   }
   return parts.length ? " " + parts.join(" ") : "";
 }
+function inlineMarkup(node2, mode) {
+  if (typeof node2 === "string") return esc2(node2, mode === "react");
+  const a2 = attrString(node2, mode);
+  const kids = node2.children ?? [];
+  return kids.length ? `<${node2.tag}${a2}>${kids.map((k2) => inlineMarkup(k2, mode)).join("")}</${node2.tag}>` : `<${node2.tag}${a2}></${node2.tag}>`;
+}
 function markup(node2, mode, depth = 0) {
   if (mode === "react" && typeof node2 !== "string") node2 = reactify(node2);
   const pad = "  ".repeat(depth);
   if (typeof node2 === "string") return pad + esc2(node2, mode === "react");
+  if (node2.tag === "pre") return `${pad}${inlineMarkup(node2, mode)}`;
   const a2 = attrString(node2, mode);
   const kids = node2.children ?? [];
   if (!kids.length) return VOID.has(node2.tag) ? `${pad}<${node2.tag}${a2} />` : `${pad}<${node2.tag}${a2}></${node2.tag}>`;
@@ -22597,7 +22940,7 @@ function getCode(input3) {
     throw e;
   }
 }
-var getRules = () => ({ rules: RULES, exceptions: EXCEPTIONS, grid: { space: GRID_SPACE, radius: RADII, gaps: GAPS2 }, guidelines: Object.fromEntries(components.map((c3) => [c3.id, c3.guidelines])) });
+var getRules = () => ({ rules: RULES2, exceptions: EXCEPTIONS, grid: { space: GRID_SPACE, radius: RADII, gaps: GAPS2 }, guidelines: Object.fromEntries(components.map((c3) => [c3.id, c3.guidelines])) });
 var SYNONYMS = {
   modal: ["dialog"],
   popup: ["dialog", "popover"],
@@ -22621,6 +22964,9 @@ var SYNONYMS = {
   wizard: ["stepper"],
   onboarding: ["stepper"],
   pin: ["otp-input"],
+  otp: ["otp-input"],
+  "one-time": ["otp-input"],
+  verification: ["otp-input"],
   code: ["otp-input", "copy-button"],
   quantity: ["number-input"],
   stars: ["rating"],

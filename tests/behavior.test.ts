@@ -233,4 +233,86 @@ describe('generated behavior', () => {
     $('button').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
     expect($('[role=tooltip]')).not.toBeNull();
   });
+
+  it('tree expands, collapses and navigates with the keyboard', () => {
+    mount('tree-view', { items: 'src\n  a.ts\n  b.ts\nREADME.md', expand: 'none', selected: '' });
+    const items = $$('[role=treeitem]');
+    const folder = items[0];
+    expect(folder.getAttribute('aria-expanded')).toBe('false');
+    expect($('[role=group]').hidden).toBe(true);
+    click(folder);
+    expect(folder.getAttribute('aria-expanded')).toBe('true');
+    expect($('[role=group]').hidden).toBe(false);
+    expect(folder.classList.contains('p8-tree__item--on')).toBe(true);
+    folder.focus();
+    key(folder, 'ArrowRight');
+    expect(document.activeElement).toBe(items[1]);
+    key(items[1], 'ArrowLeft');
+    expect(document.activeElement).toBe(folder);
+    key(folder, 'ArrowLeft');
+    expect(folder.getAttribute('aria-expanded')).toBe('false');
+    key(folder, 'End');
+    expect(document.activeElement).toBe(items[3]);
+    expect(items[3].classList.contains('p8-tree__item--active')).toBe(true);
+  });
+
+  it('timer counts down, pauses, resets and fires done', () => {
+    vi.useFakeTimers();
+    mount('timer', { seconds: '3' });
+    const time = $('[data-time]');
+    const done = vi.fn();
+    document.addEventListener('p8-timer-done', done);
+    expect(time.textContent).toBe('00:03');
+    click($('[data-timer=toggle]'));
+    vi.advanceTimersByTime(1000);
+    expect(time.textContent).toBe('00:02');
+    expect($('[data-timer=toggle]').textContent).toBe('Pause');
+    click($('[data-timer=toggle]'));
+    vi.advanceTimersByTime(5000);
+    expect(time.textContent).toBe('00:02');
+    click($('[data-timer=toggle]'));
+    vi.advanceTimersByTime(2000);
+    expect(time.textContent).toBe('00:00');
+    expect(done).toHaveBeenCalled();
+    expect($('[data-timer=toggle]').textContent).toBe('Start');
+    click($('[data-timer=reset]'));
+    expect(time.textContent).toBe('00:03');
+    document.removeEventListener('p8-timer-done', done);
+  });
+
+  it('stopwatch counts up and formats hours', () => {
+    vi.useFakeTimers();
+    mount('timer', { mode: 'stopwatch', autostart: true });
+    vi.advanceTimersByTime(65000);
+    expect($('[data-time]').textContent).toBe('01:05');
+  });
+
+  it('inline edit saves on Enter, cancels on Escape', () => {
+    mount('inline-edit', { value: 'Old', label: 'Title' });
+    const view = $('[data-view]'), input = $('[data-edit]') as HTMLInputElement;
+    const changed = vi.fn();
+    document.addEventListener('p8-change', (e) => changed((e as CustomEvent).detail.value));
+    click(view);
+    expect(input.hidden).toBe(false);
+    expect(view.hidden).toBe(true);
+    input.value = 'New name';
+    key(input, 'Enter');
+    expect(view.textContent).toContain('New name');
+    expect(view.hidden).toBe(false);
+    expect(changed).toHaveBeenCalledWith('New name');
+    click(view);
+    input.value = 'Discard me';
+    key(input, 'Escape');
+    expect(view.textContent).toContain('New name');
+    expect(input.value).toBe('New name');
+  });
+
+  it('code block copies exactly the code shown', () => {
+    const writeText = vi.fn();
+    Object.defineProperty(window.navigator, 'clipboard', { value: { writeText }, configurable: true });
+    mount('code-block', { code: '<p8-button>Hi</p8-button>' });
+    expect($('pre').textContent).toBe('<p8-button>Hi</p8-button>');
+    click($('[data-p8~=copy]'));
+    expect(writeText).toHaveBeenCalledWith('<p8-button>Hi</p8-button>');
+  });
 });

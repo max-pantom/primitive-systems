@@ -306,6 +306,87 @@ const KINDS: Record<string, string> = {
     items[i].focus();
   }, ${SIG});`,
 
+  tree: `
+  function tItems(t) { return Array.from(t.querySelectorAll('[role="treeitem"]')).filter(function (x) { return !x.closest('[role="group"][hidden]'); }); }
+  function tGroup(it) { var g = it.nextElementSibling; return g && g.getAttribute('role') === 'group' ? g : null; }
+  function tOpen(it, open) { var g = tGroup(it); if (!g) return; g.hidden = !open; it.setAttribute('aria-expanded', String(open)); it.classList.toggle('p8-tree__item--on', open); }
+  function tSelect(t, it) { Array.from(t.querySelectorAll('[role="treeitem"]')).forEach(function (x) { x.classList.toggle('p8-tree__item--active', x === it); x.tabIndex = x === it ? 0 : -1; }); }
+  root.addEventListener('click', function (e) {
+    var it = cl(e, '[data-p8~="tree"] [role="treeitem"]');
+    if (!it) return;
+    if (tGroup(it)) tOpen(it, it.getAttribute('aria-expanded') !== 'true');
+    tSelect(it.closest('[data-p8~="tree"]'), it);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var it = cl(e, '[data-p8~="tree"] [role="treeitem"]');
+    if (!it) return;
+    var t = it.closest('[data-p8~="tree"]'), list = tItems(t), i = list.indexOf(it), k = e.key, g = tGroup(it), open = it.getAttribute('aria-expanded') === 'true';
+    if (k === 'ArrowDown') i = Math.min(list.length - 1, i + 1);
+    else if (k === 'ArrowUp') i = Math.max(0, i - 1);
+    else if (k === 'Home') i = 0;
+    else if (k === 'End') i = list.length - 1;
+    else if (k === 'ArrowRight') { if (g && !open) { tOpen(it, true); e.preventDefault(); return; } if (g && open) i = i + 1; else return; }
+    else if (k === 'ArrowLeft') { if (g && open) { tOpen(it, false); e.preventDefault(); return; } var par = it.closest('[role="group"]'); if (par && par.previousElementSibling) i = list.indexOf(par.previousElementSibling); else return; }
+    else return;
+    e.preventDefault();
+    if (list[i]) { list[i].focus(); tSelect(t, list[i]); }
+  }, ${SIG});`,
+
+  timer: `
+  function tFmt(s) { var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; var pad = function (n) { return (n < 10 ? '0' : '') + n; }; return h > 0 ? h + ':' + pad(m) + ':' + pad(x) : pad(m) + ':' + pad(x); }
+  all('[data-p8~="timer"]').forEach(function (t) {
+    var down = t.getAttribute('data-mode') !== 'stopwatch', start = Number(t.getAttribute('data-seconds')) || 0;
+    var cur = down ? start : 0, run = false, id = null, el = t.querySelector('[data-time]'), btn = t.querySelector('[data-timer="toggle"]');
+    function paint() { el.textContent = tFmt(cur); t.classList.toggle('p8-timer--done', down && cur === 0); }
+    function stop() { run = false; clearInterval(id); if (btn) btn.textContent = 'Start'; }
+    function tick() {
+      if (down) { cur = Math.max(0, cur - 1); if (cur === 0) { stop(); t.dispatchEvent(new CustomEvent('p8-timer-done', { bubbles: true })); } } else cur++;
+      paint();
+    }
+    function go() { if (run || (down && cur === 0)) return; run = true; id = setInterval(tick, 1000); timers.push(id); if (btn) btn.textContent = 'Pause'; }
+    t.__p8 = { toggle: function () { run ? stop() : go(); }, reset: function () { stop(); cur = down ? start : 0; paint(); } };
+    paint();
+    if (t.hasAttribute('data-autostart')) go();
+  });
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="timer"] [data-timer]');
+    if (!b) return;
+    var t = b.closest('[data-p8~="timer"]');
+    if (t.__p8) t.__p8[b.getAttribute('data-timer')]();
+  }, ${SIG});`,
+
+  inline: `
+  function iDone(w, save) {
+    var inp = w.querySelector('[data-edit]'), view = w.querySelector('[data-view]');
+    if (inp.hidden) return;
+    var label = inp.getAttribute('aria-label'), ph = inp.getAttribute('placeholder') || '';
+    if (save) {
+      var val = inp.value.trim();
+      view.firstChild.textContent = val || ph;
+      view.classList.toggle('p8-inline__view--empty', !val);
+      view.setAttribute('aria-label', label + ': ' + (val || ph) + '. Edit');
+      w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: val } }));
+    } else inp.value = inp.getAttribute('data-old') || '';
+    inp.hidden = true; view.hidden = false; view.focus();
+  }
+  root.addEventListener('click', function (e) {
+    var v = cl(e, '[data-p8~="inline"] [data-view]');
+    if (!v) return;
+    var w = v.closest('[data-p8~="inline"]'), inp = w.querySelector('[data-edit]');
+    inp.setAttribute('data-old', inp.value);
+    v.hidden = true; inp.hidden = false; inp.focus(); inp.select();
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var inp = cl(e, '[data-p8~="inline"] [data-edit]');
+    if (!inp) return;
+    if (e.key === 'Enter') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), true); }
+    else if (e.key === 'Escape') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), false); }
+  }, ${SIG});
+  root.addEventListener('focusout', function (e) {
+    var inp = cl(e, '[data-p8~="inline"] [data-edit]');
+    if (inp) iDone(inp.closest('[data-p8~="inline"]'), true);
+  }, ${SIG});`,
+
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
@@ -350,7 +431,7 @@ export function runtime(node: Node): string {
 ${needsPairs ? `  var PAIRS = ${JSON.stringify(pairs().filter(([b]) => ruleMapHasAny(b, node)))};
   function setOn(el, on) { PAIRS.forEach(function (p) { if (el.classList && el.classList.contains(p[0])) el.classList.toggle(p[0] + p[1], on); }); }` : ''}
 ${body}
-  return function () { ac.abort(); timers.forEach(clearTimeout); };
+  return function () { ac.abort(); timers.forEach(function (x) { clearTimeout(x); clearInterval(x); }); };
 }`;
 }
 

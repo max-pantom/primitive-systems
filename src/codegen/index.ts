@@ -151,10 +151,19 @@ function attrString(node: Node, mode: Mode): string {
   return parts.length ? ' ' + parts.join(' ') : '';
 }
 
+/** Whitespace is significant inside <pre>: serialize children with no indentation or newlines. */
+function inlineMarkup(node: Node | string, mode: Mode): string {
+  if (typeof node === 'string') return esc(node, mode === 'react');
+  const a = attrString(node, mode);
+  const kids = node.children ?? [];
+  return kids.length ? `<${node.tag}${a}>${kids.map((k) => inlineMarkup(k, mode)).join('')}</${node.tag}>` : `<${node.tag}${a}></${node.tag}>`;
+}
+
 export function markup(node: Node | string, mode: Mode, depth = 0): string {
   if (mode === 'react' && typeof node !== 'string') node = reactify(node);
   const pad = '  '.repeat(depth);
   if (typeof node === 'string') return pad + esc(node, mode === 'react');
+  if (node.tag === 'pre') return `${pad}${inlineMarkup(node, mode)}`;
   const a = attrString(node, mode);
   const kids = node.children ?? [];
   if (!kids.length) return VOID.has(node.tag) ? `${pad}<${node.tag}${a} />` : `${pad}<${node.tag}${a}></${node.tag}>`;

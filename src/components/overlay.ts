@@ -43,7 +43,7 @@ export const dropdown: ComponentDef = {
   composition: 'Trigger is a Button; the panel contains a Menu.',
   props: [
     P.text('trigger', 'Actions', 'Trigger label.'),
-    P.area('items', 'Rename\nDuplicate\n---\nDelete', 'Items one per line; "---" is a divider.', 'string (one per line)'),
+    P.area('items', 'Rename | ⌘R\nDuplicate | ⌘D\n---\nDelete | ⌫', 'Items one per line; "---" is a divider.', 'string (one per line)'),
     P.select('align', ['start', 'end'], 'start', 'Which trigger edge the panel aligns to.'),
     P.bool('open', true, 'Initially open.'),
   ],

@@ -114,11 +114,12 @@ export const segmented: ComponentDef = {
 
 /* ---------- Slider ---------- */
 const sl = { root: `${p}-slider` };
-const thumb = { 'box-sizing': 'border-box', width: v('size-16'), height: v('size-16'), 'border-radius': v('radius-full'), border: 'none', background: v('color-ink') };
+const thumb = { 'box-sizing': 'border-box', width: v('size-16'), height: v('size-16'), 'border-radius': v('radius-full'), border: 'none', background: v('color-ink'), transition: `width ${motion}` };
+const stretch = { width: v('size-24') };
 const track = { height: v('space-4'), 'border-radius': v('radius-full'), background: v('color-control-strong') };
 export const slider: ComponentDef = {
   id: 'slider', name: 'Slider', description: 'Pick a value in a range (native range input).', tags: ['control', 'form'], status: 'stable',
-  usage: 'A native input type="range": arrow keys, Home/End and touch work without scripts.',
+  usage: 'A native input type="range": arrow keys, Home/End and touch work without scripts. The thumb stretches into a pill while you drag.',
   props: [
     P.text('label', 'Value', 'Accessible label.'),
     P.text('value', '40', 'Initial value.'),
@@ -134,6 +135,8 @@ export const slider: ComponentDef = {
         { sel: '::-moz-range-track', decls: track },
         { sel: '::-webkit-slider-thumb', decls: { ...thumb, appearance: 'none', 'margin-top': `calc((${v('space-4')} - ${v('size-16')}) / 2)` } },
         { sel: '::-moz-range-thumb', decls: thumb },
+        { sel: ':active:not(:disabled)::-webkit-slider-thumb', decls: stretch },
+        { sel: ':active:not(:disabled)::-moz-range-thumb', decls: stretch },
         { sel: ':focus-visible::-webkit-slider-thumb', decls: { 'box-shadow': `0 0 0 ${v('border-focus')} ${v('color-ring-focus')}` } },
         { sel: ':focus-visible::-moz-range-thumb', decls: { 'box-shadow': `0 0 0 ${v('border-focus')} ${v('color-ring-focus')}` } },
       ] },

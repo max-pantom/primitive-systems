@@ -5,5 +5,5 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   integrations: [react(), svelte()],
-  vite: { plugins: [tailwindcss()] },
+  vite: { plugins: [tailwindcss()], server: { proxy: { '/api': 'http://localhost:4322', '/mcp': 'http://localhost:4322' } } },
 });

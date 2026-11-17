@@ -78,3 +78,8 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Avatar Group | `avatar-group` | pass | pass | yes |
 | Progress Ring | `progress-ring` | pass | pass | yes |
 | Banner | `banner` | pass | pass | yes |
+| Tree View | `tree-view` | pass | pass | yes |
+| Scroll Area | `scroll-area` | pass | pass | yes |
+| Timer | `timer` | pass | pass | yes |
+| Inline Edit | `inline-edit` | pass | pass | yes |
+| Code Block | `code-block` | pass | pass | yes |
