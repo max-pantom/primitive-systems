@@ -92,3 +92,11 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Timeline | `timeline` | pass | pass | yes |
 | Context Menu | `context-menu` | pass | pass | yes |
 | Hover Card | `hover-card` | pass | pass | yes |
+| Password Input | `password-input` | pass | pass | yes |
+| Data Table | `data-table` | pass | pass | yes |
+| Date Range Picker | `date-range-picker` | pass | pass | yes |
+| Resizable Panels | `resizable-panels` | pass | pass | yes |
+| Sortable List | `sortable-list` | pass | pass | yes |
+| Filter Bar | `filter-bar` | pass | pass | yes |
+| Notification List | `notification-list` | pass | pass | yes |
+| Image Viewer | `image-viewer` | pass | pass | yes |

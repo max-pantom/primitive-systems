@@ -1,5 +1,12 @@
 # Progress
 
+## 0.10.0 — app components
+
+- Eight new components → 74 total: Password Input (show/hide, live requirement checks, autocomplete), Data Table (sorting, row selection with select-all, column visibility, bulk actions via `p8-action`), Date Range Picker (start/end fields, range highlight, typed dates, auto-swap), Resizable Panels (pointer drag and arrow keys, `p8-resize`), Sortable List (handle drag with mouse/pen/touch and arrow/Home/End keys, announced moves), Filter Bar (field/value pickers, chips, clear-all, `p8-change`), Notification List (unread dots, mark one/all read, `p8-read`) and Image Viewer (thumbnail grid and lightbox with captions, ←/→, focus return).
+- Each component's interactions are in the shared runtime, so they work the same in the docs, every generated framework output and `<p8-*>`. The keyboard report now covers focusable widgets that are not buttons, such as the resize divider.
+- Tests: jsdom tests cover each component's interactions, and a Playwright test covers real pointer drags, sorting, range picking, the lightbox and password reveal. None of the 924 existing codegen snapshots changed.
+- Verification: 1,348 Vitest tests, type checking, the 74-component rule audit (0 violations), the production build and all 19 Playwright checks pass, including the layout-shift guard over every new control.
+
 ## 0.9.0 — pickers and changelog
 
 - Nine new components: Date Picker, Time Picker, Multi-select, File Upload, Swatch Picker, Carousel, Timeline, Context Menu and Hover Card → 66 total. All share the seed tokens, six framework generators and per-component guidelines.

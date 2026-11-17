@@ -2,6 +2,10 @@
 export interface Release { version: string; title: string; items: string[] }
 
 export const RELEASES: Release[] = [
+  { version: '0.10.0', title: 'App components: data table, range picker, panels', items: [
+    'New: Password Input (show/hide, live requirements), Data Table (sorting, row selection, column visibility, bulk actions), Date Range Picker, Resizable Panels, Sortable List (drag and keyboard), Filter Bar, Notification List, Image Viewer (lightbox).',
+    'Keyboard reports cover focusable widgets that are not buttons (the resize divider).',
+  ] },
   { version: '0.9.0', title: 'Pickers, carousel, timeline, context menu', items: [
     'New: Date Picker (calendar popover), Time Picker, Multi-select with chips, File Upload (dropzone + list), Swatch Picker, Carousel, Timeline, Context Menu, Hover Card.',
     'Changelog page at /changelog, GET /api/changelog and the get_changelog tool.',

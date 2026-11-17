@@ -393,3 +393,184 @@ describe('0.9 interactions', () => {
     expect(document.activeElement).toBe($('[data-area]'));
   });
 });
+
+describe('0.10.0 components', () => {
+  const input = (el: HTMLInputElement, value: string) => { el.value = value; el.dispatchEvent(new Event('input', { bubbles: true })); };
+  const change = (el: HTMLElement) => el.dispatchEvent(new Event('change', { bubbles: true }));
+
+  it('password input reveals text and checks requirements live', () => {
+    mount('password-input', { value: '' });
+    const field = $('[data-password]') as HTMLInputElement, eye = $('[data-reveal]');
+    expect(field.type).toBe('password');
+    click(eye);
+    expect(field.type).toBe('text');
+    expect(eye.getAttribute('aria-pressed')).toBe('true');
+    expect(eye.getAttribute('aria-label')).toBe('Hide password');
+    click(eye);
+    expect(field.type).toBe('password');
+    let detail: any;
+    document.body.addEventListener('p8-change', (e) => { detail = (e as CustomEvent).detail; });
+    input(field, 'abc');
+    expect($$('.p8-password__rule--on')).toHaveLength(0);
+    expect(detail.valid).toBe(false);
+    input(field, 'Abcdefg1!');
+    expect($$('.p8-password__rule--on')).toHaveLength(4);
+    expect(detail.valid).toBe(true);
+  });
+
+  it('data table sorts, selects, runs bulk actions and hides columns', () => {
+    mount('data-table');
+    const names = () => $$('tbody tr').map((r) => r.querySelector('td[data-col="0"]')!.textContent);
+    click($('[data-sort="0"]'));
+    expect(names()).toEqual(['Ada Lovelace', 'Alan Turing', 'Grace Hopper', 'Katherine Johnson']);
+    expect($('th[data-col="0"]').getAttribute('aria-sort')).toBe('ascending');
+    click($('[data-sort="0"]'));
+    expect(names()[0]).toBe('Katherine Johnson');
+    click($('[data-sort="2"]'));
+    expect(names()).toEqual(['Grace Hopper', 'Ada Lovelace', 'Katherine Johnson', 'Alan Turing']);
+    expect($('th[data-col="0"]').getAttribute('aria-sort')).toBe('none');
+    const action = $('[data-action="Delete"]') as HTMLButtonElement;
+    expect(action.disabled).toBe(true);
+    click($$('[data-pick]')[0]);
+    expect($('[data-count]').textContent).toBe('1 selected');
+    expect($('[data-all]').getAttribute('aria-checked')).toBe('mixed');
+    expect($$('tbody tr')[0].classList.contains('p8-dtable__row--on')).toBe(true);
+    expect(action.disabled).toBe(false);
+    let detail: any;
+    document.body.addEventListener('p8-action', (e) => { detail = (e as CustomEvent).detail; });
+    click(action);
+    expect(detail).toEqual({ action: 'Delete', rows: [1] });
+    click($('[data-all]'));
+    expect($('[data-count]').textContent).toBe('4 selected');
+    expect($('[data-all]').getAttribute('aria-checked')).toBe('true');
+    click($('[data-all]'));
+    expect($('[data-count]').textContent).toBe('0 selected');
+    const colBox = $('[role=checkbox][data-col="1"]');
+    click(colBox);
+    expect($$('[data-col="1"]:is(th, td)').every((c) => c.hidden)).toBe(true);
+    click(colBox);
+    expect($$('[data-col="1"]:is(th, td)').some((c) => c.hidden)).toBe(false);
+    click($('[role=checkbox][data-col="0"]')); click($('[role=checkbox][data-col="1"]')); click($('[role=checkbox][data-col="2"]'));
+    expect($$('th[data-col]').filter((c) => !c.hidden)).toHaveLength(1);
+  });
+
+  it('date range picker picks start then end, highlights the range and closes', () => {
+    mount('date-range-picker', { start: '', end: '', month: '2026-11', open: true });
+    const day = (iso: string) => $(`[data-date="${iso}"]`);
+    expect($('[data-hint]').textContent).toBe('Pick a start date');
+    click(day('2026-11-05'));
+    expect(($('[data-start]') as HTMLInputElement).value).toBe('2026-11-05');
+    expect($('[data-hint]').textContent).toBe('Pick an end date');
+    click(day('2026-11-03'));
+    expect(($('[data-start]') as HTMLInputElement).value).toBe('2026-11-03');
+    let detail: any;
+    document.body.addEventListener('p8-change', (e) => { detail = (e as CustomEvent).detail; });
+    click(day('2026-11-07'));
+    expect(detail).toEqual({ start: '2026-11-03', end: '2026-11-07' });
+    expect($('[data-hint]').textContent).toBe('5 days selected');
+    expect($$('.p8-cal__day--active').map((b) => b.dataset.date)).toEqual(['2026-11-04', '2026-11-05', '2026-11-06']);
+    expect($$('.p8-cal__day--on').map((b) => b.dataset.date)).toEqual(['2026-11-03', '2026-11-07']);
+    expect($('[data-panel]').hidden).toBe(true);
+    click($('[data-trigger]'));
+    expect($('[data-panel]').hidden).toBe(false);
+    click($('[data-dir="1"]'));
+    expect($('[data-label]').textContent).toBe('December 2026');
+    const end = $('[data-end]') as HTMLInputElement;
+    end.value = '2026-11-01'; change(end);
+    expect(($('[data-start]') as HTMLInputElement).value).toBe('2026-11-01');
+    expect(end.value).toBe('2026-11-03');
+  });
+
+  it('resizable panels move with the keyboard and clamp to min / max', () => {
+    mount('resizable-panels', { size: '40' });
+    const h = $('[data-handle]'), pane = $('[data-pane]');
+    key(h, 'ArrowRight');
+    expect(h.getAttribute('aria-valuenow')).toBe('45');
+    expect(pane.style.flexBasis).toBe('45%');
+    key(h, 'End');
+    expect(h.getAttribute('aria-valuenow')).toBe('80');
+    key(h, 'Home');
+    expect(h.getAttribute('aria-valuenow')).toBe('20');
+    key(h, 'ArrowLeft');
+    expect(h.getAttribute('aria-valuenow')).toBe('20');
+  });
+
+  it('sortable list reorders with the keyboard and announces the move', () => {
+    mount('sortable-list', { items: 'A\nB\nC' });
+    const order = () => $$('[data-item]').map((x) => x.dataset.item);
+    let detail: any;
+    document.body.addEventListener('p8-change', (e) => { detail = (e as CustomEvent).detail; });
+    const handleA = $('[data-item="A"] [data-handle]');
+    key(handleA, 'ArrowDown');
+    expect(order()).toEqual(['B', 'A', 'C']);
+    expect(detail.order).toEqual(['B', 'A', 'C']);
+    expect($('[data-status]').textContent).toBe('A moved to position 2 of 3');
+    expect(handleA.getAttribute('aria-label')).toBe('Move A, position 2 of 3');
+    key(handleA, 'End');
+    expect(order()).toEqual(['B', 'C', 'A']);
+    key($('[data-item="C"] [data-handle]'), 'Home');
+    expect(order()).toEqual(['C', 'B', 'A']);
+  });
+
+  it('filter bar adds, dedupes, removes and clears filters', () => {
+    mount('filter-bar', { value: '' });
+    const chips = () => $$('[data-chips] [data-chip]').map((c) => c.dataset.chip);
+    expect(($('[data-clear]') as HTMLButtonElement).disabled).toBe(true);
+    expect($('[data-empty]').hidden).toBe(false);
+    let detail: any;
+    document.body.addEventListener('p8-change', (e) => { detail = (e as CustomEvent).detail; });
+    click($('[data-add]'));
+    expect(chips()).toEqual(['Status: Open']);
+    click($('[data-add]'));
+    expect(chips()).toEqual(['Status: Open']);
+    const field = $('[data-field]') as HTMLSelectElement;
+    field.value = 'Owner'; change(field);
+    expect($$('[data-value] option').map((o) => o.textContent)).toEqual(['Ada', 'Grace', 'Alan']);
+    ($('[data-value]') as HTMLSelectElement).value = 'Grace';
+    click($('[data-add]'));
+    expect(chips()).toEqual(['Status: Open', 'Owner: Grace']);
+    expect(detail.filters).toEqual([{ field: 'Status', value: 'Open' }, { field: 'Owner', value: 'Grace' }]);
+    expect($('[data-empty]').hidden).toBe(true);
+    click($('[data-chip="Status: Open"] [data-close]'));
+    expect(chips()).toEqual(['Owner: Grace']);
+    click($('[data-clear]'));
+    expect(chips()).toEqual([]);
+    expect(detail.filters).toEqual([]);
+    expect(($('[data-clear]') as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('notification list marks one and all as read', () => {
+    mount('notification-list');
+    expect($('[data-count]').textContent).toBe('2 unread');
+    click($$('[data-read]')[0]);
+    expect($$('[data-unread="true"]')).toHaveLength(1);
+    expect($('[data-count]').textContent).toBe('1 unread');
+    expect(document.activeElement).toBe($$('[data-read]')[1]);
+    click($('[data-all]'));
+    expect($('[data-count]').textContent).toBe('All caught up');
+    expect(($('[data-all]') as HTMLButtonElement).disabled).toBe(true);
+    expect($$('[data-read]').every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
+  });
+
+  it('image viewer opens, steps, wraps and closes back to the thumbnail', () => {
+    mount('image-viewer');
+    const box = $('[data-lightbox]');
+    expect(box.hidden).toBe(true);
+    const thumbs = $$('[data-open]');
+    thumbs[1].focus();
+    click(thumbs[1]);
+    expect(box.hidden).toBe(false);
+    expect($('[data-counter]').textContent).toBe('2 / 6');
+    expect(($('[data-full]') as HTMLImageElement).alt).toBe('Harbour lights');
+    key(document, 'ArrowRight');
+    expect($('[data-counter]').textContent).toBe('3 / 6');
+    click($('[data-lightbox] [data-dir="-1"]'));
+    click($('[data-lightbox] [data-dir="-1"]'));
+    click($('[data-lightbox] [data-dir="-1"]'));
+    expect($('[data-counter]').textContent).toBe('6 / 6');
+    expect($('[data-lightbox] [data-caption]').textContent).toBe('Still life');
+    key(document, 'Escape');
+    expect(box.hidden).toBe(true);
+    expect(document.activeElement).toBe(thumbs[1]);
+  });
+});

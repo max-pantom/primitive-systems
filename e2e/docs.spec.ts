@@ -276,3 +276,62 @@ test('new pickers, file drops and hover focus work in the preview', async ({ pag
   await preview.locator('a').focus();
   await expect(preview.locator('.p8-hovercard__wrap')).toHaveCSS('opacity', '1');
 });
+
+test('0.10.0: drag to resize and reorder, table sort, range pick, lightbox and password reveal work in the browser', async ({ page }) => {
+  const preview = page.getByTestId('preview');
+  await page.goto('/#resizable-panels');
+  const handle = preview.locator('[data-handle]');
+  const root = (await preview.locator('.p8-resize').boundingBox())!;
+  const h = (await handle.boundingBox())!;
+  await page.mouse.move(h.x + h.width / 2, h.y + h.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(root.x + root.width * 0.7, h.y + h.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await expect(handle).toHaveAttribute('aria-valuenow', '70');
+  expect(Math.round((await preview.locator('[data-pane]').boundingBox())!.width)).toBeGreaterThan(Math.round(root.width * 0.65));
+  await handle.press('ArrowLeft');
+  await expect(handle).toHaveAttribute('aria-valuenow', '65');
+
+  await page.goto('/#sortable-list');
+  const first = (await preview.locator('[data-item="Write brief"] [data-handle]').boundingBox())!;
+  const last = (await preview.locator('[data-item="Ship"]').boundingBox())!;
+  await page.mouse.move(first.x + first.width / 2, first.y + first.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(first.x + first.width / 2, last.y + last.height - 2, { steps: 8 });
+  await page.mouse.up();
+  expect(await preview.locator('[data-item]').evaluateAll((els) => els.map((e) => e.getAttribute('data-item')))).toEqual(['Design review', 'Build prototype', 'User testing', 'Ship', 'Write brief']);
+  await preview.locator('[data-item="Write brief"] [data-handle]').press('Home');
+  await expect(preview.locator('[data-item]').first()).toHaveAttribute('data-item', 'Write brief');
+  await expect(preview.locator('[data-item="Write brief"] [data-handle]')).toBeFocused();
+
+  await page.goto('/#data-table');
+  await preview.getByRole('button', { name: 'Joined' }).click();
+  await expect(preview.locator('tbody tr').first()).toContainText('Grace Hopper');
+  await preview.getByRole('checkbox', { name: 'Select Grace Hopper' }).click();
+  await expect(preview.getByRole('button', { name: 'Export' })).toBeEnabled();
+  await preview.getByRole('button', { name: 'Columns' }).click();
+  await preview.getByRole('checkbox', { name: 'Show Role' }).click();
+  await expect(preview.locator('th[data-col="1"]')).toBeHidden();
+
+  await page.goto('/#date-range-picker');
+  await preview.getByRole('button', { name: '2026-11-20', exact: true }).click();
+  await preview.getByRole('button', { name: '2026-11-22', exact: true }).click();
+  await expect(preview.getByRole('textbox', { name: 'End date' })).toHaveValue('2026-11-22');
+  await expect(preview.locator('[data-hint]')).toHaveText('3 days selected');
+  await expect(preview.locator('[data-panel]')).toBeHidden();
+
+  await page.goto('/#image-viewer');
+  await preview.getByRole('button', { name: 'Open Forest path' }).click();
+  await expect(preview.getByRole('dialog', { name: 'Image viewer' })).toBeVisible();
+  await page.keyboard.press('ArrowRight');
+  await expect(preview.locator('[data-counter]')).toHaveText('4 / 6');
+  await page.keyboard.press('Escape');
+  await expect(preview.getByRole('dialog', { name: 'Image viewer' })).toBeHidden();
+  await expect(preview.getByRole('button', { name: 'Open Forest path' })).toBeFocused();
+
+  await page.goto('/#password-input');
+  await preview.getByLabel('Password', { exact: true }).fill('Secret12!');
+  await expect(preview.locator('.p8-password__rule--on')).toHaveCount(4);
+  await preview.getByRole('button', { name: 'Show password' }).click();
+  await expect(preview.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text');
+});

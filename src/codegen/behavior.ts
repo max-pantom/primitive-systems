@@ -587,6 +587,288 @@ const KINDS: Record<string, string> = {
   }, ${SIG});
   doc.addEventListener('click', function (e) { all('[data-p8~="context"]').forEach(function (c) { if (!c.contains(e.target)) xClose(c); }); }, ${SIG});`,
 
+  password: `
+  var PWT = { number: /\\d/, upper: /[A-Z]/, lower: /[a-z]/, symbol: /[^A-Za-z0-9\\s]/ };
+  function pwCheck(w) {
+    var v = w.querySelector('[data-password]').value, ok = true;
+    Array.from(w.querySelectorAll('[data-rule]')).forEach(function (li) {
+      var r = li.getAttribute('data-rule'), met = r.indexOf('length:') === 0 ? v.length >= Number(r.slice(7)) : PWT[r] ? PWT[r].test(v) : true;
+      li.classList.toggle('p8-password__rule--on', met); if (!met) ok = false;
+    });
+    w.setAttribute('data-valid', String(ok));
+    return ok;
+  }
+  all('[data-p8~="password"]').forEach(pwCheck);
+  root.addEventListener('input', function (e) {
+    var w = cl(e, '[data-p8~="password"]');
+    if (!w || !e.target.hasAttribute('data-password')) return;
+    var ok = pwCheck(w);
+    w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { valid: ok } }));
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="password"] [data-reveal]');
+    if (!b || b.disabled) return;
+    var w = b.closest('[data-p8~="password"]'), i = w.querySelector('[data-password]'), show = i.type === 'password';
+    i.type = show ? 'text' : 'password';
+    b.setAttribute('aria-pressed', String(show)); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    b.classList.toggle('p8-password__toggle--on', show);
+  }, ${SIG});`,
+
+  datatable: `
+  function dtBox(b, state) {
+    b.setAttribute('aria-checked', state === 'mixed' ? 'mixed' : String(state));
+    b.classList.toggle('p8-check__box--on', state !== false);
+    var icons = b.querySelectorAll('svg');
+    icons[0].classList.toggle('p8-check__icon--on', state === true);
+    if (icons[1]) icons[1].classList.toggle('p8-dtable__minus--on', state === 'mixed');
+  }
+  function dtPicked(t) { return Array.from(t.querySelectorAll('tbody [data-pick]')).filter(function (b) { return b.getAttribute('aria-checked') === 'true'; }); }
+  function dtSync(t) {
+    var picks = t.querySelectorAll('tbody [data-pick]'), on = dtPicked(t), head = t.querySelector('[data-all]');
+    if (head) dtBox(head, !on.length ? false : on.length === picks.length ? true : 'mixed');
+    Array.from(picks).forEach(function (b) { b.closest('tr').classList.toggle('p8-dtable__row--on', b.getAttribute('aria-checked') === 'true'); });
+    var c = t.querySelector('[data-count]'); if (c && head) c.textContent = on.length + ' selected';
+    Array.from(t.querySelectorAll('[data-action]')).forEach(function (a) { a.disabled = !on.length; });
+  }
+  function dtKey(s) { var x = s.trim(); return x !== '' && !isNaN(Number(x)) ? Number(x) : x; }
+  function dtSort(t, col) {
+    var th = t.querySelector('th[data-col="' + col + '"]'), dir = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+    Array.from(t.querySelectorAll('th[data-col]')).forEach(function (h) { h.setAttribute('aria-sort', h === th ? dir : 'none'); });
+    var body = t.querySelector('tbody'), rows = Array.from(body.rows);
+    rows.sort(function (a, b) {
+      var x = dtKey(a.querySelector('td[data-col="' + col + '"]').textContent), y = dtKey(b.querySelector('td[data-col="' + col + '"]').textContent);
+      var r = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true, sensitivity: 'base' });
+      return (dir === 'ascending' ? r : -r) || Number(a.getAttribute('data-row')) - Number(b.getAttribute('data-row'));
+    });
+    rows.forEach(function (r) { body.appendChild(r); });
+    t.dispatchEvent(new CustomEvent('p8-sort', { bubbles: true, detail: { column: Number(col), direction: dir } }));
+  }
+  root.addEventListener('click', function (e) {
+    var t = cl(e, '[data-p8~="datatable"]');
+    if (!t) return;
+    var s = cl(e, '[data-sort]'), pick = cl(e, '[data-pick]'), allB = cl(e, '[data-all]'), act = cl(e, '[data-action]'), col = cl(e, '[data-col][role="checkbox"]');
+    if (s) { dtSort(t, s.getAttribute('data-sort')); return; }
+    if (pick) { dtBox(pick, pick.getAttribute('aria-checked') !== 'true'); dtSync(t); return; }
+    if (allB) { var to = allB.getAttribute('aria-checked') !== 'true'; Array.from(t.querySelectorAll('tbody [data-pick]')).forEach(function (b) { dtBox(b, to); }); dtSync(t); return; }
+    if (act && !act.disabled) { t.dispatchEvent(new CustomEvent('p8-action', { bubbles: true, detail: { action: act.getAttribute('data-action'), rows: dtPicked(t).map(function (b) { return Number(b.closest('tr').getAttribute('data-row')); }).sort(function (a, b) { return a - b; }) } })); return; }
+    if (col) {
+      var shown = Array.from(t.querySelectorAll('[role="checkbox"][data-col]')).filter(function (b) { return b.getAttribute('aria-checked') === 'true'; });
+      var show = col.getAttribute('aria-checked') !== 'true';
+      if (!show && shown.length <= 1) return;
+      dtBox(col, show);
+      Array.from(t.querySelectorAll('th[data-col="' + col.getAttribute('data-col') + '"], td[data-col="' + col.getAttribute('data-col') + '"]')).forEach(function (c) { c.hidden = !show; });
+    }
+  }, ${SIG});`,
+
+  range: `
+  var RFMT = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function drOk(v) { return /^\\d{4}-\\d{2}-\\d{2}$/.test(v) && !isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v; }
+  function drCells(y, m, ws) {
+    var off = (new Date(Date.UTC(y, m, 1)).getUTCDay() - ws + 7) % 7, out = [];
+    for (var i = 0; i < 42; i++) { var d = new Date(Date.UTC(y, m, 1 - off + i)); out.push({ iso: d.toISOString().slice(0, 10), n: d.getUTCDate(), out: d.getUTCMonth() !== m }); }
+    return out;
+  }
+  function drVals(c) { var s = c.querySelector('[data-start]').value, e = c.querySelector('[data-end]').value; s = drOk(s) ? s : ''; e = drOk(e) && s ? e : ''; return [s, e]; }
+  function drPaint(c) {
+    var p = c.getAttribute('data-month').split('-'), y = Number(p[0]), m = Number(p[1]) - 1, cells = drCells(y, m, Number(c.getAttribute('data-week'))), v = drVals(c);
+    Array.from(c.querySelectorAll('[data-grid] [data-date]')).forEach(function (b, i) {
+      var x = cells[i], end = x.iso === v[0] || x.iso === v[1], mid = !!(v[0] && v[1] && x.iso > v[0] && x.iso < v[1]);
+      b.setAttribute('data-date', x.iso); b.setAttribute('aria-label', x.iso); b.textContent = String(x.n);
+      b.classList.toggle('p8-cal__day--out', x.out); b.classList.toggle('p8-cal__day--on', end); b.classList.toggle('p8-cal__day--active', mid); b.setAttribute('aria-pressed', String(end || mid));
+    });
+    c.querySelector('[data-label]').textContent = RFMT.format(new Date(Date.UTC(y, m, 1)));
+    var n = v[0] && v[1] ? Math.round((Date.parse(v[1]) - Date.parse(v[0])) / 86400000) + 1 : 0;
+    c.querySelector('[data-hint]').textContent = !v[0] ? 'Pick a start date' : !v[1] ? 'Pick an end date' : n + (n === 1 ? ' day' : ' days') + ' selected';
+  }
+  function drEmit(c) { var v = drVals(c); c.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { start: v[0], end: v[1] } })); }
+  root.addEventListener('click', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || c.querySelector('[data-start]').disabled) return;
+    var dir = cl(e, '[data-p8~="range"] [data-dir]'), day = cl(e, '[data-p8~="range"] [data-date]');
+    if (dir) { var p = c.getAttribute('data-month').split('-'), d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1 + Number(dir.getAttribute('data-dir')), 1)); c.setAttribute('data-month', d.getUTCFullYear() + '-' + ('0' + (d.getUTCMonth() + 1)).slice(-2)); drPaint(c); return; }
+    if (!day) return;
+    var s = c.querySelector('[data-start]'), en = c.querySelector('[data-end]'), v = drVals(c), iso = day.getAttribute('data-date'), done = false;
+    if (!v[0] || v[1]) { s.value = iso; en.value = ''; }
+    else if (iso < v[0]) s.value = iso;
+    else { en.value = iso; done = true; }
+    drPaint(c); drEmit(c);
+    if (done) c.dispatchEvent(new CustomEvent('p8-close', { bubbles: true }));
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
+    if (drOk(e.target.value)) c.setAttribute('data-month', e.target.value.slice(0, 7));
+    drPaint(c);
+  }, ${SIG});
+  root.addEventListener('change', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
+    var s = c.querySelector('[data-start]'), en = c.querySelector('[data-end]');
+    if (drOk(s.value) && drOk(en.value) && en.value < s.value) { var t = s.value; s.value = en.value; en.value = t; }
+    drPaint(c); drEmit(c);
+  }, ${SIG});`,
+
+  resize: `
+  function rzSet(h, pct) {
+    var min = Number(h.getAttribute('aria-valuemin')), max = Number(h.getAttribute('aria-valuemax'));
+    pct = Math.round(Math.min(max, Math.max(min, pct)));
+    h.setAttribute('aria-valuenow', String(pct));
+    h.previousElementSibling.style.flexBasis = pct + '%';
+    h.dispatchEvent(new CustomEvent('p8-resize', { bubbles: true, detail: { size: pct } }));
+  }
+  function rzVert(h) { return h.getAttribute('aria-orientation') === 'horizontal'; }
+  root.addEventListener('keydown', function (e) {
+    var h = cl(e, '[data-p8~="resize"] [data-handle]');
+    if (!h) return;
+    var now = Number(h.getAttribute('aria-valuenow')), k = e.key, vert = rzVert(h);
+    if (k === (vert ? 'ArrowUp' : 'ArrowLeft')) rzSet(h, now - 5);
+    else if (k === (vert ? 'ArrowDown' : 'ArrowRight')) rzSet(h, now + 5);
+    else if (k === 'Home') rzSet(h, 0);
+    else if (k === 'End') rzSet(h, 100);
+    else return;
+    e.preventDefault();
+  }, ${SIG});
+  root.addEventListener('pointerdown', function (e) {
+    var h = cl(e, '[data-p8~="resize"] [data-handle]');
+    if (!h || e.button !== 0) return;
+    e.preventDefault(); h.focus();
+    var box = h.parentElement, vert = rzVert(h);
+    if (h.setPointerCapture) try { h.setPointerCapture(e.pointerId); } catch (err) { }
+    function move(ev) { var r = box.getBoundingClientRect(); rzSet(h, vert ? (ev.clientY - r.top) / r.height * 100 : (ev.clientX - r.left) / r.width * 100); }
+    function up() { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); }
+    h.addEventListener('pointermove', move, ${SIG}); h.addEventListener('pointerup', up, ${SIG}); h.addEventListener('pointercancel', up, ${SIG});
+  }, ${SIG});`,
+
+  sortable: `
+  function soItems(l) { return Array.from(l.querySelectorAll('[data-item]')); }
+  function soDone(w, li, announce) {
+    var items = soItems(w), i = items.indexOf(li), name = li.getAttribute('data-item');
+    items.forEach(function (x, j) { x.querySelector('[data-handle]').setAttribute('aria-label', 'Move ' + x.getAttribute('data-item') + ', position ' + (j + 1) + ' of ' + items.length); });
+    if (announce) w.querySelector('[data-status]').textContent = name + ' moved to position ' + (i + 1) + ' of ' + items.length;
+    w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { order: items.map(function (x) { return x.getAttribute('data-item'); }) } }));
+  }
+  root.addEventListener('keydown', function (e) {
+    var h = cl(e, '[data-p8~="sortable"] [data-handle]');
+    if (!h) return;
+    var w = h.closest('[data-p8~="sortable"]'), li = h.closest('[data-item]'), list = li.parentElement, k = e.key;
+    if (k === 'ArrowUp' && li.previousElementSibling) list.insertBefore(li, li.previousElementSibling);
+    else if (k === 'ArrowDown' && li.nextElementSibling) list.insertBefore(li.nextElementSibling, li);
+    else if (k === 'Home' && li.previousElementSibling) list.insertBefore(li, list.firstElementChild);
+    else if (k === 'End' && li.nextElementSibling) list.appendChild(li);
+    else { if (k === 'ArrowUp' || k === 'ArrowDown' || k === 'Home' || k === 'End') e.preventDefault(); return; }
+    e.preventDefault(); h.focus(); soDone(w, li, true);
+  }, ${SIG});
+  root.addEventListener('pointerdown', function (e) {
+    var h = cl(e, '[data-p8~="sortable"] [data-handle]');
+    if (!h || e.button !== 0) return;
+    var w = h.closest('[data-p8~="sortable"]'), li = h.closest('[data-item]'), list = li.parentElement, moved = false;
+    e.preventDefault();
+    li.classList.add('p8-sortable__item--active');
+    function move(ev) {
+      var sibs = soItems(list).filter(function (x) { return x !== li; }), before = null;
+      for (var i = 0; i < sibs.length; i++) { var r = sibs[i].getBoundingClientRect(); if (ev.clientY < r.top + r.height / 2) { before = sibs[i]; break; } }
+      if (before !== li.nextElementSibling || (!before && li !== list.lastElementChild)) { list.insertBefore(li, before); moved = true; }
+    }
+    function up() {
+      li.classList.remove('p8-sortable__item--active');
+      doc.removeEventListener('pointermove', move); doc.removeEventListener('pointerup', up); doc.removeEventListener('pointercancel', up);
+      h.focus();
+      if (moved) soDone(w, li, true);
+    }
+    // Listen on the document: moving the item in the DOM would drop pointer capture on the handle.
+    doc.addEventListener('pointermove', move, ${SIG}); doc.addEventListener('pointerup', up, ${SIG}); doc.addEventListener('pointercancel', up, ${SIG});
+  }, ${SIG});`,
+
+  filters: `
+  function fbData(b) { try { return JSON.parse(b.getAttribute('data-fields') || '{}'); } catch (err) { return {}; } }
+  function fbChips(b) { return Array.from(b.querySelectorAll('[data-chips] [data-chip]')); }
+  function fbSync(b) {
+    var chips = fbChips(b), off = b.querySelector('[data-add]').disabled;
+    b.querySelector('[data-empty]').hidden = chips.length > 0;
+    b.querySelector('[data-clear]').disabled = off || !chips.length;
+    b.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { filters: chips.map(function (c) { var t = c.getAttribute('data-chip'), i = t.indexOf(': '); return { field: t.slice(0, i), value: t.slice(i + 2) }; }) } }));
+  }
+  root.addEventListener('change', function (e) {
+    var b = cl(e, '[data-p8~="filters"]');
+    if (!b || !e.target.hasAttribute('data-field')) return;
+    var vs = fbData(b)[e.target.value] || [], sel = b.querySelector('[data-value]');
+    sel.textContent = '';
+    vs.forEach(function (v) { var o = doc.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="filters"]');
+    if (!b) return;
+    var add = cl(e, '[data-add]'), clear = cl(e, '[data-clear]'), x = cl(e, '[data-chip] [data-close]');
+    if (add && !add.disabled) {
+      var label = b.querySelector('[data-field]').value + ': ' + b.querySelector('[data-value]').value;
+      if (fbChips(b).some(function (c) { return c.getAttribute('data-chip') === label; })) return;
+      var tpl = b.querySelector('template[data-chip-template]'), src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild, chip = src.cloneNode(true);
+      chip.setAttribute('data-chip', label); chip.firstChild.textContent = label; chip.querySelector('[data-close]').setAttribute('aria-label', 'Remove ' + label);
+      b.querySelector('[data-chips]').insertBefore(chip, b.querySelector('[data-empty]'));
+      fbSync(b); return;
+    }
+    if (x) { x.closest('[data-chip]').remove(); fbSync(b); b.querySelector('[data-add]').focus(); return; }
+    if (clear && !clear.disabled) { fbChips(b).forEach(function (c) { c.remove(); }); fbSync(b); b.querySelector('[data-field]').focus(); }
+  }, ${SIG});`,
+
+  notify: `
+  function ntSync(w) {
+    var n = w.querySelectorAll('[data-unread="true"]').length;
+    w.querySelector('[data-count]').textContent = n ? n + ' unread' : 'All caught up';
+    w.querySelector('[data-all]').disabled = !n;
+    return n;
+  }
+  root.addEventListener('click', function (e) {
+    var w = cl(e, '[data-p8~="notify"]');
+    if (!w) return;
+    var one = cl(e, '[data-read]'), allB = cl(e, '[data-all]');
+    if (one) {
+      var li = one.closest('[data-unread]');
+      li.setAttribute('data-unread', 'false'); one.disabled = true;
+      var left = ntSync(w), next = w.querySelector('[data-unread="true"] [data-read]');
+      (next || (left ? w.querySelector('[data-all]') : w)).focus();
+      w.dispatchEvent(new CustomEvent('p8-read', { bubbles: true, detail: { index: Number(li.getAttribute('data-index')) } }));
+      return;
+    }
+    if (allB && !allB.disabled) {
+      Array.from(w.querySelectorAll('[data-unread="true"]')).forEach(function (li) { li.setAttribute('data-unread', 'false'); li.querySelector('[data-read]').disabled = true; });
+      ntSync(w); w.focus();
+      w.dispatchEvent(new CustomEvent('p8-read', { bubbles: true, detail: { all: true } }));
+    }
+  }, ${SIG});
+  all('[data-p8~="notify"]').forEach(function (w) { Array.from(w.querySelectorAll('[data-unread="false"] [data-read]')).forEach(function (b) { b.disabled = true; }); });`,
+
+  lightbox: `
+  function lbThumbs(g) { return Array.from(g.querySelectorAll('[data-open]')); }
+  function lbShow(g, i) {
+    var t = lbThumbs(g), n = t.length; i = (i + n) % n;
+    var o = g.querySelector('[data-lightbox]'), img = o.querySelector('[data-full]'), th = t[i];
+    img.src = th.querySelector('img').getAttribute('src'); img.alt = th.getAttribute('data-caption');
+    o.querySelector('[data-caption]').textContent = th.getAttribute('data-caption');
+    o.querySelector('[data-counter]').textContent = (i + 1) + ' / ' + n;
+    g.setAttribute('data-index', String(i));
+  }
+  root.addEventListener('click', function (e) {
+    var g = cl(e, '[data-p8~="lightbox"]');
+    if (!g) return;
+    var th = cl(e, '[data-open]'), dir = cl(e, '[data-lightbox] [data-dir]');
+    if (th) { g.__opener = th; lbShow(g, Number(th.getAttribute('data-open'))); var o = g.querySelector('[data-lightbox]'); o.hidden = false; o.querySelector('[data-close]').focus(); return; }
+    if (dir && !dir.disabled) lbShow(g, Number(g.getAttribute('data-index') || 0) + Number(dir.getAttribute('data-dir')));
+  }, ${SIG});
+  doc.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    all('[data-p8~="lightbox"]').forEach(function (g) {
+      if (g.querySelector('[data-lightbox]').hidden || lbThumbs(g).length < 2) return;
+      e.preventDefault();
+      lbShow(g, Number(g.getAttribute('data-index') || 0) + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+  }, ${SIG});
+  root.addEventListener('p8-closed', function (e) {
+    var g = cl(e, '[data-p8~="lightbox"]');
+    if (g && g.__opener) g.__opener.focus();
+  }, ${SIG});`,
+
+
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');

@@ -57,6 +57,14 @@ const KIND_KEYS: Record<string, KeyRow[]> = {
   number: [{ keys: '↑ ↓', does: 'Step the value (native)' }, { keys: 'Type', does: 'Enter a number' }],
   pager: [{ keys: 'Enter / Space', does: 'Go to the page' }],
   tooltip: [{ keys: 'Tab', does: 'Focusing the trigger shows the tooltip' }],
+  password: [{ keys: 'Enter / Space', does: 'Show or hide the password (eye button)' }],
+  datatable: [{ keys: 'Enter / Space', does: 'Sort by the focused column header; toggle the focused checkbox' }],
+  range: [{ keys: 'Enter / Space', does: 'Pick the focused day (first the start, then the end)' }, { keys: 'Type', does: 'Enter dates as YYYY-MM-DD' }],
+  resize: [{ keys: '← → (↑ ↓ when stacked)', does: 'Move the divider 5%' }, { keys: 'Home / End', does: 'Smallest / largest first pane' }],
+  sortable: [{ keys: '↑ ↓', does: 'Move the item up or down (on its handle)' }, { keys: 'Home / End', does: 'Move the item to the top or bottom' }],
+  filters: [{ keys: 'Enter / Space', does: 'Add the filter, remove a chip or clear all' }],
+  notify: [{ keys: 'Enter / Space', does: 'Mark one or all as read' }],
+  lightbox: [{ keys: 'Enter / Space', does: 'Open the image' }, { keys: '← →', does: 'Previous / next image' }, { keys: 'Esc', does: 'Close and return to the thumbnail' }],
 };
 
 export function keyboardReport(node: Node): KeyRow[] {
@@ -73,7 +81,7 @@ export function keyboardReport(node: Node): KeyRow[] {
   if (types.has('range')) push([{ keys: '← →', does: 'Change the value' }, { keys: 'Home / End', does: 'Minimum / maximum' }, { keys: 'PgUp / PgDn', does: 'Larger step' }]);
   if ((tags.has('input') && ![...types].every((t) => ['range', 'number'].includes(t))) || tags.has('textarea')) if (!kinds.has('otp') && !kinds.has('combobox') && !kinds.has('palette') && !kinds.has('number')) push([{ keys: 'Type', does: 'Enter text' }]);
   for (const k of kinds) push(KIND_KEYS[k] ?? []);
-  if (!tags.has('button') && !tags.has('a') && !tags.has('summary') && !tags.has('input') && !tags.has('select') && !tags.has('textarea')) return [{ keys: '—', does: 'Not interactive: no keyboard interaction and not in the tab order' }];
+  if (![...kinds].some((k) => KIND_KEYS[k]) && !tags.has('button') && !tags.has('a') && !tags.has('summary') && !tags.has('input') && !tags.has('select') && !tags.has('textarea')) return [{ keys: '—', does: 'Not interactive: no keyboard interaction and not in the tab order' }];
   return out;
 }
 

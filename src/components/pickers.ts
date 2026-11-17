@@ -14,12 +14,12 @@ export function monthGrid(y: number, m: number, weekStart: number): { iso: strin
   const off = (new Date(Date.UTC(y, m, 1)).getUTCDay() - weekStart + 7) % 7;
   return Array.from({ length: 42 }, (_, i) => { const d = new Date(Date.UTC(y, m, 1 - off + i)); return { iso: d.toISOString().slice(0, 10), n: d.getUTCDate(), out: d.getUTCMonth() !== m }; });
 }
-const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+export const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
-const validDate = (value: string) => ISO.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+export const validDate = (value: string) => ISO.test(value) && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
 
 /* ---------- Date picker ---------- */
-const cal = { root: `${p}-datepicker`, field: `${p}-datepicker__field`, trigger: `${p}-datepicker__trigger`, head: `${p}-cal__head`, label: `${p}-cal__label`, grid: `${p}-cal__grid`, dow: `${p}-cal__dow`, day: `${p}-cal__day`, on: `${p}-cal__day--on`, out: `${p}-cal__day--out` };
+export const cal = { root: `${p}-datepicker`, field: `${p}-datepicker__field`, trigger: `${p}-datepicker__trigger`, head: `${p}-cal__head`, label: `${p}-cal__label`, grid: `${p}-cal__grid`, dow: `${p}-cal__dow`, day: `${p}-cal__day`, on: `${p}-cal__day--on`, out: `${p}-cal__day--out` };
 export const datePicker: ComponentDef = {
   id: 'date-picker', name: 'Date Picker', description: 'A date field with a calendar popover.', tags: ['control', 'form'], status: 'stable',
   usage: 'Type a date as YYYY-MM-DD or pick one. Prev/next change the month; choosing a day fills the field and closes the calendar.',

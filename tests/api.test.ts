@@ -31,7 +31,7 @@ describe('MCP and HTTP return the same data', () => {
     const http = route('GET', '/api/changelog');
     expect(http.status).toBe(200);
     expect(parse(await c.callTool({ name: 'get_changelog', arguments: {} }))).toEqual(http.body);
-    expect((http.body as any).releases[0].components).toHaveLength(9);
+    expect((http.body as any).releases[0].components).toHaveLength(8);
   });
   it('get_tokens', async () => {
     const c = await mcp();

@@ -2,6 +2,10 @@
 
 Generated from `src/changelog.ts`. Components are marked **New** or **Refined** in the catalog and in `list_components` (`mark`, `since`).
 
+## 0.10.0 — App components: data table, range picker, panels
+- New: Password Input (show/hide, live requirements), Data Table (sorting, row selection, column visibility, bulk actions), Date Range Picker, Resizable Panels, Sortable List (drag and keyboard), Filter Bar, Notification List, Image Viewer (lightbox).
+- Keyboard reports cover focusable widgets that are not buttons (the resize divider).
+
 ## 0.9.0 — Pickers, carousel, timeline, context menu
 - New: Date Picker (calendar popover), Time Picker, Multi-select with chips, File Upload (dropzone + list), Swatch Picker, Carousel, Timeline, Context Menu, Hover Card.
 - Changelog page at /changelog, GET /api/changelog and the get_changelog tool.

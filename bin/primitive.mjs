@@ -20203,8 +20203,8 @@ var checkbox = {
   render(pr) {
     const attrs = { type: "button", role: "checkbox", "aria-checked": String(pr.checked) };
     if (pr.disabled) attrs.disabled = true;
-    const box = n("button", pr.checked ? [k.box, k.on] : [k.box], [{ ...iconNode("check", 14), cls: pr.checked ? [c.icon, k.icon, k.iconOn] : [c.icon, k.icon] }], attrs);
-    return n("label", [k.row], [box, pr.label], { "data-p8": "toggle" });
+    const box2 = n("button", pr.checked ? [k.box, k.on] : [k.box], [{ ...iconNode("check", 14), cls: pr.checked ? [c.icon, k.icon, k.iconOn] : [c.icon, k.icon] }], attrs);
+    return n("label", [k.row], [box2, pr.label], { "data-p8": "toggle" });
   }
 };
 var w = { row: `${p}-switch-row`, root: `${p}-switch`, on: `${p}-switch--on`, thumb: `${p}-switch__thumb`, thumbOn: `${p}-switch__thumb--on` };
@@ -21640,12 +21640,12 @@ var timer = {
     const secs = Math.max(0, Math.floor(Number(pr.seconds) || 0));
     const start = pr.mode === "stopwatch" ? 0 : secs;
     const fmt = (s2) => s2 >= 3600 ? `${Math.floor(s2 / 3600)}:${String(Math.floor(s2 % 3600 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}` : `${String(Math.floor(s2 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}`;
-    const btn2 = (label, act) => {
+    const btn3 = (label, act) => {
       const b2 = button.render({ label, variant: "ghost", size: "md", icon: "none", iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
       return { ...b2, cls: [...b2.cls ?? [], `${tm.root}__btn`], attrs: { ...b2.attrs, "data-timer": act } };
     };
     const kids = [n("span", [tm.time], [fmt(start)], { "data-time": true })];
-    if (pr.controls) kids.push(n("span", [tm.actions], [btn2(pr.autostart ? "Pause" : "Start", "toggle"), btn2("Reset", "reset")]));
+    if (pr.controls) kids.push(n("span", [tm.actions], [btn3(pr.autostart ? "Pause" : "Start", "toggle"), btn3("Reset", "reset")]));
     const attrs = { role: "timer", "aria-label": pr.mode === "stopwatch" ? "Stopwatch" : "Countdown", "data-p8": "timer", "data-mode": pr.mode, "data-seconds": String(secs) };
     if (pr.autostart) attrs["data-autostart"] = true;
     return n("div", [tm.root], kids, attrs);
@@ -21757,7 +21757,7 @@ var datePicker = {
     const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(String(pr.month)) ? String(pr.month) : "2026-11";
     const [y, m2] = (value ? value.slice(0, 7) : month).split("-").map(Number);
     const ws = pr.weekStart === "mon" ? 1 : 0;
-    const days = [...DOW.slice(ws), ...DOW.slice(0, ws)];
+    const days2 = [...DOW.slice(ws), ...DOW.slice(0, ws)];
     const grid = monthGrid(y, m2 - 1, ws);
     const arrow = (icon, dir, label) => {
       const b2 = iconButton.render({ icon, label, size: "14", variant: "ghost-flat", disabled: false });
@@ -21766,7 +21766,7 @@ var datePicker = {
     const panel = n("div", pr.open ? [po.panel] : [po.panel], [
       n("div", [cal.head], [arrow("chevron-left", "-1", "Previous month"), n("span", [cal.label], [monthLabel(y, m2 - 1)], { "aria-live": "polite", "data-label": true }), arrow("chevron-right", "1", "Next month")]),
       n("div", [cal.grid], [
-        ...days.map((d2) => n("span", [cal.dow], [d2], { "aria-hidden": "true" })),
+        ...days2.map((d2) => n("span", [cal.dow], [d2], { "aria-hidden": "true" })),
         ...grid.map((g2) => n("button", [cal.day, ...g2.out ? [cal.out] : [], ...g2.iso === value ? [cal.on] : []], [String(g2.n)], { type: "button", ...pr.disabled ? { disabled: true } : {}, "data-date": g2.iso, "aria-label": g2.iso, "aria-pressed": String(g2.iso === value) }))
       ], { role: "group", "aria-label": "Calendar", "data-grid": true })
     ], pr.open && !pr.disabled ? { "data-panel": true, role: "dialog", "aria-label": "Choose date" } : { "data-panel": true, role: "dialog", "aria-label": "Choose date", hidden: true });
@@ -21975,13 +21975,13 @@ var carousel = {
   render(pr) {
     const half = pr.perView === "2";
     const slides = Array.from({ length: Number(pr.slides) }, (_, i2) => n("div", half ? [ca.slide, `${ca.slide}--half`] : [ca.slide], [`Slide ${i2 + 1}`], { role: "group", "aria-roledescription": "slide", "aria-label": `${i2 + 1} of ${pr.slides}` }));
-    const btn2 = (icon, dir, label) => {
+    const btn3 = (icon, dir, label) => {
       const b2 = iconButton.render({ icon, label, size: "16", variant: "default", disabled: dir === "-1" });
       return { ...b2, attrs: { ...b2.attrs, "data-dir": dir } };
     };
     return n("div", [ca.root], [
       n("div", [ca.track], slides, { "data-track": true, tabindex: "0", "aria-label": "Slides" }),
-      n("div", [ca.nav], [btn2("chevron-left", "-1", "Previous slide"), btn2("chevron-right", "1", "Next slide")])
+      n("div", [ca.nav], [btn3("chevron-left", "-1", "Previous slide"), btn3("chevron-right", "1", "Next slide")])
     ], { role: "region", "aria-roledescription": "carousel", "aria-label": "Carousel", "data-p8": "carousel" });
   }
 };
@@ -22075,6 +22075,461 @@ var hoverCard = {
   }
 };
 
+// src/components/apps.ts
+var btn2 = (label, variant, extra = {}, icon = "none") => {
+  const b2 = button.render({ label, variant, size: "md", icon, iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var ibtn = (icon, label, extra = {}, size = "16", variant = "ghost-flat") => {
+  const b2 = iconButton.render({ icon, label, size, variant, disabled: false });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var dis = (on) => on ? { disabled: true } : {};
+var srOnly = { position: "absolute", width: v("size-16"), height: v("size-16"), overflow: "hidden", "clip-path": "inset(50%)", "white-space": "nowrap" };
+var pw = { root: `${p}-password`, wrap: `${p}-password__wrap`, input: `${p}-password__input`, field: `${p}-password__field`, toggle: `${p}-password__toggle`, toggleOn: `${p}-password__toggle--on`, rules: `${p}-password__rules`, rule: `${p}-password__rule`, ruleOn: `${p}-password__rule--on`, yes: `${p}-password__yes`, no: `${p}-password__no` };
+var PASSWORD_RULES = {
+  length: (nn) => `At least ${nn} characters`,
+  number: () => "A number",
+  upper: () => "An uppercase letter",
+  lower: () => "A lowercase letter",
+  symbol: () => "A symbol"
+};
+var passwordInput = {
+  id: "password-input",
+  name: "Password Input",
+  description: "A password field with show/hide and live requirement checks.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: 'The eye button switches between hidden and visible text (aria-pressed). Requirements are checked as you type: length:N, number, upper, lower, symbol, one per line. Use autocomplete="new-password" on sign-up and "current-password" on sign-in so password managers work.',
+  composition: "A Text Input with an Icon Button inside; the requirement list sits below it.",
+  props: [
+    P.text("label", "Password", "Visible label."),
+    P.text("value", "", "Initial value."),
+    P.select("autocomplete", ["new-password", "current-password"], "new-password", "Tells password managers whether to suggest a new password or fill a saved one."),
+    P.area("requirements", "length:8\nnumber\nupper\nsymbol", "One per line: length:N, number, upper, lower or symbol. Empty for none (e.g. on sign-in).", "string (one per line)"),
+    P.bool("disabled", false, "Disables the field.")
+  ],
+  rules: [
+    { cls: pw.root, base: { display: "flex", "flex-direction": "column", gap: v("space-8"), width: v("size-500"), "max-width": "100%", "font-family": v("type-family") } },
+    { cls: pw.wrap, base: { position: "relative", display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: pw.input, base: { "padding-inline-end": `calc(${v("size-40")} + ${v("space-4")})` } },
+    { cls: pw.field, base: { position: "relative", display: "flex" } },
+    { cls: pw.toggle, base: { position: "absolute", top: "50%", translate: "0 -50%", "inset-inline-end": v("space-2") } },
+    { cls: pw.toggleOn, base: { background: v("color-control-strong") } },
+    { cls: pw.rules, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), margin: "0", padding: "0", "list-style": "none" } },
+    { cls: pw.rule, base: { display: "flex", "align-items": "center", gap: v("space-8"), color: v("color-ink-muted"), ...text("sm"), transition: `color ${motion}` } },
+    { cls: pw.ruleOn, base: { color: v("color-ink") }, nested: [{ sel: ` .${pw.yes}`, decls: { display: "inline-flex" } }, { sel: ` .${pw.no}`, decls: { display: "none" } }] },
+    { cls: pw.yes, base: { display: "none" } },
+    { cls: pw.no, base: { display: "inline-flex" } },
+    iconRule
+  ],
+  render(pr) {
+    const reqs = lines(pr.requirements).map((l2) => {
+      const [k2, a2] = l2.split(":").map((x) => x.trim());
+      return { k: k2, a: Number(a2) || 8 };
+    }).filter((r2) => Object.hasOwn(PASSWORD_RULES, r2.k));
+    const attrs = { id: "password", type: "password", autocomplete: pr.autocomplete, spellcheck: "false", "data-password": true };
+    if (!pr.label) attrs["aria-label"] = "Password";
+    if (pr.value) attrs.value = pr.value;
+    if (reqs.length) attrs["aria-describedby"] = "password-rules";
+    if (pr.disabled) attrs.disabled = true;
+    const met = (k2, a2) => {
+      const s2 = String(pr.value);
+      return k2 === "length" ? s2.length >= a2 : k2 === "number" ? /\d/.test(s2) : k2 === "upper" ? /[A-Z]/.test(s2) : k2 === "lower" ? /[a-z]/.test(s2) : /[^A-Za-z0-9\s]/.test(s2);
+    };
+    const eye = ibtn("eye", "Show password", { "aria-pressed": "false", "data-reveal": true, ...dis(pr.disabled) });
+    return n("div", [pw.root], [
+      n("div", [pw.wrap], [
+        ...pr.label ? [n("label", [f.label], [pr.label], { for: "password" })] : [],
+        n("div", [pw.field], [n("input", [i.root, pw.input], void 0, attrs), { ...eye, cls: [...eye.cls ?? [], pw.toggle] }])
+      ]),
+      ...reqs.length ? [n("ul", [pw.rules], reqs.map(({ k: k2, a: a2 }) => n("li", met(k2, a2) ? [pw.rule, pw.ruleOn] : [pw.rule], [
+        { ...iconNode("check", 14), cls: [c.icon, pw.yes] },
+        { ...iconNode("minus", 14), cls: [c.icon, pw.no] },
+        PASSWORD_RULES[k2](a2)
+      ], { "data-rule": k2 === "length" ? `length:${a2}` : k2 })), { id: "password-rules", "aria-label": "Password requirements" })] : []
+    ], { "data-p8": "password" });
+  }
+};
+var dt = { root: `${p}-dtable`, bar: `${p}-dtable__bar`, count: `${p}-dtable__count`, actions: `${p}-dtable__actions`, table: `${p}-dtable__table`, th: `${p}-dtable__head`, td: `${p}-dtable__cell`, sel: `${p}-dtable__select`, row: `${p}-dtable__row`, rowOn: `${p}-dtable__row--on`, sort: `${p}-dtable__sort`, arrow: `${p}-dtable__arrow`, minus: `${p}-dtable__minus`, minusOn: `${p}-dtable__minus--on`, cols: `${p}-dtable__cols`, all: `${p}-dtable__all` };
+var box = (on, label, extra, mixed = false) => n("button", on ? [k.box, k.on] : [k.box], [
+  { ...iconNode("check", 14), cls: on ? [c.icon, k.icon, k.iconOn] : [c.icon, k.icon] },
+  ...mixed ? [{ ...iconNode("minus", 14), cls: [c.icon, dt.minus] }] : []
+], { type: "button", role: "checkbox", "aria-checked": String(on), "aria-label": label, ...extra });
+var dataTable = {
+  id: "data-table",
+  name: "Data Table",
+  description: "A table with sorting, row selection, column visibility and bulk actions.",
+  tags: ["data", "layout"],
+  status: "stable",
+  usage: 'Write rows as "a | b | c"; the first line is the header. Click a header to sort (numbers and dates sort naturally). Select rows with the checkboxes, then run a bulk action: the table fires p8-action with { action, rows } (row indexes in the original order). Columns hides and shows columns.',
+  composition: "Checkboxes, Buttons and a Popover around a Table.",
+  props: [
+    P.area("rows", "Name | Role | Joined\nAda Lovelace | Engineer | 2024-03-12\nGrace Hopper | Admiral | 2023-11-02\nAlan Turing | Researcher | 2025-01-20\nKatherine Johnson | Analyst | 2024-07-08", 'Rows one per line, cells split by "|". First line is the header.', "string (one per line)"),
+    P.bool("selectable", true, "Show row checkboxes and the bulk action bar."),
+    P.area("actions", "Export\nDelete", "Bulk actions, one per line. Enabled while rows are selected.", "string (one per line)"),
+    P.bool("columnToggle", true, "Show the Columns menu.")
+  ],
+  rules: [
+    ...popRules,
+    { cls: dt.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: dt.bar, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: dt.count, base: { color: v("color-ink-muted") } },
+    { cls: dt.actions, base: { display: "flex", "align-items": "center", gap: v("space-8") } },
+    { cls: dt.cols, base: { display: "flex", "flex-direction": "column", gap: v("space-8") } },
+    { cls: dt.table, base: { width: "100%", "table-layout": "fixed", "border-collapse": "collapse" } },
+    {
+      cls: dt.th,
+      base: { "text-align": "left", "padding-block": v("space-8"), "padding-inline": v("space-12"), color: v("color-ink-muted"), "font-weight": v("type-weight"), "white-space": "nowrap", "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}` },
+      nested: [hiddenRule, { sel: '[aria-sort="ascending"] .' + dt.arrow, decls: { opacity: "1", rotate: "180deg" } }, { sel: '[aria-sort="descending"] .' + dt.arrow, decls: { opacity: "1" } }]
+    },
+    { cls: dt.td, base: { "padding-block": v("space-8"), "padding-inline": v("space-12"), overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap", "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}` }, nested: [hiddenRule] },
+    { cls: dt.sel, base: { width: v("size-16") } },
+    { cls: dt.row, base: { transition: `background ${motion}` } },
+    { cls: dt.rowOn, base: { background: v("color-control") } },
+    { cls: dt.sort, base: { display: "inline-flex", "align-items": "center", gap: v("space-4"), "max-width": "100%", padding: "0", border: "none", "border-radius": v("radius-4"), background: "transparent", color: "inherit", cursor: "pointer", ...text("sm") }, hover: { color: v("color-ink") }, focus },
+    { cls: dt.arrow, base: { opacity: "0", transition: `opacity ${motion}, rotate ${motion}` }, parent: { cls: dt.sort, hover: { opacity: "1" } } },
+    { cls: dt.all, base: { position: "relative" } },
+    { cls: dt.minus, base: { position: "absolute", inset: "0", margin: "auto", opacity: "0" } },
+    { cls: dt.minusOn, base: { opacity: "1" } },
+    iconRule
+  ],
+  render(pr) {
+    const rows = lines(pr.rows).map((l2) => l2.split("|").map((c3) => c3.trim()));
+    const head = rows.shift() ?? ["Column"];
+    const width = head.length;
+    const selectable = Boolean(pr.selectable);
+    const actions = lines(pr.actions);
+    const bar2 = [];
+    bar2.push(n("span", [dt.count], [selectable ? "0 selected" : `${rows.length} rows`], { "aria-live": "polite", "data-count": true }));
+    const right = selectable ? actions.map((a2) => btn2(a2, "default", { "data-action": a2, disabled: true })) : [];
+    if (pr.columnToggle) {
+      const trig = btn2("Columns", "ghost", { "data-trigger": true, "aria-expanded": "false", "aria-haspopup": "true" }, "list");
+      right.push(n("div", [po.root], [trig, n("div", [po.panel, po.end, dt.cols], head.map((h, i2) => n("label", [k.row], [box(true, `Show ${h}`, { "data-col": String(i2) }), h])), { "data-panel": true, role: "group", "aria-label": "Columns", hidden: true })], { "data-p8": "popover" }));
+    }
+    if (right.length) bar2.push(n("div", [dt.actions], right));
+    const headRow = n("tr", [], [
+      ...selectable ? [n("th", [dt.th, dt.sel], [{ ...box(false, "Select all rows", { "data-all": true }, true), cls: [k.box, dt.all] }], { scope: "col" })] : [],
+      ...head.map((h, i2) => n("th", [dt.th], [n("button", [dt.sort], [h, { ...iconNode("chevron-down", 14), cls: [c.icon, dt.arrow] }], { type: "button", "data-sort": String(i2) })], { scope: "col", "aria-sort": "none", "data-col": String(i2) }))
+    ]);
+    const body = rows.map((r2, ri) => n("tr", [dt.row], [
+      ...selectable ? [n("td", [dt.td, dt.sel], [box(false, `Select ${r2[0] || `row ${ri + 1}`}`, { "data-pick": true })])] : [],
+      ...Array.from({ length: width }, (_, ci) => n("td", [dt.td], r2[ci] ? [r2[ci]] : [], { "data-col": String(ci), ...r2[ci] ? { title: r2[ci] } : {} }))
+    ], { "data-row": String(ri) }));
+    return n("div", [dt.root], [
+      n("div", [dt.bar], bar2),
+      n("table", [dt.table], [n("thead", [], [headRow]), n("tbody", [], body)])
+    ], { "data-p8": "datatable" });
+  }
+};
+var dr = { root: `${p}-daterange`, fields: `${p}-daterange__fields`, input: `${p}-daterange__input`, sep: `${p}-daterange__sep`, hint: `${p}-daterange__hint`, range: `${p}-cal__day--active` };
+var days = (a2, b2) => Math.round((Date.parse(b2) - Date.parse(a2)) / 864e5) + 1;
+var rangeHint = (s2, e) => !s2 ? "Pick a start date" : !e ? "Pick an end date" : `${days(s2, e)} day${days(s2, e) === 1 ? "" : "s"} selected`;
+var dateRangePicker = {
+  id: "date-range-picker",
+  name: "Date Range Picker",
+  description: "Start and end date fields with a calendar that selects a range.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: "Click a start day, then an end day; the days between are highlighted and the calendar closes. Picking a day before the start moves the start. You can also type both dates as YYYY-MM-DD. Fires p8-change with { start, end }.",
+  composition: "Two Text Inputs and an Icon Button trigger; the calendar is the Date Picker grid in a Popover.",
+  props: [
+    P.text("start", "2026-11-10", "Start date, YYYY-MM-DD. Empty for none."),
+    P.text("end", "2026-11-14", "End date, YYYY-MM-DD. Empty for none."),
+    P.text("month", "2026-11", "Month the calendar opens on, YYYY-MM (used when there is no start)."),
+    P.select("weekStart", ["sun", "mon"], "sun", "First day of the week."),
+    P.bool("open", true, "Initially open."),
+    P.bool("disabled", false, "Disables the fields.")
+  ],
+  rules: [
+    ...popRules,
+    { cls: dr.root, base: { position: "relative", display: "flex", "flex-direction": "column", gap: v("space-4"), width: v("size-500"), "max-width": "100%" } },
+    { cls: dr.fields, base: { display: "flex", "align-items": "center", gap: v("space-8") } },
+    { cls: dr.input, base: { flex: "1", "min-width": "0" } },
+    { cls: dr.sep, base: { color: v("color-ink-muted"), ...text("sm") } },
+    { cls: dr.hint, base: { margin: "0", color: v("color-ink-muted"), ...text("sm") } },
+    { cls: cal.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12"), "margin-bottom": v("space-8") } },
+    { cls: cal.label, base: { ...text("sm"), "font-weight": v("type-weight-strong") } },
+    { cls: cal.grid, base: { display: "grid", "grid-template-columns": "repeat(7, 1fr)", gap: v("space-4"), "text-align": "center" } },
+    { cls: cal.dow, base: { color: v("color-ink-muted"), ...text("sm") } },
+    { cls: cal.day, base: { display: "inline-flex", "align-items": "center", "justify-content": "center", width: v("size-32"), height: v("size-32"), padding: "0", border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus },
+    { cls: cal.out, base: { color: v("color-ink-muted") } },
+    { cls: dr.range, base: { background: v("color-control-strong"), color: v("color-ink") }, hover: { background: v("color-control-strong") } },
+    { cls: cal.on, base: { background: v("color-ink"), color: v("color-ink-inverse") }, hover: { background: v("color-ink") } },
+    iconRule
+  ],
+  render(pr) {
+    let s2 = validDate(String(pr.start)) ? String(pr.start) : "";
+    let e = validDate(String(pr.end)) ? String(pr.end) : "";
+    if (!s2) e = "";
+    if (s2 && e && e < s2) [s2, e] = [e, s2];
+    const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(String(pr.month)) ? String(pr.month) : "2026-11";
+    const [y, m2] = (s2 ? s2.slice(0, 7) : month).split("-").map(Number);
+    const ws = pr.weekStart === "mon" ? 1 : 0;
+    const grid = monthGrid(y, m2 - 1, ws);
+    const off = dis(pr.disabled);
+    const arrow = (icon, dir, label) => ibtn(icon, label, { "data-dir": dir, ...off }, "14");
+    const open2 = Boolean(pr.open) && !pr.disabled;
+    const field2 = (label, value, key) => n("input", [i.root, dr.input], void 0, { type: "text", inputmode: "numeric", placeholder: "YYYY-MM-DD", "aria-label": label, [key]: true, ...value ? { value } : {}, ...off });
+    const trig = ibtn("calendar", "Choose dates", { "data-trigger": true, "aria-expanded": String(open2), "aria-haspopup": "dialog", ...off }, "16", "ghost");
+    const panel = n("div", [po.panel, po.end], [
+      n("div", [cal.head], [arrow("chevron-left", "-1", "Previous month"), n("span", [cal.label], [monthLabel(y, m2 - 1)], { "aria-live": "polite", "data-label": true }), arrow("chevron-right", "1", "Next month")]),
+      n("div", [cal.grid], [
+        ...[...DOW.slice(ws), ...DOW.slice(0, ws)].map((d2) => n("span", [cal.dow], [d2], { "aria-hidden": "true" })),
+        ...grid.map((g2) => {
+          const end = g2.iso === s2 || g2.iso === e, mid = Boolean(s2 && e && g2.iso > s2 && g2.iso < e);
+          return n("button", [cal.day, ...g2.out ? [cal.out] : [], ...mid ? [dr.range] : [], ...end ? [cal.on] : []], [String(g2.n)], { type: "button", ...off, "data-date": g2.iso, "aria-label": g2.iso, "aria-pressed": String(end || mid) });
+        })
+      ], { role: "group", "aria-label": "Calendar", "data-grid": true })
+    ], { "data-panel": true, role: "dialog", "aria-label": "Choose dates", ...open2 ? {} : { hidden: true } });
+    return n("div", [po.root, dr.root], [
+      n("div", [dr.fields], [field2("Start date", s2, "data-start"), n("span", [dr.sep], ["\u2013"], { "aria-hidden": "true" }), field2("End date", e, "data-end"), trig]),
+      n("p", [dr.hint], [rangeHint(s2, e)], { "aria-live": "polite", "data-hint": true }),
+      panel
+    ], { "data-p8": "popover range", "data-week": String(ws), "data-month": `${y}-${String(m2).padStart(2, "0")}` });
+  }
+};
+var rz = { root: `${p}-resize`, col: `${p}-resize--vertical`, pane: `${p}-resize__pane`, first: `${p}-resize__pane--first`, handle: `${p}-resize__handle`, title: `${p}-resize__title` };
+var resizablePanels = {
+  id: "resizable-panels",
+  name: "Resizable Panels",
+  description: "Two panes with a draggable, keyboard-accessible divider.",
+  tags: ["layout"],
+  status: "stable",
+  usage: "Drag the divider, or focus it and use the arrow keys (5% steps), Home and End (min / max). Fires p8-resize with { size } (the first pane, in percent). The panes are placeholders; put your own content inside.",
+  props: [
+    P.select("orientation", ["horizontal", "vertical"], "horizontal", "Side by side (horizontal) or stacked (vertical)."),
+    P.select("size", ["30", "40", "50", "60", "70"], "40", "Starting size of the first pane, in percent."),
+    P.area("panes", "Navigation\nContent", "The two pane titles, one per line.", "string (one per line)")
+  ],
+  rules: [
+    { cls: rz.root, base: { display: "flex", width: v("size-500"), "max-width": "100%", height: v("size-240"), "box-sizing": "border-box", overflow: "hidden", "border-radius": v("radius-8"), background: v("color-surface"), color: v("color-ink"), ...ringDecl, ...text("sm") } },
+    { cls: rz.col, base: { "flex-direction": "column" } },
+    { cls: rz.pane, base: { flex: "1 1 0", "min-width": "0", "min-height": "0", overflow: "auto", "box-sizing": "border-box", "padding-block": v("space-12"), "padding-inline": v("space-16"), display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: rz.first, base: { flex: "0 0 auto" } },
+    { cls: rz.title, base: { "font-weight": v("type-weight-strong") } },
+    {
+      cls: rz.handle,
+      base: { position: "relative", flex: `0 0 ${v("space-8")}`, display: "flex", "align-items": "center", "justify-content": "center", cursor: "col-resize", "touch-action": "none", background: "transparent", transition: `background ${motion}` },
+      hover: { background: v("color-control") },
+      focus: { ...focus, outline: "none" },
+      nested: [{ sel: "::before", decls: { content: "''", position: "absolute", inset: "0", margin: "auto", width: "0", height: "100%", "border-left": `${v("border-hairline")} solid ${v("color-ring")}` } }, { sel: '[aria-orientation="horizontal"]', decls: { cursor: "row-resize" } }, { sel: '[aria-orientation="horizontal"]::before', decls: { width: "100%", height: "0", "border-left": "none", "border-top": `${v("border-hairline")} solid ${v("color-ring")}` } }]
+    }
+  ],
+  render(pr) {
+    const vertical = pr.orientation === "vertical";
+    const size = Math.min(80, Math.max(20, Number(pr.size) || 40));
+    const [a2 = "First", b2 = "Second"] = lines(pr.panes);
+    const pane = (title, first) => n("div", first ? [rz.pane, rz.first] : [rz.pane], [n("span", [rz.title], [title]), n("span", [], ["Placeholder content"])], first ? { "data-pane": true, style: `flex-basis: ${size}%` } : void 0);
+    return n("div", vertical ? [rz.root, rz.col] : [rz.root], [
+      pane(a2, true),
+      n("div", [rz.handle], [], { role: "separator", tabindex: "0", "aria-orientation": vertical ? "horizontal" : "vertical", "aria-label": `Resize ${a2} and ${b2}`, "aria-valuenow": String(size), "aria-valuemin": "20", "aria-valuemax": "80", "data-handle": true }),
+      pane(b2, false)
+    ], { "data-p8": "resize" });
+  }
+};
+var so = { wrap: `${p}-sortable-wrap`, root: `${p}-sortable`, item: `${p}-sortable__item`, itemOn: `${p}-sortable__item--active`, handle: `${p}-sortable__handle`, label: `${p}-sortable__label`, status: `${p}-sortable__status` };
+var sortableList = {
+  id: "sortable-list",
+  name: "Sortable List",
+  description: "Reorder items by dragging the handle or with the keyboard.",
+  tags: ["list", "control"],
+  status: "stable",
+  usage: "Drag an item by its handle (mouse, pen or touch). With the keyboard, focus a handle and press \u2191 / \u2193 to move the item, Home / End to move it to the top or bottom; the new position is announced. Fires p8-change with { order }.",
+  composition: "Each handle is an Icon Button.",
+  props: [P.area("items", "Write brief\nDesign review\nBuild prototype\nUser testing\nShip", "Items one per line, in their starting order.", "string (one per line)")],
+  rules: [
+    { cls: so.wrap, base: { position: "relative" } },
+    { cls: so.root, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), width: v("size-400"), "max-width": "100%", margin: "0", padding: "0", "list-style": "none", color: v("color-ink"), ...text("sm") } },
+    { cls: so.item, base: { display: "flex", "align-items": "center", gap: v("space-4"), "padding-block": v("space-4"), "padding-inline-start": v("space-4"), "padding-inline-end": v("space-12"), "border-radius": v("radius-8"), background: v("color-control"), "user-select": "none", transition: `background ${motion}` } },
+    { cls: so.itemOn, base: { background: v("color-control-strong") } },
+    { cls: so.handle, base: { cursor: "grab", "touch-action": "none" } },
+    { cls: so.label, base: { flex: "1", "min-width": "0", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    { cls: so.status, base: srOnly },
+    iconRule
+  ],
+  render(pr) {
+    const items = lines(pr.items);
+    return n("div", [so.wrap], [
+      n("ul", [so.root], items.map((it, i2) => {
+        const h = ibtn("menu", `Move ${it}, position ${i2 + 1} of ${items.length}`, { "data-handle": true, "aria-roledescription": "drag handle" }, "14");
+        return n("li", [so.item], [{ ...h, cls: [...h.cls ?? [], so.handle] }, n("span", [so.label], [it])], { "data-item": it });
+      }), { "aria-label": "Reorderable list" }),
+      n("span", [so.status], [], { role: "status", "aria-live": "assertive", "data-status": true })
+    ], { "data-p8": "sortable" });
+  }
+};
+var fb = { root: `${p}-filters`, row: `${p}-filters__row`, pick: `${p}-filters__pick`, chips: `${p}-filters__chips`, list: `${p}-filters__list`, empty: `${p}-filters__empty` };
+var parseFields = (s2) => lines(s2).map((l2) => {
+  const at = l2.indexOf(":");
+  return at < 0 ? [l2, []] : [l2.slice(0, at).trim(), l2.slice(at + 1).split(",").map((x) => x.trim()).filter(Boolean)];
+}).filter(([k2, vs]) => k2 && vs.length);
+var filterBar = {
+  id: "filter-bar",
+  name: "Filter Bar",
+  description: "Build filter conditions; active filters show as removable chips with clear-all.",
+  tags: ["control", "data"],
+  status: "stable",
+  usage: 'Pick a field and a value, then Add filter. Each active filter is a chip with a remove button; Clear all removes every chip. Fields are "Field: value, value" one per line. Fires p8-change with { filters: [{ field, value }] } so you can filter your own data.',
+  composition: "Two Selects and a Button; active filters are Tags.",
+  props: [
+    P.area("fields", "Status: Open, In progress, Closed\nOwner: Ada, Grace, Alan\nPriority: High, Medium, Low", 'One field per line: "Field: value, value, value".', "string (one per line)"),
+    P.area("value", "Status: Open\nPriority: High", 'Active filters, one per line: "Field: value".', "string (one per line)"),
+    P.bool("disabled", false, "Disables the bar.")
+  ],
+  rules: [
+    { cls: fb.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: fb.row, base: { display: "flex", "align-items": "center", gap: v("space-8") } },
+    { cls: fb.pick, base: { flex: "1", "min-width": "0" } },
+    { cls: fb.chips, base: { display: "flex", "align-items": "center", gap: v("space-12") } },
+    { cls: fb.list, base: { flex: "1", "min-width": "0", display: "flex", "align-items": "center", gap: v("space-8"), "overflow-x": "auto", "scrollbar-width": "thin", "white-space": "nowrap" } },
+    { cls: fb.empty, base: { color: v("color-ink-muted") }, nested: [hiddenRule] },
+    iconRule
+  ],
+  render(pr) {
+    const fields = parseFields(pr.fields);
+    const active = lines(pr.value).filter((l2) => {
+      const at = l2.indexOf(":");
+      const fv = fields.find(([k2]) => k2 === l2.slice(0, at).trim());
+      return at > 0 && fv && fv[1].includes(l2.slice(at + 1).trim());
+    }).map((l2) => {
+      const at = l2.indexOf(":");
+      return `${l2.slice(0, at).trim()}: ${l2.slice(at + 1).trim()}`;
+    });
+    const uniq = [...new Set(active)];
+    const off = dis(pr.disabled);
+    const chip = (label) => {
+      const t3 = tag.render({ label, removable: true, variant: "default" });
+      const { "data-p8": _d, ...rest2 } = t3.attrs ?? {};
+      return { ...t3, attrs: { ...rest2, "data-chip": label }, children: t3.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...off } } : c3) };
+    };
+    const select2 = (label, key, options) => n("div", [s.wrap, fb.pick], [
+      n("select", [s.root], options.map((o2, i2) => n("option", [], [o2], i2 === 0 ? { value: o2, selected: true } : { value: o2 })), { "aria-label": label, [key]: true, ...off }),
+      { ...iconNode("chevron-down", 16), cls: [c.icon, s.icon, ...pr.disabled ? [s.iconOff] : []] }
+    ]);
+    return n("div", [fb.root], [
+      n("div", [fb.row], [select2("Filter field", "data-field", fields.map(([k2]) => k2)), select2("Filter value", "data-value", fields[0]?.[1] ?? []), btn2("Add filter", "default", { "data-add": true, ...off }, "plus")]),
+      n("div", [fb.chips], [
+        n("div", [fb.list], [...uniq.map(chip), n("span", [fb.empty], ["No filters"], uniq.length ? { "data-empty": true, hidden: true } : { "data-empty": true })], { role: "group", "aria-label": "Active filters", "data-chips": true }),
+        btn2("Clear all", "ghost", { "data-clear": true, ...uniq.length && !pr.disabled ? {} : { disabled: true } })
+      ]),
+      n("template", [], [chip("__label__")], { "data-chip-template": true })
+    ], { "data-p8": "filters", "data-fields": JSON.stringify(Object.fromEntries(fields)) });
+  }
+};
+var nt = { root: `${p}-notify`, head: `${p}-notify__head`, heading: `${p}-notify__heading`, title: `${p}-notify__title`, count: `${p}-notify__count`, list: `${p}-notify__list`, item: `${p}-notify__item`, dot: `${p}-notify__dot`, body: `${p}-notify__body`, name: `${p}-notify__name`, detail: `${p}-notify__detail`, time: `${p}-notify__time`, read: `${p}-notify__read` };
+var unreadText = (k2) => k2 ? `${k2} unread` : "All caught up";
+var notificationList = {
+  id: "notification-list",
+  name: "Notification List",
+  description: "Notifications with unread markers, timestamps and mark-as-read.",
+  tags: ["content", "feedback"],
+  status: "stable",
+  usage: 'One notification per line: "Title | Time | Detail". Start a line with * to mark it unread. The check button marks one read; Mark all read clears them all. Fires p8-read with { index } (or { all: true }).',
+  composition: "Mark-as-read buttons are Icon Buttons; Mark all read is a ghost Button.",
+  props: [
+    P.text("title", "Notifications", "Heading."),
+    P.area("items", "* New comment | 2m | Ada replied to your design review\n* Build passed | 1h | main was deployed to production\nInvite accepted | Yesterday | Grace joined the workspace", "One per line: Title | Time | Detail. Prefix * for unread.", "string (one per line)")
+  ],
+  rules: [
+    { cls: nt.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", width: v("size-400"), "max-width": "100%", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-12"), background: v("color-canvas"), color: v("color-ink"), ...ringDecl, ...text("sm") }, focus: { outline: "none" } },
+    { cls: nt.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: nt.heading, base: { display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: nt.title, base: { margin: "0", ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: nt.count, base: { color: v("color-ink-muted") } },
+    { cls: nt.list, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), margin: "0", padding: "0", "list-style": "none" } },
+    {
+      cls: nt.item,
+      base: { display: "flex", "align-items": "flex-start", gap: v("space-12"), "padding-block": v("space-8"), "border-radius": v("radius-8") },
+      nested: [{ sel: `[data-unread="false"] .${nt.dot}`, decls: { visibility: "hidden" } }, { sel: `[data-unread="false"] .${nt.read}`, decls: { visibility: "hidden" } }, { sel: `[data-unread="false"] .${nt.name}`, decls: { "font-weight": v("type-weight") } }]
+    },
+    { cls: nt.dot, base: { "flex-shrink": "0", width: v("space-8"), height: v("space-8"), "margin-top": v("space-4"), "border-radius": v("radius-full"), background: v("color-ink") } },
+    { cls: nt.body, base: { flex: "1", "min-width": "0", display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: nt.name, base: { "font-weight": v("type-weight-strong") } },
+    { cls: nt.detail, base: { color: v("color-ink-muted") } },
+    { cls: nt.time, base: { color: v("color-ink-muted"), "white-space": "nowrap" } },
+    { cls: nt.read, base: {} },
+    iconRule
+  ],
+  render(pr) {
+    const items = lines(pr.items).map((l2) => {
+      const unread2 = l2.startsWith("*");
+      const [title = "", time3 = "", detail2 = ""] = l2.replace(/^\*\s*/, "").split("|").map((x) => x.trim());
+      return { unread: unread2, title, time: time3, detail: detail2 };
+    });
+    const unread = items.filter((x) => x.unread).length;
+    const all = btn2("Mark all read", "ghost", { "data-all": true, ...unread ? {} : { disabled: true } });
+    return n("section", [nt.root], [
+      n("div", [nt.head], [n("div", [nt.heading], [n("h2", [nt.title], [pr.title]), n("span", [nt.count], [unreadText(unread)], { "aria-live": "polite", "data-count": true })]), all]),
+      n("ul", [nt.list], items.map((x, i2) => {
+        const b2 = ibtn("check", `Mark "${x.title}" as read`, { "data-read": true }, "14");
+        return n("li", [nt.item], [
+          n("span", [nt.dot], [], { role: "img", "aria-label": "Unread" }),
+          n("div", [nt.body], [n("span", [nt.name], [x.title]), ...x.detail ? [n("span", [nt.detail], [x.detail])] : []]),
+          ...x.time ? [n("span", [nt.time], [x.time])] : [],
+          { ...b2, cls: [...b2.cls ?? [], nt.read] }
+        ], { "data-unread": String(x.unread), "data-index": String(i2) });
+      }))
+    ], { "aria-label": pr.title || "Notifications", tabindex: "-1", "data-p8": "notify" });
+  }
+};
+var lb = { root: `${p}-gallery`, grid: `${p}-gallery__grid`, c2: `${p}-gallery__grid--2`, c4: `${p}-gallery__grid--4`, thumb: `${p}-gallery__thumb`, img: `${p}-gallery__img`, panel: `${p}-lightbox`, fig: `${p}-lightbox__figure`, full: `${p}-lightbox__img`, cap: `${p}-lightbox__caption`, counter: `${p}-lightbox__counter`, bar: `${p}-lightbox__bar`, nav: `${p}-lightbox__nav` };
+var SHADES = ["gainsboro", "silver", "darkgray", "lightgray", "gray", "whitesmoke"];
+var placeholderImage = (i2) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='800' height='600' fill='${SHADES[i2 % SHADES.length]}'/><circle cx='${560 - i2 % 3 * 120}' cy='180' r='70' fill='white' fill-opacity='0.7'/><path d='M0 600L${220 + i2 % 4 * 40} ${300 + i2 % 2 * 40}L420 460L560 340L800 520V600Z' fill='dimgray' fill-opacity='0.55'/></svg>`)}`;
+var imageViewer = {
+  id: "image-viewer",
+  name: "Image Viewer",
+  description: "A thumbnail grid that opens images in a lightbox with captions and previous/next.",
+  tags: ["content", "overlay"],
+  status: "stable",
+  usage: 'One image per line: "Caption | image URL" (a line with only a caption gets a placeholder). Click a thumbnail to open it; \u2190 / \u2192 or the arrow buttons move between images, Esc or the backdrop closes and focus returns to the thumbnail.',
+  composition: "The lightbox is a Dialog-style overlay; navigation uses Icon Buttons.",
+  props: [
+    P.area("images", "Dunes at dawn\nHarbour lights\nForest path\nCity at night\nMountain lake\nStill life", "One per line: Caption | image URL. The URL is optional.", "string (one per line)"),
+    P.select("columns", ["2", "3", "4"], "3", "Thumbnails per row."),
+    P.bool("open", false, "Start with the first image open.")
+  ],
+  rules: [
+    ...overlayRules,
+    { cls: lb.root, base: { width: v("size-400"), "max-width": "100%" } },
+    { cls: lb.grid, base: { display: "grid", "grid-template-columns": "repeat(3, 1fr)", gap: v("space-8"), margin: "0", padding: "0", "list-style": "none" } },
+    { cls: lb.c2, base: { "grid-template-columns": "repeat(2, 1fr)" } },
+    { cls: lb.c4, base: { "grid-template-columns": "repeat(4, 1fr)" } },
+    { cls: lb.thumb, base: { display: "block", width: "100%", padding: "0", border: "none", overflow: "hidden", "border-radius": v("radius-8"), background: v("color-control"), cursor: "zoom-in" }, focus, nested: [{ sel: ":hover img", decls: { opacity: v("opacity-hover") } }] },
+    { cls: lb.img, base: { display: "block", width: "100%", "aspect-ratio": "4 / 3", "object-fit": "cover", transition: `opacity ${motion}` } },
+    { cls: lb.panel, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", width: v("size-500"), "max-width": "100%", "max-height": "100%", overflow: "hidden", padding: v("space-16"), "border-radius": v("radius-12"), background: v("color-canvas"), color: v("color-ink"), ...ringDecl, ...text("sm") } },
+    { cls: lb.fig, base: { flex: "1 1 auto", display: "flex", "flex-direction": "column", gap: v("space-12"), margin: "0", "min-height": "0" } },
+    { cls: lb.full, base: { flex: "1 1 auto", "min-height": "0", display: "block", width: "100%", "max-height": "60vh", "object-fit": "contain", "border-radius": v("radius-8"), background: v("color-control") } },
+    { cls: lb.cap, base: { display: "flex", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: lb.counter, base: { color: v("color-ink-muted"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    { cls: lb.bar, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: lb.nav, base: { display: "flex", gap: v("space-8") } },
+    iconRule
+  ],
+  render(pr) {
+    const imgs = lines(pr.images).map((l2, i2) => {
+      const [cap = "", src = ""] = l2.split("|").map((x) => x.trim());
+      return { cap: cap || `Image ${i2 + 1}`, src: src || placeholderImage(i2) };
+    });
+    if (!imgs.length) imgs.push({ cap: "Image 1", src: placeholderImage(0) });
+    const cols = pr.columns === "2" ? [lb.grid, lb.c2] : pr.columns === "4" ? [lb.grid, lb.c4] : [lb.grid];
+    const first = imgs[0];
+    const many = imgs.length > 1;
+    return n("div", [lb.root], [
+      n("ul", cols, imgs.map((im, i2) => n("li", [], [n("button", [lb.thumb], [n("img", [lb.img], void 0, { src: im.src, alt: "", loading: "lazy" })], { type: "button", "aria-label": `Open ${im.cap}`, "data-open": String(i2), "data-caption": im.cap })])), { "aria-label": "Images" }),
+      n("div", [ov.root], [
+        n("div", [lb.panel], [
+          n("div", [lb.bar], [
+            n("span", [lb.counter], [`1 / ${imgs.length}`], { "data-counter": true, "aria-live": "polite" }),
+            n("div", [lb.nav], [ibtn("chevron-left", "Previous image", { "data-dir": "-1", ...dis(!many) }), ibtn("chevron-right", "Next image", { "data-dir": "1", ...dis(!many) }), ibtn("close", "Close", { "data-close": true })])
+          ]),
+          n("figure", [lb.fig], [n("img", [lb.full], void 0, { src: first.src, alt: first.cap, "data-full": true }), n("figcaption", [lb.cap], [n("span", [], [first.cap], { "data-caption": true })])])
+        ], { role: "dialog", "aria-modal": "true", "aria-label": "Image viewer" })
+      ], pr.open ? { "data-p8": "overlay", "data-lightbox": true } : { "data-p8": "overlay", "data-lightbox": true, hidden: true })
+    ], { "data-p8": "lightbox" });
+  }
+};
+
 // src/components/guidelines.ts
 var GUIDELINES = {
   button: { do: ["Use one primary button per view or dialog.", 'Start labels with a verb: "Save", "Invite".', "Use ghost for secondary actions next to a primary."], dont: ["Do not put two primary buttons side by side.", "Do not use an icon with no label here; use Icon Button."] },
@@ -22137,6 +22592,14 @@ var GUIDELINES = {
   timeline: { do: ["Keep titles to a few words.", "Put the time in a consistent format."], dont: ["Do not use for steps the user must complete; use Stepper."] },
   "context-menu": { do: ["Offer the same actions elsewhere (a menu button).", "Keep to seven items."], dont: ["Do not hide the only way to do something in a right-click."] },
   "hover-card": { do: ["Use for previews of people or links.", "Make the trigger a real link."], dont: ["Do not put essential information in it; touch users cannot hover.", "Do not put buttons in it that are not reachable another way."] },
+  "password-input": { do: ['Use autocomplete="new-password" on sign-up and "current-password" on sign-in.', "Show the requirements before the user types, not only after an error.", "Let users reveal what they typed."], dont: ["Do not block paste; password managers rely on it.", "Do not show requirements on sign-in."] },
+  "data-table": { do: ["Use when people need to sort, select or act on many rows.", "Keep the first column a name that identifies the row.", "Name bulk actions with verbs."], dont: ["Do not use for a handful of facts; use Table or Data List.", "Do not run destructive bulk actions without a confirmation Dialog."] },
+  "date-range-picker": { do: ["Use for bookings, reports and filters with a start and an end.", "Show the length of the range."], dont: ["Do not use two separate Date Pickers for one range.", "Do not allow an end before the start."] },
+  "resizable-panels": { do: ["Use for app layouts where people tune the space (sidebar and editor).", "Keep a sensible minimum size for each pane."], dont: ["Do not use on phones; stack the panes instead.", "Do not nest more than two levels of splits."] },
+  "sortable-list": { do: ["Use when the order itself is the data (priorities, steps).", "Keep the handle visible so reordering is discoverable."], dont: ["Do not rely on drag alone; the arrow keys must work too.", "Do not use for long lists; offer sort options instead."] },
+  "filter-bar": { do: ["Show every active filter as a chip.", "Offer Clear all once a filter is set."], dont: ["Do not apply filters the user cannot see.", "Do not use for a single filter; use Segmented Control or Select."] },
+  "notification-list": { do: ["Mark unread with both a dot and stronger text.", "Keep titles short and put detail on the second line."], dont: ["Do not delete notifications when they are read.", "Do not use for urgent messages; use Alert or Toast."] },
+  "image-viewer": { do: ["Give every image a caption; it becomes the alt text.", "Keep thumbnails the same shape."], dont: ["Do not auto-advance.", "Do not open the viewer for a single small image; link it instead."] },
   "tree-view": { do: ["Use for hierarchies with two to four levels.", "Pre-select the current item."], dont: ["Do not use for flat lists; use List Row or Sidebar Nav.", "Do not nest deeper than five levels."] },
   "scroll-area": { do: ["Give it a fixed height.", "Keep it focusable so the keyboard can scroll it."], dont: ["Do not nest scroll areas.", "Do not hide important actions below the fold of a scroll area."] },
   timer: { do: ["Use a countdown for deadlines and a stopwatch for elapsed time.", "Listen for p8-timer-done to react when it ends."], dont: ["Do not announce every second to screen readers.", "Do not use for dates; show a date instead."] },
@@ -22173,15 +22636,23 @@ var MARKS = {
   "inline-edit": { since: "0.8.0" },
   "code-block": { since: "0.8.0" },
   slider: { since: "0.4.0", mark: "refined" },
-  "date-picker": { since: "0.9.0", mark: "new" },
-  "time-picker": { since: "0.9.0", mark: "new" },
-  "multi-select": { since: "0.9.0", mark: "new" },
-  "file-upload": { since: "0.9.0", mark: "new" },
-  "swatch-picker": { since: "0.9.0", mark: "new" },
-  carousel: { since: "0.9.0", mark: "new" },
-  timeline: { since: "0.9.0", mark: "new" },
-  "context-menu": { since: "0.9.0", mark: "new" },
-  "hover-card": { since: "0.9.0", mark: "new" },
+  "date-picker": { since: "0.9.0" },
+  "time-picker": { since: "0.9.0" },
+  "multi-select": { since: "0.9.0" },
+  "file-upload": { since: "0.9.0" },
+  "swatch-picker": { since: "0.9.0" },
+  carousel: { since: "0.9.0" },
+  timeline: { since: "0.9.0" },
+  "context-menu": { since: "0.9.0" },
+  "hover-card": { since: "0.9.0" },
+  "password-input": { since: "0.10.0", mark: "new" },
+  "data-table": { since: "0.10.0", mark: "new" },
+  "date-range-picker": { since: "0.10.0", mark: "new" },
+  "resizable-panels": { since: "0.10.0", mark: "new" },
+  "sortable-list": { since: "0.10.0", mark: "new" },
+  "filter-bar": { since: "0.10.0", mark: "new" },
+  "notification-list": { since: "0.10.0", mark: "new" },
+  "image-viewer": { since: "0.10.0", mark: "new" },
   combobox: { since: "0.7.0" },
   "number-input": { since: "0.7.0" },
   "otp-input": { since: "0.7.0" },
@@ -22282,7 +22753,15 @@ var components = [
   carousel,
   timeline,
   contextMenu,
-  hoverCard
+  hoverCard,
+  passwordInput,
+  dataTable,
+  dateRangePicker,
+  resizablePanels,
+  sortableList,
+  filterBar,
+  notificationList,
+  imageViewer
 ];
 for (const c3 of components) {
   c3.guidelines = GUIDELINES[c3.id];
@@ -22911,6 +23390,279 @@ var KINDS = {
     if (item) xClose(item.closest('[data-p8~="context"]'));
   }, ${SIG});
   doc.addEventListener('click', function (e) { all('[data-p8~="context"]').forEach(function (c) { if (!c.contains(e.target)) xClose(c); }); }, ${SIG});`,
+  password: `
+  var PWT = { number: /\\d/, upper: /[A-Z]/, lower: /[a-z]/, symbol: /[^A-Za-z0-9\\s]/ };
+  function pwCheck(w) {
+    var v = w.querySelector('[data-password]').value, ok = true;
+    Array.from(w.querySelectorAll('[data-rule]')).forEach(function (li) {
+      var r = li.getAttribute('data-rule'), met = r.indexOf('length:') === 0 ? v.length >= Number(r.slice(7)) : PWT[r] ? PWT[r].test(v) : true;
+      li.classList.toggle('p8-password__rule--on', met); if (!met) ok = false;
+    });
+    w.setAttribute('data-valid', String(ok));
+    return ok;
+  }
+  all('[data-p8~="password"]').forEach(pwCheck);
+  root.addEventListener('input', function (e) {
+    var w = cl(e, '[data-p8~="password"]');
+    if (!w || !e.target.hasAttribute('data-password')) return;
+    var ok = pwCheck(w);
+    w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { valid: ok } }));
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="password"] [data-reveal]');
+    if (!b || b.disabled) return;
+    var w = b.closest('[data-p8~="password"]'), i = w.querySelector('[data-password]'), show = i.type === 'password';
+    i.type = show ? 'text' : 'password';
+    b.setAttribute('aria-pressed', String(show)); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    b.classList.toggle('p8-password__toggle--on', show);
+  }, ${SIG});`,
+  datatable: `
+  function dtBox(b, state) {
+    b.setAttribute('aria-checked', state === 'mixed' ? 'mixed' : String(state));
+    b.classList.toggle('p8-check__box--on', state !== false);
+    var icons = b.querySelectorAll('svg');
+    icons[0].classList.toggle('p8-check__icon--on', state === true);
+    if (icons[1]) icons[1].classList.toggle('p8-dtable__minus--on', state === 'mixed');
+  }
+  function dtPicked(t) { return Array.from(t.querySelectorAll('tbody [data-pick]')).filter(function (b) { return b.getAttribute('aria-checked') === 'true'; }); }
+  function dtSync(t) {
+    var picks = t.querySelectorAll('tbody [data-pick]'), on = dtPicked(t), head = t.querySelector('[data-all]');
+    if (head) dtBox(head, !on.length ? false : on.length === picks.length ? true : 'mixed');
+    Array.from(picks).forEach(function (b) { b.closest('tr').classList.toggle('p8-dtable__row--on', b.getAttribute('aria-checked') === 'true'); });
+    var c = t.querySelector('[data-count]'); if (c && head) c.textContent = on.length + ' selected';
+    Array.from(t.querySelectorAll('[data-action]')).forEach(function (a) { a.disabled = !on.length; });
+  }
+  function dtKey(s) { var x = s.trim(); return x !== '' && !isNaN(Number(x)) ? Number(x) : x; }
+  function dtSort(t, col) {
+    var th = t.querySelector('th[data-col="' + col + '"]'), dir = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+    Array.from(t.querySelectorAll('th[data-col]')).forEach(function (h) { h.setAttribute('aria-sort', h === th ? dir : 'none'); });
+    var body = t.querySelector('tbody'), rows = Array.from(body.rows);
+    rows.sort(function (a, b) {
+      var x = dtKey(a.querySelector('td[data-col="' + col + '"]').textContent), y = dtKey(b.querySelector('td[data-col="' + col + '"]').textContent);
+      var r = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true, sensitivity: 'base' });
+      return (dir === 'ascending' ? r : -r) || Number(a.getAttribute('data-row')) - Number(b.getAttribute('data-row'));
+    });
+    rows.forEach(function (r) { body.appendChild(r); });
+    t.dispatchEvent(new CustomEvent('p8-sort', { bubbles: true, detail: { column: Number(col), direction: dir } }));
+  }
+  root.addEventListener('click', function (e) {
+    var t = cl(e, '[data-p8~="datatable"]');
+    if (!t) return;
+    var s = cl(e, '[data-sort]'), pick = cl(e, '[data-pick]'), allB = cl(e, '[data-all]'), act = cl(e, '[data-action]'), col = cl(e, '[data-col][role="checkbox"]');
+    if (s) { dtSort(t, s.getAttribute('data-sort')); return; }
+    if (pick) { dtBox(pick, pick.getAttribute('aria-checked') !== 'true'); dtSync(t); return; }
+    if (allB) { var to = allB.getAttribute('aria-checked') !== 'true'; Array.from(t.querySelectorAll('tbody [data-pick]')).forEach(function (b) { dtBox(b, to); }); dtSync(t); return; }
+    if (act && !act.disabled) { t.dispatchEvent(new CustomEvent('p8-action', { bubbles: true, detail: { action: act.getAttribute('data-action'), rows: dtPicked(t).map(function (b) { return Number(b.closest('tr').getAttribute('data-row')); }).sort(function (a, b) { return a - b; }) } })); return; }
+    if (col) {
+      var shown = Array.from(t.querySelectorAll('[role="checkbox"][data-col]')).filter(function (b) { return b.getAttribute('aria-checked') === 'true'; });
+      var show = col.getAttribute('aria-checked') !== 'true';
+      if (!show && shown.length <= 1) return;
+      dtBox(col, show);
+      Array.from(t.querySelectorAll('th[data-col="' + col.getAttribute('data-col') + '"], td[data-col="' + col.getAttribute('data-col') + '"]')).forEach(function (c) { c.hidden = !show; });
+    }
+  }, ${SIG});`,
+  range: `
+  var RFMT = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function drOk(v) { return /^\\d{4}-\\d{2}-\\d{2}$/.test(v) && !isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v; }
+  function drCells(y, m, ws) {
+    var off = (new Date(Date.UTC(y, m, 1)).getUTCDay() - ws + 7) % 7, out = [];
+    for (var i = 0; i < 42; i++) { var d = new Date(Date.UTC(y, m, 1 - off + i)); out.push({ iso: d.toISOString().slice(0, 10), n: d.getUTCDate(), out: d.getUTCMonth() !== m }); }
+    return out;
+  }
+  function drVals(c) { var s = c.querySelector('[data-start]').value, e = c.querySelector('[data-end]').value; s = drOk(s) ? s : ''; e = drOk(e) && s ? e : ''; return [s, e]; }
+  function drPaint(c) {
+    var p = c.getAttribute('data-month').split('-'), y = Number(p[0]), m = Number(p[1]) - 1, cells = drCells(y, m, Number(c.getAttribute('data-week'))), v = drVals(c);
+    Array.from(c.querySelectorAll('[data-grid] [data-date]')).forEach(function (b, i) {
+      var x = cells[i], end = x.iso === v[0] || x.iso === v[1], mid = !!(v[0] && v[1] && x.iso > v[0] && x.iso < v[1]);
+      b.setAttribute('data-date', x.iso); b.setAttribute('aria-label', x.iso); b.textContent = String(x.n);
+      b.classList.toggle('p8-cal__day--out', x.out); b.classList.toggle('p8-cal__day--on', end); b.classList.toggle('p8-cal__day--active', mid); b.setAttribute('aria-pressed', String(end || mid));
+    });
+    c.querySelector('[data-label]').textContent = RFMT.format(new Date(Date.UTC(y, m, 1)));
+    var n = v[0] && v[1] ? Math.round((Date.parse(v[1]) - Date.parse(v[0])) / 86400000) + 1 : 0;
+    c.querySelector('[data-hint]').textContent = !v[0] ? 'Pick a start date' : !v[1] ? 'Pick an end date' : n + (n === 1 ? ' day' : ' days') + ' selected';
+  }
+  function drEmit(c) { var v = drVals(c); c.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { start: v[0], end: v[1] } })); }
+  root.addEventListener('click', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || c.querySelector('[data-start]').disabled) return;
+    var dir = cl(e, '[data-p8~="range"] [data-dir]'), day = cl(e, '[data-p8~="range"] [data-date]');
+    if (dir) { var p = c.getAttribute('data-month').split('-'), d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1 + Number(dir.getAttribute('data-dir')), 1)); c.setAttribute('data-month', d.getUTCFullYear() + '-' + ('0' + (d.getUTCMonth() + 1)).slice(-2)); drPaint(c); return; }
+    if (!day) return;
+    var s = c.querySelector('[data-start]'), en = c.querySelector('[data-end]'), v = drVals(c), iso = day.getAttribute('data-date'), done = false;
+    if (!v[0] || v[1]) { s.value = iso; en.value = ''; }
+    else if (iso < v[0]) s.value = iso;
+    else { en.value = iso; done = true; }
+    drPaint(c); drEmit(c);
+    if (done) c.dispatchEvent(new CustomEvent('p8-close', { bubbles: true }));
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
+    if (drOk(e.target.value)) c.setAttribute('data-month', e.target.value.slice(0, 7));
+    drPaint(c);
+  }, ${SIG});
+  root.addEventListener('change', function (e) {
+    var c = cl(e, '[data-p8~="range"]');
+    if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
+    var s = c.querySelector('[data-start]'), en = c.querySelector('[data-end]');
+    if (drOk(s.value) && drOk(en.value) && en.value < s.value) { var t = s.value; s.value = en.value; en.value = t; }
+    drPaint(c); drEmit(c);
+  }, ${SIG});`,
+  resize: `
+  function rzSet(h, pct) {
+    var min = Number(h.getAttribute('aria-valuemin')), max = Number(h.getAttribute('aria-valuemax'));
+    pct = Math.round(Math.min(max, Math.max(min, pct)));
+    h.setAttribute('aria-valuenow', String(pct));
+    h.previousElementSibling.style.flexBasis = pct + '%';
+    h.dispatchEvent(new CustomEvent('p8-resize', { bubbles: true, detail: { size: pct } }));
+  }
+  function rzVert(h) { return h.getAttribute('aria-orientation') === 'horizontal'; }
+  root.addEventListener('keydown', function (e) {
+    var h = cl(e, '[data-p8~="resize"] [data-handle]');
+    if (!h) return;
+    var now = Number(h.getAttribute('aria-valuenow')), k = e.key, vert = rzVert(h);
+    if (k === (vert ? 'ArrowUp' : 'ArrowLeft')) rzSet(h, now - 5);
+    else if (k === (vert ? 'ArrowDown' : 'ArrowRight')) rzSet(h, now + 5);
+    else if (k === 'Home') rzSet(h, 0);
+    else if (k === 'End') rzSet(h, 100);
+    else return;
+    e.preventDefault();
+  }, ${SIG});
+  root.addEventListener('pointerdown', function (e) {
+    var h = cl(e, '[data-p8~="resize"] [data-handle]');
+    if (!h || e.button !== 0) return;
+    e.preventDefault(); h.focus();
+    var box = h.parentElement, vert = rzVert(h);
+    if (h.setPointerCapture) try { h.setPointerCapture(e.pointerId); } catch (err) { }
+    function move(ev) { var r = box.getBoundingClientRect(); rzSet(h, vert ? (ev.clientY - r.top) / r.height * 100 : (ev.clientX - r.left) / r.width * 100); }
+    function up() { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); }
+    h.addEventListener('pointermove', move, ${SIG}); h.addEventListener('pointerup', up, ${SIG}); h.addEventListener('pointercancel', up, ${SIG});
+  }, ${SIG});`,
+  sortable: `
+  function soItems(l) { return Array.from(l.querySelectorAll('[data-item]')); }
+  function soDone(w, li, announce) {
+    var items = soItems(w), i = items.indexOf(li), name = li.getAttribute('data-item');
+    items.forEach(function (x, j) { x.querySelector('[data-handle]').setAttribute('aria-label', 'Move ' + x.getAttribute('data-item') + ', position ' + (j + 1) + ' of ' + items.length); });
+    if (announce) w.querySelector('[data-status]').textContent = name + ' moved to position ' + (i + 1) + ' of ' + items.length;
+    w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { order: items.map(function (x) { return x.getAttribute('data-item'); }) } }));
+  }
+  root.addEventListener('keydown', function (e) {
+    var h = cl(e, '[data-p8~="sortable"] [data-handle]');
+    if (!h) return;
+    var w = h.closest('[data-p8~="sortable"]'), li = h.closest('[data-item]'), list = li.parentElement, k = e.key;
+    if (k === 'ArrowUp' && li.previousElementSibling) list.insertBefore(li, li.previousElementSibling);
+    else if (k === 'ArrowDown' && li.nextElementSibling) list.insertBefore(li.nextElementSibling, li);
+    else if (k === 'Home' && li.previousElementSibling) list.insertBefore(li, list.firstElementChild);
+    else if (k === 'End' && li.nextElementSibling) list.appendChild(li);
+    else { if (k === 'ArrowUp' || k === 'ArrowDown' || k === 'Home' || k === 'End') e.preventDefault(); return; }
+    e.preventDefault(); h.focus(); soDone(w, li, true);
+  }, ${SIG});
+  root.addEventListener('pointerdown', function (e) {
+    var h = cl(e, '[data-p8~="sortable"] [data-handle]');
+    if (!h || e.button !== 0) return;
+    var w = h.closest('[data-p8~="sortable"]'), li = h.closest('[data-item]'), list = li.parentElement, moved = false;
+    e.preventDefault();
+    li.classList.add('p8-sortable__item--active');
+    function move(ev) {
+      var sibs = soItems(list).filter(function (x) { return x !== li; }), before = null;
+      for (var i = 0; i < sibs.length; i++) { var r = sibs[i].getBoundingClientRect(); if (ev.clientY < r.top + r.height / 2) { before = sibs[i]; break; } }
+      if (before !== li.nextElementSibling || (!before && li !== list.lastElementChild)) { list.insertBefore(li, before); moved = true; }
+    }
+    function up() {
+      li.classList.remove('p8-sortable__item--active');
+      doc.removeEventListener('pointermove', move); doc.removeEventListener('pointerup', up); doc.removeEventListener('pointercancel', up);
+      h.focus();
+      if (moved) soDone(w, li, true);
+    }
+    // Listen on the document: moving the item in the DOM would drop pointer capture on the handle.
+    doc.addEventListener('pointermove', move, ${SIG}); doc.addEventListener('pointerup', up, ${SIG}); doc.addEventListener('pointercancel', up, ${SIG});
+  }, ${SIG});`,
+  filters: `
+  function fbData(b) { try { return JSON.parse(b.getAttribute('data-fields') || '{}'); } catch (err) { return {}; } }
+  function fbChips(b) { return Array.from(b.querySelectorAll('[data-chips] [data-chip]')); }
+  function fbSync(b) {
+    var chips = fbChips(b), off = b.querySelector('[data-add]').disabled;
+    b.querySelector('[data-empty]').hidden = chips.length > 0;
+    b.querySelector('[data-clear]').disabled = off || !chips.length;
+    b.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { filters: chips.map(function (c) { var t = c.getAttribute('data-chip'), i = t.indexOf(': '); return { field: t.slice(0, i), value: t.slice(i + 2) }; }) } }));
+  }
+  root.addEventListener('change', function (e) {
+    var b = cl(e, '[data-p8~="filters"]');
+    if (!b || !e.target.hasAttribute('data-field')) return;
+    var vs = fbData(b)[e.target.value] || [], sel = b.querySelector('[data-value]');
+    sel.textContent = '';
+    vs.forEach(function (v) { var o = doc.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="filters"]');
+    if (!b) return;
+    var add = cl(e, '[data-add]'), clear = cl(e, '[data-clear]'), x = cl(e, '[data-chip] [data-close]');
+    if (add && !add.disabled) {
+      var label = b.querySelector('[data-field]').value + ': ' + b.querySelector('[data-value]').value;
+      if (fbChips(b).some(function (c) { return c.getAttribute('data-chip') === label; })) return;
+      var tpl = b.querySelector('template[data-chip-template]'), src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild, chip = src.cloneNode(true);
+      chip.setAttribute('data-chip', label); chip.firstChild.textContent = label; chip.querySelector('[data-close]').setAttribute('aria-label', 'Remove ' + label);
+      b.querySelector('[data-chips]').insertBefore(chip, b.querySelector('[data-empty]'));
+      fbSync(b); return;
+    }
+    if (x) { x.closest('[data-chip]').remove(); fbSync(b); b.querySelector('[data-add]').focus(); return; }
+    if (clear && !clear.disabled) { fbChips(b).forEach(function (c) { c.remove(); }); fbSync(b); b.querySelector('[data-field]').focus(); }
+  }, ${SIG});`,
+  notify: `
+  function ntSync(w) {
+    var n = w.querySelectorAll('[data-unread="true"]').length;
+    w.querySelector('[data-count]').textContent = n ? n + ' unread' : 'All caught up';
+    w.querySelector('[data-all]').disabled = !n;
+    return n;
+  }
+  root.addEventListener('click', function (e) {
+    var w = cl(e, '[data-p8~="notify"]');
+    if (!w) return;
+    var one = cl(e, '[data-read]'), allB = cl(e, '[data-all]');
+    if (one) {
+      var li = one.closest('[data-unread]');
+      li.setAttribute('data-unread', 'false'); one.disabled = true;
+      var left = ntSync(w), next = w.querySelector('[data-unread="true"] [data-read]');
+      (next || (left ? w.querySelector('[data-all]') : w)).focus();
+      w.dispatchEvent(new CustomEvent('p8-read', { bubbles: true, detail: { index: Number(li.getAttribute('data-index')) } }));
+      return;
+    }
+    if (allB && !allB.disabled) {
+      Array.from(w.querySelectorAll('[data-unread="true"]')).forEach(function (li) { li.setAttribute('data-unread', 'false'); li.querySelector('[data-read]').disabled = true; });
+      ntSync(w); w.focus();
+      w.dispatchEvent(new CustomEvent('p8-read', { bubbles: true, detail: { all: true } }));
+    }
+  }, ${SIG});
+  all('[data-p8~="notify"]').forEach(function (w) { Array.from(w.querySelectorAll('[data-unread="false"] [data-read]')).forEach(function (b) { b.disabled = true; }); });`,
+  lightbox: `
+  function lbThumbs(g) { return Array.from(g.querySelectorAll('[data-open]')); }
+  function lbShow(g, i) {
+    var t = lbThumbs(g), n = t.length; i = (i + n) % n;
+    var o = g.querySelector('[data-lightbox]'), img = o.querySelector('[data-full]'), th = t[i];
+    img.src = th.querySelector('img').getAttribute('src'); img.alt = th.getAttribute('data-caption');
+    o.querySelector('[data-caption]').textContent = th.getAttribute('data-caption');
+    o.querySelector('[data-counter]').textContent = (i + 1) + ' / ' + n;
+    g.setAttribute('data-index', String(i));
+  }
+  root.addEventListener('click', function (e) {
+    var g = cl(e, '[data-p8~="lightbox"]');
+    if (!g) return;
+    var th = cl(e, '[data-open]'), dir = cl(e, '[data-lightbox] [data-dir]');
+    if (th) { g.__opener = th; lbShow(g, Number(th.getAttribute('data-open'))); var o = g.querySelector('[data-lightbox]'); o.hidden = false; o.querySelector('[data-close]').focus(); return; }
+    if (dir && !dir.disabled) lbShow(g, Number(g.getAttribute('data-index') || 0) + Number(dir.getAttribute('data-dir')));
+  }, ${SIG});
+  doc.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    all('[data-p8~="lightbox"]').forEach(function (g) {
+      if (g.querySelector('[data-lightbox]').hidden || lbThumbs(g).length < 2) return;
+      e.preventDefault();
+      lbShow(g, Number(g.getAttribute('data-index') || 0) + (e.key === 'ArrowRight' ? 1 : -1));
+    });
+  }, ${SIG});
+  root.addEventListener('p8-closed', function (e) {
+    var g = cl(e, '[data-p8~="lightbox"]');
+    if (g && g.__opener) g.__opener.focus();
+  }, ${SIG});`,
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
@@ -23007,7 +23759,15 @@ var KIND_KEYS = {
   rating: [{ keys: "\u2190 \u2192 \u2191 \u2193", does: "Change the rating" }],
   number: [{ keys: "\u2191 \u2193", does: "Step the value (native)" }, { keys: "Type", does: "Enter a number" }],
   pager: [{ keys: "Enter / Space", does: "Go to the page" }],
-  tooltip: [{ keys: "Tab", does: "Focusing the trigger shows the tooltip" }]
+  tooltip: [{ keys: "Tab", does: "Focusing the trigger shows the tooltip" }],
+  password: [{ keys: "Enter / Space", does: "Show or hide the password (eye button)" }],
+  datatable: [{ keys: "Enter / Space", does: "Sort by the focused column header; toggle the focused checkbox" }],
+  range: [{ keys: "Enter / Space", does: "Pick the focused day (first the start, then the end)" }, { keys: "Type", does: "Enter dates as YYYY-MM-DD" }],
+  resize: [{ keys: "\u2190 \u2192 (\u2191 \u2193 when stacked)", does: "Move the divider 5%" }, { keys: "Home / End", does: "Smallest / largest first pane" }],
+  sortable: [{ keys: "\u2191 \u2193", does: "Move the item up or down (on its handle)" }, { keys: "Home / End", does: "Move the item to the top or bottom" }],
+  filters: [{ keys: "Enter / Space", does: "Add the filter, remove a chip or clear all" }],
+  notify: [{ keys: "Enter / Space", does: "Mark one or all as read" }],
+  lightbox: [{ keys: "Enter / Space", does: "Open the image" }, { keys: "\u2190 \u2192", does: "Previous / next image" }, { keys: "Esc", does: "Close and return to the thumbnail" }]
 };
 function keyboardReport(node2) {
   const out = [];
@@ -23032,7 +23792,7 @@ function keyboardReport(node2) {
     if (!kinds.has("otp") && !kinds.has("combobox") && !kinds.has("palette") && !kinds.has("number")) push([{ keys: "Type", does: "Enter text" }]);
   }
   for (const k2 of kinds) push(KIND_KEYS[k2] ?? []);
-  if (!tags.has("button") && !tags.has("a") && !tags.has("summary") && !tags.has("input") && !tags.has("select") && !tags.has("textarea")) return [{ keys: "\u2014", does: "Not interactive: no keyboard interaction and not in the tab order" }];
+  if (![...kinds].some((k2) => KIND_KEYS[k2]) && !tags.has("button") && !tags.has("a") && !tags.has("summary") && !tags.has("input") && !tags.has("select") && !tags.has("textarea")) return [{ keys: "\u2014", does: "Not interactive: no keyboard interaction and not in the tab order" }];
   return out;
 }
 function labelReport(node2) {
