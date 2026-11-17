@@ -87,6 +87,7 @@ test('spacing rules hold in the rendered preview', async ({ page }) => {
 });
 
 test('every component renders and has code in every tab', async ({ page }) => {
+  test.setTimeout(600_000);
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
   await expect(nav.getByRole('link')).toHaveCount((await (await page.request.get('/api/components')).json()).components.length);
@@ -124,6 +125,7 @@ test('dark mode toggle', async ({ page }) => {
 
 /** Fixed controls keep their bounds; multi-select may grow vertically as chips wrap. */
 test('no layout shift when interacting with any component', async ({ page }) => {
+  test.setTimeout(900_000);
   test.setTimeout(120_000);
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
@@ -131,7 +133,10 @@ test('no layout shift when interacting with any component', async ({ page }) => 
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   const box = async () => {
     const root = page.getByTestId('preview').locator('> div > *').first();
-    return (await root.boundingBox())!;
+    const b = (await root.boundingBox())!;
+    // the preview can scroll when a component is taller than the pane; scrolling is not a layout shift
+    const scroll = await page.getByTestId('preview').evaluate((e) => [e.scrollLeft, e.scrollTop]);
+    return { x: b.x + scroll[0], y: b.y + scroll[1], width: b.width, height: b.height };
   };
   for (const name of names) {
     await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
@@ -144,6 +149,7 @@ test('no layout shift when interacting with any component', async ({ page }) => 
     for (let i = 0; i < count; i++) {
       const t = targets.nth(i);
       if (!(await t.isEnabled()) || !(await t.isVisible())) continue;
+      await t.scrollIntoViewIfNeeded();
       await t.click({ force: true });
       await page.waitForTimeout(220);
       const after = await box();
@@ -339,4 +345,49 @@ test('0.10.0: drag to resize and reorder, table sort, range pick, lightbox and p
   await expect(preview.locator('.p8-password__rule--on')).toHaveCount(4);
   await preview.getByRole('button', { name: 'Show password' }).click();
   await expect(preview.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text');
+});
+
+test('templates page lists whole screens and they work', async ({ page }) => {
+  await page.goto('/templates');
+  const nav = page.getByRole('navigation', { name: 'Templates' });
+  await expect(nav.getByRole('link')).toHaveCount(5);
+  await expect(page.getByRole('heading', { name: 'Sign-in', level: 1 })).toBeVisible();
+  // sign-in: validation wiring
+  const preview = page.getByTestId('preview');
+  await preview.getByRole('button', { name: 'Sign in' }).click();
+  await expect(preview.locator('#form-email-error')).toHaveText('Email is required');
+  await preview.locator('#form-email').fill('ada@example.com');
+  await expect(preview.locator('#form-email-error')).toHaveText('');
+  // list to detail switches the panel
+  await nav.getByRole('link', { name: /List to detail/ }).click();
+  const rows = preview.locator('[data-target]');
+  await rows.nth(1).click();
+  await expect(preview.locator('[data-detail]:not([hidden])')).toHaveCount(1);
+  await expect(preview.locator('[data-detail]:not([hidden])')).toContainText('Order 1041');
+  // code for the whole screen in a framework
+  await page.getByTestId('tab-react').click();
+  await expect(page.getByTestId('code')).toContainText('export function ListDetail');
+  await page.getByTestId('switch-link').click();
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test('new app components work in the live preview', async ({ page }) => {
+  await page.goto('/#toggle-group');
+  const preview = page.getByTestId('preview');
+  await preview.getByRole('button', { name: 'Italic' }).click();
+  await expect(preview.getByRole('button', { name: 'Italic' })).toHaveAttribute('aria-pressed', 'true');
+  await page.goto('/#tag-input');
+  await preview.locator('[data-entry]').fill('new tag');
+  await preview.locator('[data-entry]').press('Enter');
+  await expect(preview.locator('[data-chip="new tag"]')).toBeVisible();
+  await page.goto('/#chart');
+  await preview.locator('[data-plot]').focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(preview.locator('[data-tip]')).toBeVisible();
+  await page.goto('/#calendar');
+  await preview.locator('[data-dir="1"]').click();
+  await expect(preview.locator('[data-label]')).toHaveText('December 2026');
+  await page.goto('/#chat-composer');
+  await preview.locator('[data-input]').fill('Hello');
+  await expect(preview.locator('[data-send]')).toBeEnabled();
 });

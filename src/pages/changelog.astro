@@ -2,9 +2,9 @@
 import '../styles/global.css';
 import { site } from '../config/site';
 import { RELEASES } from '../changelog';
-import { components } from '../components';
+import { components, templates } from '../components';
 
-const byVersion = (v: string) => components.filter((c) => c.since === v);
+const byVersion = (v: string) => [...components, ...templates].filter((c) => c.since === v);
 ---
 <!doctype html>
 <html lang="en">
@@ -33,7 +33,7 @@ const byVersion = (v: string) => components.filter((c) => c.since === v);
           {byVersion(r.version).length > 0 && (
             <div class="chips">
               {byVersion(r.version).map((c) => (
-                <a class="chip" href={`/#${c.id}`}>{c.name}{c.mark === 'new' && <span class="mark">New</span>}{c.mark === 'refined' && <span class="mark">Refined</span>}</a>
+                <a class="chip" href={c.tags.includes('template') ? `/templates#${c.id}` : `/#${c.id}`}>{c.name}{c.mark === 'new' && <span class="mark">New</span>}{c.mark === 'refined' && <span class="mark">Refined</span>}</a>
               ))}
             </div>
           )}

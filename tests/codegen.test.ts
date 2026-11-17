@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { components, defaultsOf, schemaOf } from '../src/components';
+import { components, defaultsOf, schemaOf, templates } from '../src/components';
+
+const everything = [...components, ...templates];
 import { FRAMEWORKS, generate, markup } from '../src/codegen';
 
 const SIX = FRAMEWORKS.filter((f) => f !== 'p8');
@@ -14,10 +16,10 @@ function variantsOf(def: (typeof components)[number]): Record<string, unknown>[]
   }
   return [{}, alt];
 }
-const variants: Record<string, Record<string, unknown>[]> = Object.fromEntries(components.map((d) => [d.id, variantsOf(d)]));
+const variants: Record<string, Record<string, unknown>[]> = Object.fromEntries(everything.map((d) => [d.id, variantsOf(d)]));
 
 describe('schemas', () => {
-  it.each(components)('$id defaults parse to themselves', (def) => {
+  it.each(everything)('$id defaults parse to themselves', (def) => {
     expect(schemaOf(def.props).parse({})).toEqual(defaultsOf(def.props));
   });
   it('rejects unknown props and bad values', () => {
@@ -27,7 +29,7 @@ describe('schemas', () => {
 });
 
 describe('codegen snapshots', () => {
-  for (const def of components)
+  for (const def of everything)
     for (const [i, props] of variants[def.id].entries())
       for (const fw of FRAMEWORKS)
         it(`${def.id} #${i} → ${fw}`, () => {
@@ -42,7 +44,7 @@ describe('cross-framework parity', () => {
   const tags = (code: string) => [...stripNonMarkup(code).matchAll(/<([a-z0-9]+)[\s>/]/g)].map((m) => m[1]);
   const classes = (code: string) => [...code.matchAll(/class(?:Name)?="([^"]*)"/g)].map((m) => m[1]);
 
-  for (const def of components)
+  for (const def of everything)
     for (const [i, props] of variants[def.id].entries())
       it(`${def.id} #${i}`, () => {
         const out = Object.fromEntries(SIX.map((fw) => [fw, generate(def, props, fw).code]));
@@ -59,7 +61,8 @@ describe('cross-framework parity', () => {
         // tailwind and inline outputs carry the same declarations per element (no stray values)
         const node = def.render(generate(def, props, 'astro').props);
         expect(markup(node, 'class')).toContain('<');
-        expect(out.tailwind).not.toMatch(/#[0-9a-f]{3,8}\b/i);
+        // user data (a chosen colour in style/value/labels) may contain hex; component styling never does
+        expect(out.tailwind.replace(/<script>[\s\S]*?<\/script>/g, '').replace(/(style|value|aria-label|data-[\w-]+|\w+)="[^"]*#[0-9a-f]{3,8}[^"]*"/gi, '').replace(/>#[0-9a-f]{3,8}</gi, '><')).not.toMatch(/#[0-9a-f]{3,8}\b/i);
       });
 });
 
@@ -84,5 +87,18 @@ describe('custom swatch styles', () => {
       if (framework === 'react') expect(code).toContain('style={{ background: "#ff0000" }}');
       if (framework === 'html') expect(code).toContain('; background: #ff0000');
     }
+  });
+});
+
+describe('React output uses valid React attribute names', () => {
+  it('maps lowercase HTML attributes (novalidate, autocomplete, maxlength, inputmode, readonly…)', () => {
+    const form = generate(everything.find((d) => d.id === 'form')!, {}, 'react').code;
+    expect(form).toContain('noValidate');
+    expect(form).toContain('autoComplete');
+    expect(form).not.toMatch(/\snovalidate|\sautocomplete=/);
+    const otp = generate(everything.find((d) => d.id === 'otp-input')!, {}, 'react').code;
+    expect(otp).toContain('maxLength');
+    expect(otp).toContain('inputMode');
+    expect(otp).not.toMatch(/\smaxlength=|\sinputmode=/);
   });
 });

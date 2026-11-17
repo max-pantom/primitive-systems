@@ -13,6 +13,9 @@ import { treeView, scrollArea, timer, inlineEdit, codeBlock } from './extras';
 import { datePicker, timePicker, multiSelect, fileUpload, swatchPicker } from './pickers';
 import { carousel, timeline, contextMenu, hoverCard } from './extras2';
 import { passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer } from './apps';
+import { toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton } from './kit';
+import { emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell } from './screens';
+import { templates } from './templates';
 import type { ComponentDef, Node, Rule } from './types';
 
 export const components: ComponentDef[] = [button, card, input, textarea, divider, menu, tabs, disclosure, dataList, select, checkbox, switchC, badge, tooltip, dialog, toast, avatar,
@@ -21,13 +24,17 @@ export const components: ComponentDef[] = [button, card, input, textarea, divide
   combobox, numberInput, otpInput, stepper, rating, accordion, statCard, avatarGroup, progressRing, banner,
   treeView, scrollArea, timer, inlineEdit, codeBlock,
   datePicker, timePicker, multiSelect, fileUpload, swatchPicker, carousel, timeline, contextMenu, hoverCard,
-  passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer];
+  passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer,
+  toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton,
+  emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell];
 import { GUIDELINES, MARKS } from './guidelines';
-for (const c of components) { c.guidelines = GUIDELINES[c.id]; c.since = MARKS[c.id]?.since ?? '0.6.0'; c.mark = MARKS[c.id]?.mark; }
-export const getDef = (id: string) => components.find((c) => c.id === id);
+for (const c of [...components, ...templates]) { c.guidelines = GUIDELINES[c.id]; c.since = MARKS[c.id]?.since ?? '0.6.0'; c.mark = MARKS[c.id]?.mark; }
+export const getDef = (id: string) => components.find((c) => c.id === id) ?? templates.find((c) => c.id === id);
 
 /** Every rule across the library, keyed by class (first definition wins; button rules are reused by card). */
-export const ruleMap: Map<string, Rule> = new Map(components.flatMap((c) => c.rules).map((r) => [r.cls, r]));
+export const ruleMap: Map<string, Rule> = new Map([...components, ...templates].flatMap((c) => c.rules).map((r) => [r.cls, r]));
+export { templates };
+export const getTemplate = (id: string) => templates.find((t) => t.id === id);
 
 export function usedClasses(node: Node | string, acc: string[] = []): string[] {
   if (typeof node === 'string') return acc;

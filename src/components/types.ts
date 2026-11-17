@@ -50,6 +50,8 @@ export interface ComponentDef {
   composition?: string;
   /** Usage rules for agents: how to use the component well, not just correctly. */
   guidelines?: { do: string[]; dont: string[] };
+  /** Templates: ids of the components the screen is built from. */
+  uses?: string[];
   /** Release marker shown in the catalog. */
   since?: string;
   mark?: 'new' | 'refined';

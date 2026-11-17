@@ -17,11 +17,12 @@ An agentic component library: one definition per component, six code outputs, a 
 ## Workflow
 
 1. `get_rules` once per task. Obey it.
-2. `search_components` with the user's need in plain words ("confirm a destructive action") — pick from the results; do not invent components.
+2. For a whole screen (sign-in, settings, dashboard, list-to-detail, empty page) call `list_templates` and `get_template` with a framework: you get the composed screen, behavior included. Otherwise `search_components` with the user's need in plain words ("confirm a destructive action") — pick from the results; do not invent components.
 3. `get_component` for the props, defaults and **guidelines (do / don't)** of each one you will use.
 4. `get_code` for one component, or `compose_code` for a whole section (it stacks several with one script). Use the framework the project already uses; if unsure, `html` or `p8`.
 5. Put the theme in once: `get_tokens` (or `build_theme` for a custom palette), emitted as CSS variables. Never paste hex into components.
-6. After editing a project that uses the library, run `lint_code` (or `npx primitive lint src`) on the files you changed.
+6. After editing a project that uses the library, run `lint_code` with `fix: true` (or `npx primitive lint src --fix`) on the files you changed: it corrects off-grid spacing, gaps, raw colours and missing labels and lists each change; handle what remains.
+7. To update code you generated earlier, call `diff_component` (`from` = the version you used) and follow its migration hints; pin with `version` on `get_component` / `get_code` while you migrate.
 
 ## The rules that matter most
 

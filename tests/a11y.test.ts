@@ -37,6 +37,6 @@ describe('accessibility report', () => {
   });
   it('is part of get_component for agents', async () => {
     const { getComponent } = await import('../src/api/handlers');
-    expect(getComponent('button').a11y.keyboard.length).toBeGreaterThan(0);
+    expect((getComponent('button') as unknown as { a11y: { keyboard: unknown[] } }).a11y.keyboard.length).toBeGreaterThan(0);
   });
 });

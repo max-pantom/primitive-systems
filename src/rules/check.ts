@@ -1,4 +1,4 @@
-import { components, defaultsOf } from '../components';
+import { components, defaultsOf, templates } from '../components';
 import type { ComponentDef, Decls, Node, Rule } from '../components';
 import { theme } from '../tokens/theme';
 import { EXCEPTIONS, FIELD_CLASSES, GAPS, GRID_SPACE, RADII } from './rulebook';
@@ -133,7 +133,7 @@ export function variants(def: ComponentDef): Record<string, string | boolean>[] 
 
 export function checkAll(): Violation[] {
   const out: Violation[] = [...checkTokens(), ...checkSource()];
-  for (const def of components) {
+  for (const def of [...components, ...templates]) {
     out.push(...checkRules(def));
     variants(def).forEach((props, i) => {
       const node = def.render(props);

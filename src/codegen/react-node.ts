@@ -35,3 +35,15 @@ export function styleToObject(css: string): Record<string, string> {
   }
   return out;
 }
+
+const REACT_ATTRS: Record<string, string> = {
+  class: 'className', for: 'htmlFor', tabindex: 'tabIndex', novalidate: 'noValidate', autocomplete: 'autoComplete', maxlength: 'maxLength', minlength: 'minLength',
+  inputmode: 'inputMode', enterkeyhint: 'enterKeyHint', spellcheck: 'spellCheck', readonly: 'readOnly', colspan: 'colSpan', rowspan: 'rowSpan', autofocus: 'autoFocus',
+  contenteditable: 'contentEditable', crossorigin: 'crossOrigin', srcset: 'srcSet', datetime: 'dateTime', accesskey: 'accessKey', enctype: 'encType', formaction: 'formAction', usemap: 'useMap',
+};
+/** HTML attribute name → React prop name (kebab SVG attributes become camelCase; aria-* and data-* stay). */
+export function reactAttrName(k: string): string {
+  if (REACT_ATTRS[k]) return REACT_ATTRS[k];
+  if (/^(aria|data)-/.test(k)) return k;
+  return k.replace(/-(\w)/g, (_, c) => c.toUpperCase());
+}

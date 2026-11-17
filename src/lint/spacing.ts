@@ -1,14 +1,23 @@
 /** Flags padding, margin, gap and radius values that are off the 4/8 grid in consumer code (CSS, SCSS, JSX styles, Tailwind arbitrary values). */
-export interface LintIssue { line: number; property: string; value: string; severity: 'error' | 'warn'; message: string }
+export interface LintIssue { line: number; rule: 'grid' | 'gap' | 'color' | 'label'; property: string; value: string; severity: 'error' | 'warn'; message: string; fixable?: boolean }
 
 const PROP = '(padding|margin|gap|row-gap|column-gap|border-radius|border-(?:top|bottom)-(?:left|right)-radius|padding-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?|margin-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)';
 const CAMEL = '(padding|margin|gap|rowGap|columnGap|borderRadius|padding(?:Top|Right|Bottom|Left|Inline|Block)|margin(?:Top|Right|Bottom|Left|Inline|Block))';
 
-function judge(px: number): { severity: 'error' | 'warn'; message: string } | null {
+export const GAP_VALUES = [4, 8, 12];
+export const snapGap = (px: number) => GAP_VALUES.reduce((a, b) => (Math.abs(b - px) < Math.abs(a - px) || (Math.abs(b - px) === Math.abs(a - px) && b > a) ? b : a));
+export const snapGrid = (px: number) => Math.max(0, Math.round(px / 4) * 4);
+const isGapProp = (prop: string) => /^(gap|row-gap|column-gap|rowGap|columnGap|gap-[xy]|space-[xy])$/.test(prop);
+
+function judge(px: number, prop = ''): { severity: 'error' | 'warn'; message: string; rule: 'grid' | 'gap'; fixable: boolean } | null {
+  if (isGapProp(prop)) {
+    if (GAP_VALUES.includes(Math.abs(px)) || px === 0) return null;
+    return { severity: 'error', rule: 'gap', fixable: true, message: `${px}px is not an allowed gap (4, 8 or 12) — use ${snapGap(Math.abs(px))}px` };
+  }
   if (px === 0 || px % 4 === 0) return null;
-  if (px === 2 || px === 6) return { severity: 'warn', message: `${px}px is only allowed for line gaps (2) and menu item sides (6)` };
+  if (px === 2 || px === 6) return { severity: 'warn', rule: 'grid', fixable: false, message: `${px}px is only allowed for menu item sides (6) and insets (2)` };
   const near = Math.round(px / 4) * 4;
-  return { severity: 'error', message: `${px}px is off the 4/8 grid — use ${near}px` };
+  return { severity: 'error', rule: 'grid', fixable: true, message: `${px}px is off the 4/8 grid — use ${near}px` };
 }
 
 export function lintSpacing(code: string): LintIssue[] {
@@ -16,7 +25,7 @@ export function lintSpacing(code: string): LintIssue[] {
   const lines = code.split('\n');
   const seen = new Set<string>();
   const push = (line: number, property: string, value: string, px: number) => {
-    const j = judge(px);
+    const j = judge(px, property.replace(/^.*-(?=gap)/, ''));
     const key = `${line}|${property}|${px}`;
     if (j && !seen.has(key)) { seen.add(key); issues.push({ line, property, value, ...j }); }
   };

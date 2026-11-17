@@ -1,6 +1,6 @@
 import { site } from '../config/site';
 import { getDef, ruleMap, usedClasses, parseProps, defaultsOf } from '../components';
-import { reactify, styleToObject } from './react-node';
+import { reactAttrName, reactify, styleToObject } from './react-node';
 import { hasBehavior, runtime } from './behavior';
 import type { ComponentDef, Decls, Node, Props, Rule } from '../components';
 
@@ -126,7 +126,6 @@ const esc = (t: string, braces: boolean) => {
 };
 const VOID = new Set(['input', 'img', 'hr', 'br', 'path', 'line', 'circle', 'rect', 'polygon', 'animate', 'animateTransform']);
 const escAttr = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const camel = (k: string) => (/^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, ch) => ch.toUpperCase()));
 
 function attrString(node: Node, mode: Mode): string {
   const parts: string[] = [];
@@ -147,7 +146,7 @@ function attrString(node: Node, mode: Mode): string {
   for (const [k, val] of Object.entries(node.attrs ?? {})) {
     if (k === 'style' && mode === 'inline') continue;
     if (k === 'style' && mode === 'react' && typeof val === 'string') { parts.push(`style={${JSON.stringify(styleToObject(val)).replace(/"([A-Za-z_$][\w$]*)":/g, '$1: ').replace(/^\{/, '{ ').replace(/\}$/, ' }')}}`); continue; }
-    const name = mode === 'react' ? (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : camel(k)) : k;
+    const name = mode === 'react' ? reactAttrName(k) : k;
     parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }
   return parts.length ? ' ' + parts.join(' ') : '';

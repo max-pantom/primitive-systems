@@ -3,9 +3,10 @@
 This repo is an agentic component library. If you are an AI agent building UI for a Primitive 8 app, **use it instead of writing components**.
 
 1. Read the rule book: `RULEBOOK.md` (or MCP `get_rules`).
-2. Find components: MCP `search_components`, or `GET /api/search?q=`.
+2. Find components or whole screens: MCP `search_components` / `list_templates`, or `GET /api/search?q=` / `GET /api/templates`.
 3. Get code: MCP `get_code` / `compose_code`, or `npx primitive add <id> -f <framework>`.
-4. Verify: `pnpm rules` (this repo) or MCP `lint_code` / `npx primitive lint src` (your project).
+4. Verify: `pnpm rules` (this repo) or MCP `lint_code` (add `fix: true`) / `npx primitive lint src --fix` (your project).
+5. Update older generated code: MCP `diff_component` with the version you used.
 
 MCP: `claude mcp add --transport http primitive-systems https://primitive-systems.vercel.app/mcp`
 Skill: copy `skills/primitive-systems/SKILL.md` to `.claude/skills/primitive-systems/SKILL.md`.

@@ -1,5 +1,16 @@
 # Progress
 
+## 0.11.0 — templates, app components, lint --fix, diff_component
+
+- **Templates** (whole screens agents can request): Sign-in, Settings page, Dashboard, List to detail, Empty page. They are ComponentDefs, so they are generated for all six frameworks + `<p8-*>`, carry their behavior, and are held to the same rule book, a11y and parity tests. Page `/templates`, MCP `list_templates` / `get_template`, `GET /api/templates`, found by `search_components` ("login screen").
+- **Components:** Empty State, Form (validation + submit wiring with `p8-submit` / `done()`), Calendar (month view + agenda), Chart + Sparkline, Chat Message + Chat Composer, Navbar, App Shell; primitives Toggle Group, Link, Heading, Text, Color Picker, Tag Input, Infinite List, Split Button. 96 catalog entries (91 components + 5 templates).
+- **lint_code fix:** off-grid spacing/radius → nearest 4, gaps → 4/8/12, raw hex → nearest theme token (only within a close distance; otherwise reported), missing aria-label/alt added from placeholder/name, every change listed, idempotent, leaves anchors/url()/prop-spread alone. CLI `primitive lint --fix`.
+- **Versions:** `src/versions/snapshots.json` is rebuilt from the real release commits (0.1.0, 0.5.0–0.10.0 + current) by `scripts/snapshot-history.sh`; `pnpm snapshot` freezes a new release. `list_versions`, `diff_component` (one component or whole library; breaking flag, removed options/props, changed defaults, removed classes, whether generated output changed, migration hints), `version` on `get_component` / `get_code`.
+  - Limit: old generated *code* is not archived. Pinning validates props against the old schema and reports `outputChanged`; the code itself always comes from the current engine. 0.2–0.4 shipped in one commit, so they have no separate snapshots.
+- **Runtime fixes found while building:** widgets that create DOM now clone styled template nodes (Svelte/Astro scoped styles and plain HTML/Tailwind class stripping would otherwise leave them unstyled); `p8-busy` listener per composer; shell labels found by structure, not class.
+- Checks: rule audit 0 violations over components and templates; behavior tests for all 12 new kinds + list-detail; e2e covers templates page and live previews.
+
+
 ## 0.10.0 — app components
 
 - Eight new components → 74 total: Password Input (show/hide, live requirement checks, autocomplete), Data Table (sorting, row selection with select-all, column visibility, bulk actions via `p8-action`), Date Range Picker (start/end fields, range highlight, typed dates, auto-swap), Resizable Panels (pointer drag and arrow keys, `p8-resize`), Sortable List (handle drag with mouse/pen/touch and arrow/Home/End keys, announced moves), Filter Bar (field/value pickers, chips, clear-all, `p8-change`), Notification List (unread dots, mark one/all read, `p8-read`) and Image Viewer (thumbnail grid and lightbox with captions, ←/→, focus return).

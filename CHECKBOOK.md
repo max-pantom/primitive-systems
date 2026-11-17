@@ -100,3 +100,20 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Filter Bar | `filter-bar` | pass | pass | yes |
 | Notification List | `notification-list` | pass | pass | yes |
 | Image Viewer | `image-viewer` | pass | pass | yes |
+| Toggle Group | `toggle-group` | pass | pass | yes |
+| Link | `link` | pass | pass | yes |
+| Heading | `heading` | pass | pass | yes |
+| Text | `text` | pass | pass | yes |
+| Color Picker | `color-picker` | pass | pass | yes |
+| Tag Input | `tag-input` | pass | pass | yes |
+| Infinite List | `infinite-list` | pass | pass | yes |
+| Split Button | `split-button` | pass | pass | yes |
+| Empty State | `empty-state` | pass | pass | yes |
+| Form | `form` | pass | pass | yes |
+| Calendar | `calendar` | pass | pass | yes |
+| Chart | `chart` | pass | pass | yes |
+| Sparkline | `sparkline` | pass | pass | yes |
+| Chat Message | `chat-message` | pass | pass | yes |
+| Chat Composer | `chat-composer` | pass | pass | yes |
+| Navbar | `navbar` | pass | pass | yes |
+| App Shell | `app-shell` | pass | pass | yes |

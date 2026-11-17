@@ -16,7 +16,7 @@ Docs + live playground: https://primitive-systems.vercel.app
 | **Zero build** | `<script src="https://primitive-systems.vercel.app/p8.js"></script>` → `<p8-button variant="primary">Save</p8-button>` |
 | **llms.txt** | https://primitive-systems.vercel.app/llms.txt |
 
-MCP tools: `list_components`, `get_component` (props + do/don't guidelines), `get_code`, `compose_code`, `search_components`, `get_rules`, `get_tokens`, `build_theme`, `lint_code`, `get_install`, `get_changelog`.
+MCP tools: `list_templates`, `get_template`, `diff_component`, `list_versions`, `list_components`, `get_component` (props + do/don't guidelines), `get_code`, `compose_code`, `search_components`, `get_rules`, `get_tokens`, `build_theme`, `lint_code`, `get_install`, `get_changelog`.
 
 Release history: `/changelog` (site), `GET /api/changelog` (JSON), and `get_changelog` (MCP).
 
@@ -24,7 +24,9 @@ Release history: `/changelog` (site), `GET /api/changelog` (JSON), and `get_chan
 
 - **Rule book:** [RULEBOOK.md](RULEBOOK.md) — 4/8 grid, 12px controls, 16/12 surfaces, default gap 12, menu 6/4, one stroke, dim focus, 14/16 icons from the Primitive8 pack, accessibility. Source of truth: `src/rules/rulebook.ts`.
 - **Check book:** [CHECKBOOK.md](CHECKBOOK.md) — `pnpm rules` checks every component's style rules and rendered markup against the rule book (tokens-only, grid, control/surface padding, gaps, type scale, hairline, focus, disabled, icons, ARIA, labels, contrast). It runs inside `pnpm test`.
-- **Lint your own code:** `npx primitive lint src` flags padding, margin, gap and radius off the 4/8 grid.
+- **Lint your own code:** `npx primitive lint src` flags off-grid padding/margin/radius, gaps other than 4/8/12, raw hex colours and missing labels; add `--fix` (MCP: `lint_code` with `fix: true`) to correct them and list every change.
+- **Templates:** whole screens (sign-in, settings, dashboard, list-to-detail, empty page) at `/templates` and through `list_templates` / `get_template`.
+- **Versions:** `list_versions`, `diff_component` and a `version` argument on `get_component` / `get_code` show what changed between releases, with migration hints (snapshots are rebuilt from real release history).
 - **Themes:** `npx primitive theme --ink "#111" --canvas "#fff" --radius 12 --out theme.css` derives the whole token file and checks contrast.
 
 ## Develop

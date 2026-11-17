@@ -12,7 +12,10 @@ export function kindsIn(node: Node | string, acc = new Set<string>()): Set<strin
 
 const SIG = '{ signal: ac.signal }';
 
+import { KINDS2 } from './behavior2';
+
 const KINDS: Record<string, string> = {
+  ...KINDS2,
   toggle: `
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="toggle"] [role="checkbox"], [data-p8~="toggle"] [role="switch"]');

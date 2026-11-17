@@ -3,7 +3,7 @@ import { dirname, extname, join, resolve } from 'node:path';
 import { composeCode, getCode, getComponent, getRules, getThemeBuild, listComponents, searchComponents } from '../api/handlers';
 import { FRAMEWORKS } from '../codegen';
 import { site } from '../config/site';
-import { lintSpacing } from '../lint/spacing';
+import { fixCode, lintAll } from '../lint/fix';
 import { themeToCss } from '../tokens/theme';
 
 const argv = process.argv.slice(2);
@@ -30,7 +30,7 @@ function help() {
   ${bin} info <id>                             Props, defaults, guidelines
   ${bin} add <id...> [-f framework] [--prop k=v] [--out dir] [--stdout] [--force]
                                              Write component code into your project
-  ${bin} lint <path...>                        Flag padding/margin/gap/radius off the 4/8 grid
+  ${bin} lint <path...> [--fix]                Flag (and with --fix, correct) off-grid spacing, gaps, raw colours and missing labels
   ${bin} theme [--ink #111111 --canvas #FFFFFF --dark-ink #E1E1E1 --dark-canvas #1D1D1D --radius 8] [--out theme.css]
   ${bin} tokens [--out theme.css]              The default theme as CSS variables
   ${bin} rules                                 The rule book
@@ -85,15 +85,22 @@ switch (cmd) {
   }
   case 'lint': {
     const targets = rest.length ? rest : ['.'];
-    let errors = 0, warns = 0, files = 0;
+    let errors = 0, warns = 0, files = 0, fixed = 0;
     for (const t of targets) for (const f of guard(() => walk(t))) {
       files++;
-      for (const i of lintSpacing(readFileSync(f, 'utf8'))) {
-        console.log(`${f}:${i.line}  ${i.severity}  ${i.property}: ${i.value}  ${i.message}`);
+      const src = readFileSync(f, 'utf8');
+      let issues = lintAll(src);
+      if (flags.fix && issues.length) {
+        const r = fixCode(src);
+        if (r.fixes.length) { writeFileSync(f, r.fixed); for (const x of r.fixes) console.log(`${f}:${x.line}  fixed  ${x.rule}  ${x.from}  →  ${x.to}${x.note ? `  (${x.note})` : ''}`); fixed += r.fixes.length; }
+        issues = r.remaining;
+      }
+      for (const i of issues) {
+        console.log(`${f}:${i.line}  ${i.severity}  ${i.rule}  ${i.property}: ${i.value}  ${i.message}`);
         i.severity === 'error' ? errors++ : warns++;
       }
     }
-    console.log(`\n${files} files, ${errors} error${errors === 1 ? '' : 's'}, ${warns} warning${warns === 1 ? '' : 's'}`);
+    console.log(`\n${files} files, ${fixed ? `${fixed} fixed, ` : ''}${errors} error${errors === 1 ? '' : 's'}, ${warns} warning${warns === 1 ? '' : 's'}`);
     process.exit(errors ? 1 : 0);
     break;
   }

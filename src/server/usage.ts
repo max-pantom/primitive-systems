@@ -82,12 +82,12 @@ export async function getUsage(): Promise<UsageSummary> {
 export function resetMemoryUsage() { HASHES.forEach((h) => mem[h].clear()); mem.since = undefined; }
 
 /** HTTP route → the equivalent tool name, so HTTP and MCP callers are counted together. */
-const HTTP_TOOL: [RegExp, string, string][] = [[/^GET \/api\/components$/, 'list_components', ''], [/^GET \/api\/components\/[^/]+$/, 'get_component', ''], [/^POST \/api\/code$/, 'get_code', ''], [/^POST \/api\/compose$/, 'compose_code', ''], [/^GET \/api\/search$/, 'search_components', ''], [/^GET \/api\/rules$/, 'get_rules', ''], [/^GET \/api\/tokens$/, 'get_tokens', ''], [/^POST \/api\/theme$/, 'build_theme', ''], [/^POST \/api\/lint$/, 'lint_code', ''], [/^GET \/api\/install$/, 'get_install', ''], [/^GET \/api\/changelog$/, 'get_changelog', '']];
+const HTTP_TOOL: [RegExp, string, string][] = [[/^GET \/api\/components$/, 'list_components', ''], [/^GET \/api\/components\/[^/]+$/, 'get_component', ''], [/^POST \/api\/code$/, 'get_code', ''], [/^POST \/api\/compose$/, 'compose_code', ''], [/^GET \/api\/search$/, 'search_components', ''], [/^GET \/api\/rules$/, 'get_rules', ''], [/^GET \/api\/tokens$/, 'get_tokens', ''], [/^POST \/api\/theme$/, 'build_theme', ''], [/^POST \/api\/lint$/, 'lint_code', ''], [/^GET \/api\/install$/, 'get_install', ''], [/^GET \/api\/changelog$/, 'get_changelog', ''], [/^GET \/api\/versions$/, 'list_versions', ''], [/^GET \/api\/diff$/, 'diff_component', ''], [/^GET \/api\/templates$/, 'list_templates', ''], [/^GET \/api\/templates\/[^/]+$/, 'get_template', ''], [/^POST \/api\/templates\/code$/, 'get_template', '']];
 
 export function describeCall(tool: string, args: Record<string, unknown> | undefined): Pick<UsageEvent, 'components' | 'framework'> {
   const a = args ?? {};
   const fw = typeof a.framework === 'string' ? a.framework : undefined;
-  if (tool === 'get_component' && typeof a.id === 'string') return { components: [a.id] };
+  if ((tool === 'get_component' || tool === 'get_template') && typeof a.id === 'string') return { components: [a.id], framework: fw };
   if (tool === 'get_code' && typeof a.component === 'string') return { components: [a.component], framework: fw };
   if (tool === 'compose_code' && Array.isArray(a.items)) return { components: [...new Set((a.items as { component?: string }[]).map((i) => i.component).filter((x): x is string => typeof x === 'string'))], framework: fw };
   return {};
@@ -98,6 +98,7 @@ export function describeHttp(method: string, path: string, body: unknown): { too
   const hit = HTTP_TOOL.find(([re]) => re.test(key));
   if (!hit) return null;
   const tool = hit[1];
-  const idMatch = path.match(/^\/api\/components\/([^/]+)$/);
-  return { tool, ...describeCall(tool, idMatch ? { id: decodeURIComponent(idMatch[1]) } : (body as Record<string, unknown>)) };
+  const idMatch = path.match(/^\/api\/(?:components|templates)\/([^/]+)$/);
+  const b = body as Record<string, unknown> | undefined;
+  return { tool, ...describeCall(tool, idMatch ? { id: decodeURIComponent(idMatch[1]) } : path === '/api/templates/code' ? { id: b?.id, framework: b?.framework } : b) };
 }

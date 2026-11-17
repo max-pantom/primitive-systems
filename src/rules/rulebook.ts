@@ -35,6 +35,7 @@ export const EXCEPTIONS: Exception[] = [
   { rule: 'surface-padding', target: 'p8-palette', reason: 'Wrapper around an input and options that carry their own control padding.' },
   { rule: 'surface-padding', target: 'p8-combobox__list', reason: 'Option list wrapper: 4px inset around options that carry their own 12px control padding.' },
   { rule: 'surface-padding', target: 'p8-multi__list', reason: 'Option list wrapper: 4px inset around options that carry their own 12px control padding.' },
+  { rule: 'control-padding', target: 'p8-mcal__cell', reason: 'Month-grid cell: a fixed-height cell holding a day number and up to two event labels; the 4px inset keeps labels inside the cell lines.' },
   { rule: 'control-padding', target: 'p8-cal__day', reason: 'Fixed 32px calendar cell with no padding; digits are centered in the square.' },
   { rule: 'control-padding', target: 'p8-swatch', reason: 'Fixed 24px colour swatch with no padding.' },
   { rule: 'control-padding', target: 'p8-rating__star', reason: 'Fixed 24px star target with no padding.' },

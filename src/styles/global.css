@@ -30,7 +30,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .link { display: inline-flex; align-items: center; gap: var(--p8-space-8); background: none; border: 0; padding: 0; font: inherit; color: var(--p8-color-ink-muted); cursor: pointer; }
 .link:hover { color: var(--p8-color-ink); }
 
-.preview { position: relative; flex: 1 1 0; min-height: 200px; overflow: auto; display: flex; align-items: center; justify-content: center; padding: var(--p8-space-32); border: var(--p8-border-hairline) solid var(--p8-color-ring); border-radius: var(--p8-radius-8); }
+.preview { position: relative; flex: 1 1 0; min-height: 200px; overflow: auto; display: flex; padding: var(--p8-space-32); border: var(--p8-border-hairline) solid var(--p8-color-ring); border-radius: var(--p8-radius-8); }
 
 .panel-head { display: flex; justify-content: space-between; align-items: center; }
 .control { display: flex; flex-direction: column; gap: var(--p8-space-4); }
@@ -171,3 +171,6 @@ ul.proplist p { margin: 0; }
 .prop-default { display: flex; gap: var(--p8-space-8); align-items: baseline; font-size: var(--p8-type-size-sm); min-width: 0; }
 .prop-default code { overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: reduce) { details.fold .chev { transition: none; } }
+
+/* Safe centering: margin:auto centers when there is room and never clips the top/left when the content is bigger than the pane. */
+.preview > div { margin: auto; }

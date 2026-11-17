@@ -34,7 +34,7 @@ export const radioGroup: ComponentDef = {
 };
 
 /* ---------- Field ---------- */
-const fl = { hint: `${p}-field__hint`, err: `${p}-field__error`, bad: `${p}-input--invalid` };
+export const fl = { hint: `${p}-field__hint`, err: `${p}-field__error`, bad: `${p}-input--invalid` };
 export const field: ComponentDef = {
   id: 'field', name: 'Field', description: 'Label, input, hint and error message in one wrapper.', tags: ['form', 'composition'], status: 'stable',
   usage: 'Wraps any input. An error replaces the hint, is linked with aria-describedby and outlines the input in ink.',

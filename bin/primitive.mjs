@@ -914,8 +914,8 @@ function numKeys(data) {
   return keyCount;
 }
 var getParsedType = (data) => {
-  const t3 = typeof data;
-  switch (t3) {
+  const t4 = typeof data;
+  switch (t4) {
     case "undefined":
       return "undefined";
     case "string":
@@ -954,7 +954,7 @@ var getParsedType = (data) => {
       }
       return "object";
     default:
-      throw new Error(`Unknown data type: ${t3}`);
+      throw new Error(`Unknown data type: ${t4}`);
   }
 };
 var propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
@@ -1254,8 +1254,8 @@ function getLengthableOrigin(input3) {
   return "unknown";
 }
 function parsedType(data) {
-  const t3 = typeof data;
-  switch (t3) {
+  const t4 = typeof data;
+  switch (t4) {
     case "number": {
       return Number.isNaN(data) ? "nan" : "number";
     }
@@ -1272,7 +1272,7 @@ function parsedType(data) {
       }
     }
   }
-  return t3;
+  return t4;
 }
 function issue(...args) {
   const [iss, input3, inst] = args;
@@ -2726,7 +2726,7 @@ var $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
     own(this, "~standard", value);
   }
 });
-var toStandardResult = (r2, ctx) => r2.issues.length ? { issues: r2.issues.map((iss) => finalizeIssue(iss, ctx, config())) } : { value: r2.value };
+var toStandardResult = (r3, ctx) => r3.issues.length ? { issues: r3.issues.map((iss) => finalizeIssue(iss, ctx, config())) } : { value: r3.value };
 async function validateAsync2(inst, value) {
   const ctx = { async: true };
   return toStandardResult(await inst._zod.run({ value, issues: [] }, ctx), ctx);
@@ -2736,9 +2736,9 @@ function standardProps(inst) {
     validate: (value) => {
       const ctx = { async: false };
       try {
-        const r2 = inst._zod.run({ value, issues: [] }, ctx);
-        if (!(r2 instanceof Promise))
-          return toStandardResult(r2, ctx);
+        const r3 = inst._zod.run({ value, issues: [] }, ctx);
+        if (!(r3 instanceof Promise))
+          return toStandardResult(r3, ctx);
       } catch (_) {
       }
       return validateAsync2(inst, value);
@@ -3373,11 +3373,11 @@ function capSize(inst, size) {
   const caps = sizeCaps(inst._zod.def.checks);
   if (!caps.length)
     return;
-  const cap = Math.min(...caps.map((c3) => c3[0]));
+  const cap2 = Math.min(...caps.map((c3) => c3[0]));
   const parse3 = inst._zod.parse;
   inst._zod.parse = (payload, ctx) => {
     const n2 = size(payload.value);
-    if (n2 > cap && !ctx?.skipChecks && ctx?.direction !== "backward") {
+    if (n2 > cap2 && !ctx?.skipChecks && ctx?.direction !== "backward") {
       for (const [max, ch] of sizeCaps(inst._zod.def.checks)) {
         if (n2 > max && ch._zod.def.when(payload)) {
           const start = payload.issues.length;
@@ -3496,7 +3496,7 @@ function handleCatchall(proms, input3, payload, ctx, def, inst, abortEarly) {
   const unrecognized = [];
   const keySet = def.keySet;
   const _catchall = def.catchall._zod;
-  const t3 = _catchall.def.type;
+  const t4 = _catchall.def.type;
   const optin = _catchall.optin;
   const optout = _catchall.optout;
   let seen = 0;
@@ -3509,19 +3509,19 @@ function handleCatchall(proms, input3, payload, ctx, def, inst, abortEarly) {
     if (keySet.has(key))
       continue;
     if (key === "__proto__") {
-      if (t3 === "never")
+      if (t4 === "never")
         unrecognized.push(key);
       continue;
     }
-    if (t3 === "never") {
+    if (t4 === "never") {
       unrecognized.push(key);
       continue;
     }
-    const r2 = _catchall.run({ value: input3[key], issues: [] }, ctx);
-    if (r2 instanceof Promise) {
-      proms.push(r2.then((r3) => handlePropertyResult(r3, payload, key, input3, optin, optout)));
+    const r3 = _catchall.run({ value: input3[key], issues: [] }, ctx);
+    if (r3 instanceof Promise) {
+      proms.push(r3.then((r4) => handlePropertyResult(r4, payload, key, input3, optin, optout)));
     } else {
-      handlePropertyResult(r2, payload, key, input3, optin, optout);
+      handlePropertyResult(r3, payload, key, input3, optin, optout);
     }
   }
   if (unrecognized.length) {
@@ -3605,11 +3605,11 @@ var $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def) => {
       const el = shape[key];
       const optin = el._zod.optin;
       const optout = el._zod.optout;
-      const r2 = el._zod.run({ value: input3[key], issues: [] }, ctx);
-      if (r2 instanceof Promise) {
-        proms.push(r2.then((r3) => handlePropertyResult(r3, payload, key, input3, optin, optout)));
+      const r3 = el._zod.run({ value: input3[key], issues: [] }, ctx);
+      if (r3 instanceof Promise) {
+        proms.push(r3.then((r4) => handlePropertyResult(r4, payload, key, input3, optin, optout)));
       } else {
-        handlePropertyResult(r2, payload, key, input3, optin, optout);
+        handlePropertyResult(r3, payload, key, input3, optin, optout);
       }
     }
     if (!catchall) {
@@ -3752,7 +3752,7 @@ function handleUnionResults(results, final, inst, ctx) {
       return final;
     }
   }
-  const nonaborted = results.filter((r2) => !aborted(r2));
+  const nonaborted = results.filter((r3) => !aborted(r3));
   if (nonaborted.length === 1) {
     final.value = nonaborted[0].value;
     return nonaborted[0];
@@ -4124,15 +4124,15 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
     const abortEarly = def.rest ? ctx?.abortEarly : void 0;
     let itemAborted = false;
     for (let i2 = 0; i2 < items.length; i2++) {
-      const r2 = items[i2]._zod.run({ value: input3[i2], issues: [] }, ctx);
-      if (r2 instanceof Promise) {
-        proms.push(r2.then((rr) => {
+      const r3 = items[i2]._zod.run({ value: input3[i2], issues: [] }, ctx);
+      if (r3 instanceof Promise) {
+        proms.push(r3.then((rr) => {
           itemResults[i2] = rr;
         }));
       } else {
-        itemResults[i2] = r2;
-        if (abortEarly && !itemAborted && r2.issues.length)
-          itemAborted = aborted(r2);
+        itemResults[i2] = r3;
+        if (abortEarly && !itemAborted && r3.issues.length)
+          itemAborted = aborted(r3);
       }
     }
     if (def.rest && !itemAborted) {
@@ -4148,7 +4148,7 @@ var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
         i2++;
         const result = def.rest._zod.run({ value: el, issues: [] }, ctx);
         if (result instanceof Promise) {
-          proms.push(result.then((r2) => handleTupleResult(r2, payload, i2)));
+          proms.push(result.then((r3) => handleTupleResult(r3, payload, i2)));
         } else {
           handleTupleResult(result, payload, i2);
         }
@@ -4176,20 +4176,20 @@ function handleTupleResult(result, final, index) {
 }
 function handleTupleResults(itemResults, final, items, input3, optoutStart) {
   for (let i2 = 0; i2 < items.length; i2++) {
-    const r2 = itemResults[i2];
+    const r3 = itemResults[i2];
     const isPresent = i2 < input3.length;
     if (!isPresent && i2 >= optoutStart && items[i2]._zod.optin === "optional") {
       final.value.length = i2;
       break;
     }
-    if (r2.issues.length) {
+    if (r3.issues.length) {
       if (!isPresent && i2 >= optoutStart) {
         final.value.length = i2;
         break;
       }
-      final.issues.push(...prefixIssues(i2, r2.issues));
+      final.issues.push(...prefixIssues(i2, r3.issues));
     }
-    final.value[i2] = r2.value;
+    final.value[i2] = r3.value;
   }
   for (let i2 = final.value.length - 1; i2 >= input3.length; i2--) {
     if (items[i2]._zod.optout === "optional" && final.value[i2] === void 0) {
@@ -5032,11 +5032,11 @@ var $ZodCustom = /* @__PURE__ */ $constructor("$ZodCustom", (inst, def) => {
   };
   inst._zod.check = (payload) => {
     const input3 = payload.value;
-    const r2 = def.fn(input3);
-    if (r2 instanceof Promise) {
-      return r2.then((r3) => handleRefineResult(r3, payload, input3, inst));
+    const r3 = def.fn(input3);
+    if (r3 instanceof Promise) {
+      return r3.then((r4) => handleRefineResult(r4, payload, input3, inst));
     }
-    handleRefineResult(r2, payload, input3, inst);
+    handleRefineResult(r3, payload, input3, inst);
     return;
   };
 });
@@ -5311,10 +5311,10 @@ var memo = {
         handoff = void 0;
         const entry = open.length > depth ? open.pop() : void 0;
         if (result instanceof Promise) {
-          return result.then((r2) => {
+          return result.then((r3) => {
             if (entry)
-              entry.issues = r2.issues.length ? cloneIssues(r2.issues) : NO_ISSUES;
-            return r2;
+              entry.issues = r3.issues.length ? cloneIssues(r3.issues) : NO_ISSUES;
+            return r3;
           });
         }
         if (entry)
@@ -7749,16 +7749,16 @@ var error20 = () => {
     number: { unit: "", shortLabel: "\u05E7\u05D8\u05DF", longLabel: "\u05D2\u05D3\u05D5\u05DC" }
     // no unit
   };
-  const typeEntry = (t3) => t3 ? TypeNames[t3] : void 0;
-  const typeLabel = (t3) => {
-    const e = typeEntry(t3);
+  const typeEntry = (t4) => t4 ? TypeNames[t4] : void 0;
+  const typeLabel = (t4) => {
+    const e = typeEntry(t4);
     if (e)
       return e.label;
-    return t3 ?? TypeNames.unknown.label;
+    return t4 ?? TypeNames.unknown.label;
   };
-  const withDefinite = (t3) => `\u05D4${typeLabel(t3)}`;
-  const verbFor = (t3) => {
-    const e = typeEntry(t3);
+  const withDefinite = (t4) => `\u05D4${typeLabel(t4)}`;
+  const verbFor = (t4) => {
+    const e = typeEntry(t4);
     const gender = e?.gender ?? "m";
     return gender === "f" ? "\u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05D9\u05D5\u05EA" : "\u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA";
   };
@@ -13102,8 +13102,8 @@ function runtimeRun(schema, value) {
   const result = schema._zod.run({ value, issues: [] }, {});
   if (result && typeof result.then === "function")
     return INVALID;
-  const r2 = result;
-  return r2.issues.length === 0 ? r2.value : INVALID;
+  const r3 = result;
+  return r3.issues.length === 0 ? r3.value : INVALID;
 }
 function compileChild(doc, ctx, schema, accessor, needsValue = true) {
   const contentLen = doc.content.length;
@@ -13337,14 +13337,14 @@ function generatePropertyCheck(doc, ctx, def, accessor) {
   generateCheck(doc, ctx, def.schema, propAccessor);
 }
 function generateOverwriteCheck(doc, ctx, check2, currentAccessor, newAccessor) {
-  const tx = check2._zod.def.tx;
-  if (!tx) {
+  const tx2 = check2._zod.def.tx;
+  if (!tx2) {
     throw new ZodCompileUnsupportedError("overwrite check without a transform function");
   }
-  if (isAsyncFunction(tx)) {
+  if (isAsyncFunction(tx2)) {
     throw new ZodCompileAsyncError("z.compile: async overwrite transforms are not supported");
   }
-  const txConst = addConstant(ctx, tx);
+  const txConst = addConstant(ctx, tx2);
   doc.write(`const ${newAccessor} = ${txConst}(${currentAccessor});`);
 }
 function throwAsync() {
@@ -14511,9 +14511,9 @@ function runtimeCatch(innerSchema, catchValue, value) {
   const result = innerSchema._zod.run({ value, issues: [] }, {});
   if (result && typeof result.then === "function")
     return INVALID;
-  const r2 = result;
-  if (r2.issues.length === 0)
-    return r2.value;
+  const r3 = result;
+  if (r3.issues.length === 0)
+    return r3.value;
   return catchValue();
 }
 function generateCatchCheck(doc, ctx, schema, accessor) {
@@ -15240,15 +15240,15 @@ function _mime(types, params) {
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _overwrite(tx) {
+function _overwrite(tx2) {
   return new $ZodCheckOverwrite({
     check: "overwrite",
-    tx
+    tx: tx2
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _normalize(form) {
-  return /* @__PURE__ */ _overwrite((input3) => input3.normalize(form));
+function _normalize(form2) {
+  return /* @__PURE__ */ _overwrite((input3) => input3.normalize(form2));
 }
 // @__NO_SIDE_EFFECTS__
 function _trim() {
@@ -16639,7 +16639,7 @@ function stringifyKeyNames(bySchema, json2, visited) {
       json2 = { ...json2, [keyword]: mapped };
   }
   const types = Array.isArray(json2.type) ? json2.type : [json2.type];
-  const numericType = !types.includes("string") && types.some((t3) => t3 === "number" || t3 === "integer");
+  const numericType = !types.includes("string") && types.some((t4) => t4 === "number" || t4 === "integer");
   const values = json2.enum ?? (json2.const !== void 0 ? [json2.const] : void 0);
   if (!numericType && !values?.some((v2) => typeof v2 === "number"))
     return json2;
@@ -17327,8 +17327,8 @@ var ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   and(arg) {
     return intersection(this, arg);
   },
-  transform(tx) {
-    return pipe(this, transform(tx));
+  transform(tx2) {
+    return pipe(this, transform(tx2));
   },
   default(d2) {
     return _default2(this, d2);
@@ -19142,8 +19142,8 @@ function convertBaseSchema(schema, ctx) {
   }
   const type = schema.type;
   if (Array.isArray(type)) {
-    const typeSchemas = type.map((t3) => {
-      const typeSchema = { ...schema, type: t3 };
+    const typeSchemas = type.map((t4) => {
+      const typeSchema = { ...schema, type: t4 };
       return convertBaseSchema(typeSchema, ctx);
     });
     if (typeSchemas.length === 0) {
@@ -19509,8 +19509,8 @@ function fromJSONSchema(schema, params) {
 var RESOLVING = /* @__PURE__ */ Symbol("z.visit/resolving");
 function visit(schema, fnOrHandlers) {
   const fn = typeof fnOrHandlers === "function" ? fnOrHandlers : (node2, rewritten) => {
-    const h = fnOrHandlers[node2._zod.def.type];
-    return h ? h(node2, rewritten) : node2;
+    const h2 = fnOrHandlers[node2._zod.def.type];
+    return h2 ? h2(node2, rewritten) : node2;
   };
   const cache = /* @__PURE__ */ new Map();
   function run(s2) {
@@ -19792,7 +19792,7 @@ var theme = {
     "32": "32px"
   },
   radius: { "4": "4px", "8": "8px", "12": "12px", "16": "16px", full: "9999px" },
-  size: { "16": "16px", "20": "20px", "24": "24px", "28": "28px", "32": "32px", "40": "40px", "48": "48px", "64": "64px", "72": "72px", "160": "160px", "240": "240px", "320": "320px", "400": "400px", "500": "500px" },
+  size: { "16": "16px", "20": "20px", "24": "24px", "28": "28px", "32": "32px", "40": "40px", "48": "48px", "64": "64px", "72": "72px", "720": "720px", "160": "160px", "240": "240px", "320": "320px", "400": "400px", "500": "500px" },
   border: { hairline: "0.5px", focus: "2px", "focus-offset": "2px" },
   type: {
     family: '"Inter", system-ui, sans-serif',
@@ -19848,8 +19848,8 @@ function iconElements(name, size) {
     if (e.line) return ["line", { x1: `${e.line[0]}`, y1: `${e.line[1]}`, x2: `${e.line[2]}`, y2: `${e.line[3]}` }];
     if (e.poly) return ["polygon", { points: e.poly.map((pt) => pt.join(",")).join(" ") }];
     if (e.circle) return ["circle", { cx: `${e.circle[0]}`, cy: `${e.circle[1]}`, r: `${e.circle[2]}`, ...e.role === "dot" ? { fill: "currentColor", stroke: "none" } : {} }];
-    const [x, y, w2, h, r2] = e.rect;
-    return ["rect", { x: `${x}`, y: `${y}`, width: `${w2}`, height: `${h}`, rx: `${r2}` }];
+    const [x, y, w2, h2, r3] = e.rect;
+    return ["rect", { x: `${x}`, y: `${y}`, width: `${w2}`, height: `${h2}`, rx: `${r3}` }];
   });
 }
 
@@ -21041,7 +21041,7 @@ var table = {
     const head = pr.header && rows.length ? rows.shift() : null;
     const kids = [];
     if (head) kids.push(n("thead", [], [n("tr", [], head.map((c3) => n("th", [tb.th], [c3], { scope: "col" })))]));
-    kids.push(n("tbody", [], rows.map((r2) => n("tr", [], r2.map((c3) => n("td", [tb.td], c3 ? [c3] : []))))));
+    kids.push(n("tbody", [], rows.map((r3) => n("tr", [], r3.map((c3) => n("td", [tb.td], c3 ? [c3] : []))))));
     return n("table", [tb.root], kids);
   }
 };
@@ -21640,12 +21640,12 @@ var timer = {
     const secs = Math.max(0, Math.floor(Number(pr.seconds) || 0));
     const start = pr.mode === "stopwatch" ? 0 : secs;
     const fmt = (s2) => s2 >= 3600 ? `${Math.floor(s2 / 3600)}:${String(Math.floor(s2 % 3600 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}` : `${String(Math.floor(s2 / 60)).padStart(2, "0")}:${String(s2 % 60).padStart(2, "0")}`;
-    const btn3 = (label, act) => {
+    const btn6 = (label, act) => {
       const b2 = button.render({ label, variant: "ghost", size: "md", icon: "none", iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
       return { ...b2, cls: [...b2.cls ?? [], `${tm.root}__btn`], attrs: { ...b2.attrs, "data-timer": act } };
     };
     const kids = [n("span", [tm.time], [fmt(start)], { "data-time": true })];
-    if (pr.controls) kids.push(n("span", [tm.actions], [btn3(pr.autostart ? "Pause" : "Start", "toggle"), btn3("Reset", "reset")]));
+    if (pr.controls) kids.push(n("span", [tm.actions], [btn6(pr.autostart ? "Pause" : "Start", "toggle"), btn6("Reset", "reset")]));
     const attrs = { role: "timer", "aria-label": pr.mode === "stopwatch" ? "Stopwatch" : "Countdown", "data-p8": "timer", "data-mode": pr.mode, "data-seconds": String(secs) };
     if (pr.autostart) attrs["data-autostart"] = true;
     return n("div", [tm.root], kids, attrs);
@@ -21698,7 +21698,7 @@ var codeBlock = {
   ],
   render(pr) {
     const code = pr.code;
-    const toks = tokenize(code).map((t3) => t3.cls ? n("span", [cd[t3.cls]], [t3.text]) : t3.text);
+    const toks = tokenize(code).map((t4) => t4.cls ? n("span", [cd[t4.cls]], [t4.text]) : t4.text);
     const head = [n("span", [cd.lang], pr.language ? [pr.language] : [])];
     if (pr.copy) head.push(copyButtonNode(code));
     return n("div", [cd.root], [n("div", [cd.head], head), n("pre", [cd.pre], [n("code", [], toks)], { tabindex: "0", "aria-label": "Code" })], void 0);
@@ -21860,9 +21860,9 @@ var multiSelect = {
   render(pr) {
     const options = lines(pr.options), chosen = lines(pr.value).filter((x) => options.includes(x));
     const chip = (label) => {
-      const t3 = tag.render({ label, removable: true, variant: "default" });
-      const { "data-p8": _d, ...rest2 } = t3.attrs ?? {};
-      return { ...t3, attrs: { ...rest2, "data-chip": label }, children: t3.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...pr.disabled ? { disabled: true } : {} } } : c3) };
+      const t4 = tag.render({ label, removable: true, variant: "default" });
+      const { "data-p8": _d, ...rest2 } = t4.attrs ?? {};
+      return { ...t4, attrs: { ...rest2, "data-chip": label }, children: t4.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...pr.disabled ? { disabled: true } : {} } } : c3) };
     };
     const opts = options.map((o2, i2) => n("button", i2 === 0 ? [ms.opt, ms.on] : [ms.opt], [o2, n("span", [ms.check], [iconNode("check", 14)])], { type: "button", ...pr.disabled ? { disabled: true } : {}, role: "option", tabindex: "-1", "aria-selected": String(chosen.includes(o2)) }));
     const inAttrs = { type: "text", role: "combobox", "aria-expanded": String(Boolean(pr.open) && !pr.disabled), "aria-controls": "multi-list", "aria-label": "Add option", placeholder: pr.placeholder };
@@ -21931,7 +21931,7 @@ var swatchPicker = {
     { cls: sw.root, base: { display: "inline-flex", gap: v("space-12") } },
     { cls: sw.item, base: { width: v("size-24"), height: v("size-24"), padding: "0", "box-sizing": "border-box", "border-radius": v("radius-full"), border: "none", background: v("color-control"), cursor: "pointer", ...ringDecl }, focus: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` }, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" } },
     { cls: sw.on, base: { outline: `${v("border-focus")} solid ${v("color-ink")}`, "outline-offset": v("space-2") } },
-    ...TOKENS.map((t3) => ({ cls: `${sw.item}--${t3}`, base: { background: v(`color-${t3}`) } }))
+    ...TOKENS.map((t4) => ({ cls: `${sw.item}--${t4}`, base: { background: v(`color-${t4}`) } }))
   ],
   render(pr) {
     const colors = lines(pr.colors).filter((c3) => TOKENS.includes(c3) || /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(c3));
@@ -21975,13 +21975,13 @@ var carousel = {
   render(pr) {
     const half = pr.perView === "2";
     const slides = Array.from({ length: Number(pr.slides) }, (_, i2) => n("div", half ? [ca.slide, `${ca.slide}--half`] : [ca.slide], [`Slide ${i2 + 1}`], { role: "group", "aria-roledescription": "slide", "aria-label": `${i2 + 1} of ${pr.slides}` }));
-    const btn3 = (icon, dir, label) => {
+    const btn6 = (icon, dir, label) => {
       const b2 = iconButton.render({ icon, label, size: "16", variant: "default", disabled: dir === "-1" });
       return { ...b2, attrs: { ...b2.attrs, "data-dir": dir } };
     };
     return n("div", [ca.root], [
       n("div", [ca.track], slides, { "data-track": true, tabindex: "0", "aria-label": "Slides" }),
-      n("div", [ca.nav], [btn3("chevron-left", "-1", "Previous slide"), btn3("chevron-right", "1", "Next slide")])
+      n("div", [ca.nav], [btn6("chevron-left", "-1", "Previous slide"), btn6("chevron-right", "1", "Next slide")])
     ], { role: "region", "aria-roledescription": "carousel", "aria-label": "Carousel", "data-p8": "carousel" });
   }
 };
@@ -22127,7 +22127,7 @@ var passwordInput = {
     const reqs = lines(pr.requirements).map((l2) => {
       const [k2, a2] = l2.split(":").map((x) => x.trim());
       return { k: k2, a: Number(a2) || 8 };
-    }).filter((r2) => Object.hasOwn(PASSWORD_RULES, r2.k));
+    }).filter((r3) => Object.hasOwn(PASSWORD_RULES, r3.k));
     const attrs = { id: "password", type: "password", autocomplete: pr.autocomplete, spellcheck: "false", "data-password": true };
     if (!pr.label) attrs["aria-label"] = "Password";
     if (pr.value) attrs.value = pr.value;
@@ -22205,16 +22205,16 @@ var dataTable = {
     const right = selectable ? actions.map((a2) => btn2(a2, "default", { "data-action": a2, disabled: true })) : [];
     if (pr.columnToggle) {
       const trig = btn2("Columns", "ghost", { "data-trigger": true, "aria-expanded": "false", "aria-haspopup": "true" }, "list");
-      right.push(n("div", [po.root], [trig, n("div", [po.panel, po.end, dt.cols], head.map((h, i2) => n("label", [k.row], [box(true, `Show ${h}`, { "data-col": String(i2) }), h])), { "data-panel": true, role: "group", "aria-label": "Columns", hidden: true })], { "data-p8": "popover" }));
+      right.push(n("div", [po.root], [trig, n("div", [po.panel, po.end, dt.cols], head.map((h2, i2) => n("label", [k.row], [box(true, `Show ${h2}`, { "data-col": String(i2) }), h2])), { "data-panel": true, role: "group", "aria-label": "Columns", hidden: true })], { "data-p8": "popover" }));
     }
     if (right.length) bar2.push(n("div", [dt.actions], right));
     const headRow = n("tr", [], [
       ...selectable ? [n("th", [dt.th, dt.sel], [{ ...box(false, "Select all rows", { "data-all": true }, true), cls: [k.box, dt.all] }], { scope: "col" })] : [],
-      ...head.map((h, i2) => n("th", [dt.th], [n("button", [dt.sort], [h, { ...iconNode("chevron-down", 14), cls: [c.icon, dt.arrow] }], { type: "button", "data-sort": String(i2) })], { scope: "col", "aria-sort": "none", "data-col": String(i2) }))
+      ...head.map((h2, i2) => n("th", [dt.th], [n("button", [dt.sort], [h2, { ...iconNode("chevron-down", 14), cls: [c.icon, dt.arrow] }], { type: "button", "data-sort": String(i2) })], { scope: "col", "aria-sort": "none", "data-col": String(i2) }))
     ]);
-    const body = rows.map((r2, ri) => n("tr", [dt.row], [
-      ...selectable ? [n("td", [dt.td, dt.sel], [box(false, `Select ${r2[0] || `row ${ri + 1}`}`, { "data-pick": true })])] : [],
-      ...Array.from({ length: width }, (_, ci) => n("td", [dt.td], r2[ci] ? [r2[ci]] : [], { "data-col": String(ci), ...r2[ci] ? { title: r2[ci] } : {} }))
+    const body = rows.map((r3, ri) => n("tr", [dt.row], [
+      ...selectable ? [n("td", [dt.td, dt.sel], [box(false, `Select ${r3[0] || `row ${ri + 1}`}`, { "data-pick": true })])] : [],
+      ...Array.from({ length: width }, (_, ci) => n("td", [dt.td], r3[ci] ? [r3[ci]] : [], { "data-col": String(ci), ...r3[ci] ? { title: r3[ci] } : {} }))
     ], { "data-row": String(ri) }));
     return n("div", [dt.root], [
       n("div", [dt.bar], bar2),
@@ -22352,8 +22352,8 @@ var sortableList = {
     const items = lines(pr.items);
     return n("div", [so.wrap], [
       n("ul", [so.root], items.map((it, i2) => {
-        const h = ibtn("menu", `Move ${it}, position ${i2 + 1} of ${items.length}`, { "data-handle": true, "aria-roledescription": "drag handle" }, "14");
-        return n("li", [so.item], [{ ...h, cls: [...h.cls ?? [], so.handle] }, n("span", [so.label], [it])], { "data-item": it });
+        const h2 = ibtn("menu", `Move ${it}, position ${i2 + 1} of ${items.length}`, { "data-handle": true, "aria-roledescription": "drag handle" }, "14");
+        return n("li", [so.item], [{ ...h2, cls: [...h2.cls ?? [], so.handle] }, n("span", [so.label], [it])], { "data-item": it });
       }), { "aria-label": "Reorderable list" }),
       n("span", [so.status], [], { role: "status", "aria-live": "assertive", "data-status": true })
     ], { "data-p8": "sortable" });
@@ -22399,9 +22399,9 @@ var filterBar = {
     const uniq = [...new Set(active)];
     const off = dis(pr.disabled);
     const chip = (label) => {
-      const t3 = tag.render({ label, removable: true, variant: "default" });
-      const { "data-p8": _d, ...rest2 } = t3.attrs ?? {};
-      return { ...t3, attrs: { ...rest2, "data-chip": label }, children: t3.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...off } } : c3) };
+      const t4 = tag.render({ label, removable: true, variant: "default" });
+      const { "data-p8": _d, ...rest2 } = t4.attrs ?? {};
+      return { ...t4, attrs: { ...rest2, "data-chip": label }, children: t4.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...off } } : c3) };
     };
     const select2 = (label, key, options) => n("div", [s.wrap, fb.pick], [
       n("select", [s.root], options.map((o2, i2) => n("option", [], [o2], i2 === 0 ? { value: o2, selected: true } : { value: o2 })), { "aria-label": label, [key]: true, ...off }),
@@ -22508,8 +22508,8 @@ var imageViewer = {
   ],
   render(pr) {
     const imgs = lines(pr.images).map((l2, i2) => {
-      const [cap = "", src = ""] = l2.split("|").map((x) => x.trim());
-      return { cap: cap || `Image ${i2 + 1}`, src: src || placeholderImage(i2) };
+      const [cap2 = "", src = ""] = l2.split("|").map((x) => x.trim());
+      return { cap: cap2 || `Image ${i2 + 1}`, src: src || placeholderImage(i2) };
     });
     if (!imgs.length) imgs.push({ cap: "Image 1", src: placeholderImage(0) });
     const cols = pr.columns === "2" ? [lb.grid, lb.c2] : pr.columns === "4" ? [lb.grid, lb.c4] : [lb.grid];
@@ -22529,6 +22529,1082 @@ var imageViewer = {
     ], { "data-p8": "lightbox" });
   }
 };
+
+// src/components/kit.ts
+var btn3 = (label, variant, extra = {}, icon = "none", fullWidth = false) => {
+  const b2 = button.render({ label, variant, size: "md", icon, iconSize: "14", iconPosition: "start", fullWidth, disabled: false });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var dis2 = (on) => on ? { disabled: true } : {};
+var srOnly2 = { position: "absolute", width: v("size-16"), height: v("size-16"), overflow: "hidden", "clip-path": "inset(50%)", "white-space": "nowrap" };
+var tgp = { root: `${p}-togglegroup`, item: `${p}-togglegroup__item`, on: `${p}-togglegroup__item--on` };
+var toggleGroup = {
+  id: "toggle-group",
+  name: "Toggle Group",
+  description: "A set of toggle buttons; one or several can be pressed.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: 'Each option is a button with aria-pressed. With type "multiple" any number can be pressed (bold, italic, underline); with "single" pressing one releases the others, and pressing it again releases it. Arrow keys move between options. Fires p8-change with { value: [labels] }.',
+  composition: "Looks like a Segmented Control; use Segmented Control when exactly one option must always be chosen.",
+  props: [
+    P.area("items", "Bold\nItalic\nUnderline", "Options, one per line.", "string (one per line)"),
+    P.area("value", "Bold", "Pressed options, one per line.", "string (one per line)"),
+    P.select("type", ["multiple", "single"], "multiple", "Whether several options can be pressed at once."),
+    P.text("label", "Text style", "Accessible name of the group."),
+    P.bool("disabled", false, "Disables every option.")
+  ],
+  rules: [
+    { cls: tgp.root, base: { display: "inline-flex", gap: v("space-4"), padding: v("space-4"), "box-sizing": "border-box", "border-radius": v("radius-12"), background: v("color-control") } },
+    { cls: tgp.item, base: { "padding-block": v("space-4"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), border: "none", background: "transparent", color: v("color-ink-muted"), cursor: "pointer", transition: `background ${motion}, color ${motion}`, ...text("sm") }, hover: { color: v("color-ink") }, focus, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" } },
+    { cls: tgp.on, base: { background: v("color-canvas"), color: v("color-ink"), ...ringDecl } }
+  ],
+  render(pr) {
+    const items = [...new Set(lines(pr.items))];
+    let pressed = lines(pr.value).filter((x) => items.includes(x));
+    if (pr.type === "single") pressed = pressed.slice(0, 1);
+    const first = items.findIndex((x) => pressed.includes(x));
+    return n("div", [tgp.root], items.map((x, i2) => n("button", pressed.includes(x) ? [tgp.item, tgp.on] : [tgp.item], [x], {
+      type: "button",
+      "aria-pressed": String(pressed.includes(x)),
+      "data-value": x,
+      tabindex: i2 === Math.max(0, first) ? "0" : "-1",
+      ...dis2(pr.disabled)
+    })), { role: "group", "aria-label": pr.label || "Options", "data-type": pr.type, "data-p8": "togglegroup" });
+  }
+};
+var lk = { root: `${p}-link`, muted: `${p}-link--muted`, icon: `${p}-link__icon`, sr: `${p}-link__sr` };
+var link = {
+  id: "link",
+  name: "Link",
+  content: "label",
+  description: "An inline text link, optionally opening in a new tab.",
+  tags: ["navigation", "content"],
+  status: "stable",
+  usage: 'Use for navigation, not actions (use Button for actions). It inherits the surrounding font size. External links open in a new tab with rel="noopener noreferrer", show an icon and tell screen readers "(opens in a new tab)".',
+  props: [
+    P.text("label", "Read the docs", 'Link text. Say where it goes; never "click here".'),
+    P.text("href", "/docs", "Destination URL."),
+    P.select("variant", ["default", "muted"], "default", "Ink or muted text; both are underlined."),
+    P.bool("external", false, "Opens in a new tab and shows an external icon.")
+  ],
+  rules: [
+    { cls: lk.root, base: { color: v("color-ink"), "text-decoration-line": "underline", "text-decoration-color": v("color-ink-muted"), "text-underline-offset": v("space-4"), "border-radius": v("radius-4"), cursor: "pointer", transition: `text-decoration-color ${motion}, color ${motion}` }, hover: { "text-decoration-color": v("color-ink") }, focus },
+    { cls: lk.muted, base: { color: v("color-ink-muted") }, hover: { color: v("color-ink") } },
+    { cls: lk.icon, base: { "margin-inline-start": v("space-4"), "vertical-align": "middle" } },
+    { cls: lk.sr, base: srOnly2 },
+    iconRule
+  ],
+  render(pr) {
+    const kids = [pr.label || pr.href];
+    const attrs = { href: pr.href || "#" };
+    if (pr.external) {
+      attrs.target = "_blank";
+      attrs.rel = "noopener noreferrer";
+      kids.push({ ...iconNode("external-link", 14), cls: [c.icon, lk.icon] }, n("span", [lk.sr], [" (opens in a new tab)"]));
+    }
+    return n("a", pr.variant === "muted" ? [lk.root, lk.muted] : [lk.root], kids, attrs);
+  }
+};
+var hd = { root: `${p}-heading`, sm: `${p}-heading--sm`, group: `${p}-heading-group`, desc: `${p}-heading__desc` };
+var heading = {
+  id: "heading",
+  name: "Heading",
+  content: "text",
+  description: "A section or page title at the right level, with an optional description.",
+  tags: ["content", "typography"],
+  status: "stable",
+  usage: "Pick the level from the document outline (one h1 per page, then h2, h3 without skipping); pick the size for looks. The system has two sizes: md (16/20) and sm (14/18), both medium weight.",
+  props: [
+    P.text("text", "Account settings", "Heading text."),
+    P.select("level", ["1", "2", "3", "4", "5", "6"], "2", "Heading level (h1\u2013h6) for the document outline."),
+    P.select("size", ["md", "sm"], "md", "Visual size: md 16/20 or sm 14/18."),
+    P.text("description", "", "Optional muted line under the heading.")
+  ],
+  rules: [
+    { cls: hd.root, base: { margin: "0", color: v("color-ink"), ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: hd.sm, base: { "font-size": v("type-size-sm"), "line-height": v("type-line-sm") } },
+    { cls: hd.group, base: { display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: hd.desc, base: { margin: "0", color: v("color-ink-muted"), ...text("sm") } }
+  ],
+  render(pr) {
+    const h2 = n(`h${pr.level}`, pr.size === "sm" ? [hd.root, hd.sm] : [hd.root], [pr.text]);
+    return pr.description ? n("div", [hd.group], [h2, n("p", [hd.desc], [pr.description])]) : h2;
+  }
+};
+var tx = { root: `${p}-text`, md: `${p}-text--md`, muted: `${p}-text--muted`, strong: `${p}-text--strong`, trunc: `${p}-text--truncate` };
+var textC = {
+  id: "text",
+  name: "Text",
+  content: "text",
+  description: "Body text in one of the two type sizes, ink or muted.",
+  tags: ["content", "typography"],
+  status: "stable",
+  usage: "Use for paragraphs and labels outside other components. Two sizes (sm 14/18, md 16/20), two tones (ink, muted) and two weights (400, 500). Truncate cuts one line with an ellipsis; give the full text in a title or elsewhere.",
+  props: [
+    P.area("text", "Changes are saved automatically. You can undo them for 30 days.", "The text."),
+    P.select("size", ["sm", "md"], "sm", "sm is 14/18, md is 16/20."),
+    P.select("tone", ["default", "muted"], "default", "Ink or muted."),
+    P.select("weight", ["regular", "strong"], "regular", "400 or 500."),
+    P.select("as", ["p", "span", "div"], "p", "Element to render."),
+    P.bool("truncate", false, "Keep to one line with an ellipsis.")
+  ],
+  rules: [
+    { cls: tx.root, base: { margin: "0", color: v("color-ink"), ...text("sm") } },
+    { cls: tx.md, base: { "font-size": v("type-size-md"), "line-height": v("type-line-md") } },
+    { cls: tx.muted, base: { color: v("color-ink-muted") } },
+    { cls: tx.strong, base: { "font-weight": v("type-weight-strong") } },
+    { cls: tx.trunc, base: { display: "block", "max-width": "100%", overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } }
+  ],
+  render(pr) {
+    const cls = [tx.root];
+    if (pr.size === "md") cls.push(tx.md);
+    if (pr.tone === "muted") cls.push(tx.muted);
+    if (pr.weight === "strong") cls.push(tx.strong);
+    if (pr.truncate) cls.push(tx.trunc);
+    return n(pr.as, cls, [pr.text], pr.truncate ? { title: pr.text } : void 0);
+  }
+};
+function hsvToHex(h2, s2, val) {
+  const S = s2 / 100, V = val / 100;
+  const k2 = (nn) => (nn + h2 / 60) % 6;
+  const ch = (nn) => Math.round(255 * (V - V * S * Math.max(0, Math.min(k2(nn), 4 - k2(nn), 1))));
+  return "#" + [ch(5), ch(3), ch(1)].map((x) => x.toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+function hexToHsv(hex4) {
+  const m2 = /^#?([0-9a-f]{6})$/i.exec(hex4.trim());
+  if (!m2) return null;
+  const [r3, g2, b2] = [0, 2, 4].map((o2) => parseInt(m2[1].slice(o2, o2 + 2), 16) / 255);
+  const mx = Math.max(r3, g2, b2), d2 = mx - Math.min(r3, g2, b2);
+  let h2 = 0;
+  if (d2) h2 = mx === r3 ? (g2 - b2) / d2 % 6 : mx === g2 ? (b2 - r3) / d2 + 2 : (r3 - g2) / d2 + 4;
+  return [Math.round((h2 * 60 + 360) % 360), Math.round(mx ? d2 / mx * 100 : 0), Math.round(mx * 100)];
+}
+var DEFAULT_COLOR = hsvToHex(217, 78, 92);
+var cp2 = { root: `${p}-colorpicker`, field: `${p}-colorpicker__field`, swatch: `${p}-colorpicker__swatch`, hex: `${p}-colorpicker__hex`, panel: `${p}-colorpicker__panel`, area: `${p}-colorpicker__area`, hue: `${p}-colorpicker__hue`, thumb: `${p}-colorpicker__thumb`, row: `${p}-colorpicker__row`, preview: `${p}-colorpicker__preview` };
+var areaBg = (h2) => `background: linear-gradient(to top, black, transparent), linear-gradient(to right, white, hsl(${h2} 100% 50%))`;
+var colorPicker = {
+  id: "color-picker",
+  name: "Color Picker",
+  description: "Pick any colour: saturation/brightness area, hue slider and hex field.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: 'Click the swatch to open the picker. Drag in the area for saturation and brightness, drag the hue bar for the hue, or type a hex value (RRGGBB). Arrow keys move the focused thumb (Shift for 10 steps). Fires p8-change with { value: "#RRGGBB" }. For a fixed palette use Swatch Picker instead.',
+  composition: "A swatch button and a Text Input; the picker sits in a Popover.",
+  props: [
+    P.text("value", DEFAULT_COLOR, "Colour as #RRGGBB."),
+    P.text("label", "Brand colour", "Accessible name."),
+    P.bool("open", true, "Initially open."),
+    P.bool("disabled", false, "Disables the picker.")
+  ],
+  rules: [
+    ...popRules,
+    { cls: cp2.root, base: { position: "relative", display: "inline-block", width: v("size-240"), "max-width": "100%" } },
+    { cls: cp2.field, base: { display: "flex", "align-items": "stretch", gap: v("space-8") } },
+    { cls: cp2.swatch, base: { "flex-shrink": "0", width: v("size-40"), padding: "0", border: "none", "border-radius": v("radius-8"), cursor: "pointer", ...ringDecl }, focus, disabled: { opacity: v("opacity-disabled"), cursor: "not-allowed" } },
+    { cls: cp2.hex, base: { "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono"), "text-transform": "uppercase" } },
+    { cls: cp2.panel, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-240") } },
+    { cls: cp2.area, base: { position: "relative", height: v("size-160"), "border-radius": v("radius-8"), cursor: "crosshair", "touch-action": "none", ...ringDecl } },
+    { cls: cp2.hue, base: { position: "relative", height: v("size-16"), "border-radius": v("radius-full"), cursor: "pointer", "touch-action": "none", background: "linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red)" } },
+    { cls: cp2.thumb, base: { position: "absolute", width: v("size-16"), height: v("size-16"), translate: "-50% -50%", "box-sizing": "border-box", "border-radius": v("radius-full"), background: "transparent", "box-shadow": `0 0 0 ${v("border-focus")} white, 0 0 0 calc(${v("border-focus")} * 2) ${v("color-backdrop")}` }, focus: { "box-shadow": `0 0 0 ${v("border-focus")} white, 0 0 0 calc(${v("border-focus")} * 3) ${v("color-ink")}`, outline: "none" } },
+    { cls: cp2.row, base: { display: "flex", "align-items": "center", gap: v("space-8"), color: v("color-ink-muted"), ...text("sm") } },
+    { cls: cp2.preview, base: { width: v("size-24"), height: v("size-24"), "flex-shrink": "0", "border-radius": v("radius-8"), ...ringDecl } }
+  ],
+  render(pr) {
+    const hsv = hexToHsv(String(pr.value)) ?? hexToHsv(DEFAULT_COLOR);
+    const hex4 = hsvToHex(...hsv);
+    const [h2, s2, b2] = hsv;
+    const open2 = Boolean(pr.open) && !pr.disabled;
+    const label = pr.label || "Colour";
+    const off = dis2(pr.disabled);
+    const panel = n("div", [po.panel, cp2.panel], [
+      n("div", [cp2.area], [n("div", [cp2.thumb], [], { role: "slider", tabindex: "0", "aria-label": "Saturation and brightness", "aria-valuemin": "0", "aria-valuemax": "100", "aria-valuenow": String(s2), "aria-valuetext": `Saturation ${s2}%, brightness ${b2}%`, style: `left: ${s2}%; top: ${100 - b2}%`, "data-thumb": "sv" })], { style: areaBg(h2), "data-area": "sv" }),
+      n("div", [cp2.hue], [n("div", [cp2.thumb], [], { role: "slider", tabindex: "0", "aria-label": "Hue", "aria-valuemin": "0", "aria-valuemax": "360", "aria-valuenow": String(h2), style: `left: ${h2 / 360 * 100}%; top: 50%`, "data-thumb": "hue" })], { "data-area": "hue" }),
+      n("div", [cp2.row], [n("span", [cp2.preview], [], { style: `background: ${hex4}`, "data-preview": true }), n("span", [], [hex4], { "aria-live": "polite", "data-readout": true })])
+    ], open2 ? { "data-panel": true, role: "dialog", "aria-label": `Choose ${label.toLowerCase()}` } : { "data-panel": true, role: "dialog", "aria-label": `Choose ${label.toLowerCase()}`, hidden: true });
+    return n("div", [po.root, cp2.root], [
+      n("div", [cp2.field], [
+        n("button", [cp2.swatch], [], { type: "button", style: `background: ${hex4}`, "aria-label": `${label}: ${hex4}`, "aria-haspopup": "dialog", "aria-expanded": String(open2), "data-trigger": true, ...off }),
+        n("input", [i.root, cp2.hex], void 0, { type: "text", value: hex4, "aria-label": `${label} hex value`, spellcheck: "false", autocomplete: "off", maxlength: "7", "data-hex": true, ...off })
+      ]),
+      panel
+    ], { "data-p8": "popover color", "data-h": String(h2), "data-s": String(s2), "data-v": String(b2), "data-label": label });
+  }
+};
+var ti = { root: `${p}-taginput`, field: `${p}-taginput__field`, list: `${p}-taginput__list`, entry: `${p}-taginput__entry`, foot: `${p}-taginput__foot` };
+var tagInput = {
+  id: "tag-input",
+  name: "Tag Input",
+  description: "Type to add free-form tags; remove them with their button or Backspace.",
+  tags: ["control", "form"],
+  status: "stable",
+  usage: 'Enter or comma adds the typed tag; pasting "a, b, c" adds three. Backspace in the empty field removes the last tag. Duplicates (any case) are ignored and the count stops at max. A hidden input named after the name prop carries "a,b,c" for forms. Fires p8-change with { tags }. To choose from a known list use Multi-select.',
+  composition: "Tags inside a Text Input surface.",
+  props: [
+    P.text("label", "Tags", "Visible label."),
+    P.area("value", "design\nresearch", "Initial tags, one per line.", "string (one per line)"),
+    P.text("placeholder", "Add a tag\u2026", "Placeholder for the typing field."),
+    P.select("max", ["5", "10", "20"], "10", "Most tags allowed."),
+    P.text("name", "tags", "Form field name of the hidden input."),
+    P.bool("disabled", false, "Disables the field.")
+  ],
+  rules: [
+    { cls: ti.root, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), width: v("size-500"), "max-width": "100%", "font-family": v("type-family") } },
+    { cls: ti.field, base: { display: "flex", "align-items": "center", gap: v("space-4"), "box-sizing": "border-box", "padding-block": v("space-4"), "padding-inline": v("space-4"), "border-radius": v("radius-8"), background: v("color-control"), cursor: "text", transition: `background ${motion}` }, hover: { background: v("color-control-strong") }, nested: [{ sel: ":focus-within", decls: { background: v("color-control-strong") } }, { sel: '[aria-disabled="true"]', decls: { opacity: v("opacity-disabled"), cursor: "not-allowed" } }] },
+    { cls: ti.list, base: { display: "flex", "align-items": "center", gap: v("space-4"), "flex-shrink": "1", "min-width": "0", "overflow-x": "auto", "scrollbar-width": "none", "white-space": "nowrap" } },
+    { cls: ti.entry, base: { flex: "1", "min-width": v("size-64"), "box-sizing": "border-box", "padding-block": v("space-4"), "padding-inline": v("space-8"), border: "none", background: "transparent", color: v("color-ink"), outline: "none", ...text("sm") }, placeholder: { color: v("color-placeholder") }, disabled: { cursor: "not-allowed" } },
+    { cls: ti.foot, base: { display: "flex", "justify-content": "space-between", gap: v("space-12"), color: v("color-ink-muted"), ...text("sm") } },
+    iconRule
+  ],
+  render(pr) {
+    const max = Number(pr.max) || 10;
+    const seen = /* @__PURE__ */ new Set();
+    const tags = lines(pr.value).map((t4) => t4.replace(/,/g, "").trim()).filter((t4) => t4 && !seen.has(t4.toLowerCase()) && seen.add(t4.toLowerCase())).slice(0, max);
+    const off = dis2(pr.disabled);
+    const chip = (label) => {
+      const t4 = tag.render({ label, removable: true, variant: "default" });
+      const { "data-p8": _d, ...rest2 } = t4.attrs ?? {};
+      return { ...t4, attrs: { ...rest2, "data-chip": label }, children: t4.children?.map((c3) => typeof c3 !== "string" && c3.tag === "button" ? { ...c3, attrs: { ...c3.attrs, ...off } } : c3) };
+    };
+    const full = tags.length >= max;
+    return n("div", [ti.root], [
+      ...pr.label ? [n("label", [f.label], [pr.label], { for: "tag-entry" })] : [],
+      n("div", [ti.field], [
+        n("div", [ti.list], tags.map(chip), { role: "group", "aria-label": `${pr.label || "Tags"} added`, "data-chips": true }),
+        n("input", [ti.entry], void 0, { id: "tag-entry", type: "text", placeholder: full ? "Limit reached" : pr.placeholder, autocomplete: "off", "aria-describedby": "tag-help", "data-entry": true, ...pr.label ? {} : { "aria-label": "Add a tag" }, ...off })
+      ], pr.disabled ? { "aria-disabled": "true" } : void 0),
+      n("div", [ti.foot], [n("span", [], ["Enter or comma to add"], { id: "tag-help" }), n("span", [], [`${tags.length} / ${max}`], { "aria-live": "polite", "data-count": true })]),
+      n("input", [], void 0, { type: "hidden", name: pr.name || "tags", value: tags.join(","), "data-value": true }),
+      n("template", [], [chip("__tag__")], { "data-chip-template": true })
+    ], { "data-p8": "taginput", "data-max": String(max), "data-placeholder": pr.placeholder });
+  }
+};
+var il = { root: `${p}-infinite`, scroller: `${p}-infinite__scroller`, list: `${p}-infinite__list`, item: `${p}-infinite__item`, title: `${p}-infinite__title`, meta: `${p}-infinite__meta`, foot: `${p}-infinite__foot`, end: `${p}-infinite__end`, status: `${p}-infinite__status` };
+var ilItem = (title, meta3) => n("li", [il.item], [n("span", [il.title], [title]), n("span", [il.meta], [meta3])], { "data-item": true });
+var infiniteList = {
+  id: "infinite-list",
+  name: "Infinite List",
+  description: "A scrolling list that loads the next page when you reach the end.",
+  tags: ["data", "layout"],
+  status: "stable",
+  usage: "Scrolling near the end, or pressing Load more, fires p8-load-more with { page, append(items, hasMore) }. Call event.preventDefault() and later append([{ title, meta }], hasMore) with your data. Without a handler and with demo on, it adds placeholder rows until total. A status line announces how many rows are shown. The Load more button keeps it usable by keyboard.",
+  composition: "Rows in a Scroll Area; the footer is a Button and a Spinner.",
+  props: [
+    P.area("items", "Order 1024 | Paid\nOrder 1023 | Paid\nOrder 1022 | Refunded\nOrder 1021 | Paid\nOrder 1020 | Pending\nOrder 1019 | Paid\nOrder 1018 | Paid\nOrder 1017 | Paid", 'First page, one row per line: "Title | Meta".', "string (one per line)"),
+    P.select("pageSize", ["5", "10", "20"], "10", "Rows per demo page."),
+    P.select("total", ["20", "40", "100"], "40", "Rows available in demo mode."),
+    P.bool("demo", true, "Without a p8-load-more handler, add placeholder rows.")
+  ],
+  rules: [
+    { cls: il.root, base: { display: "flex", "flex-direction": "column", gap: v("space-8"), width: v("size-400"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: il.scroller, base: { height: v("size-320"), "overflow-y": "auto", "border-radius": v("radius-12"), "overscroll-behavior": "contain", ...ringDecl }, focus },
+    { cls: il.list, base: { display: "flex", "flex-direction": "column", margin: "0", padding: "0", "list-style": "none" } },
+    { cls: il.item, base: { display: "flex", "justify-content": "space-between", gap: v("space-12"), "padding-block": v("space-8"), "padding-inline": v("space-16"), "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}` } },
+    { cls: il.title, base: { overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    { cls: il.meta, base: { color: v("color-ink-muted"), "white-space": "nowrap" } },
+    { cls: il.foot, base: { "padding-block": v("space-8"), "padding-inline": v("space-16") }, nested: [hiddenRule] },
+    { cls: il.end, base: { margin: "0", "padding-block": v("space-12"), "text-align": "center", color: v("color-ink-muted") }, nested: [hiddenRule] },
+    { cls: il.status, base: { margin: "0", color: v("color-ink-muted") } }
+  ],
+  render(pr) {
+    const rows = lines(pr.items).map((l2) => {
+      const [t4 = "", m2 = ""] = l2.split("|").map((x) => x.trim());
+      return [t4, m2];
+    });
+    const total = Math.max(rows.length, Number(pr.total) || 40);
+    return n("div", [il.root], [
+      n("div", [il.scroller], [
+        n("ul", [il.list], rows.map(([t4, m2]) => ilItem(t4, m2)), { "data-list": true, "aria-label": "Results" }),
+        n("div", [il.foot], [btn3("Load more", "ghost", { "data-more": true }, "none", true)], { "data-foot": true }),
+        n("p", [il.end], ["You have reached the end"], { "data-end": true, hidden: true })
+      ], { tabindex: "0", role: "region", "aria-label": "Results list", "data-scroller": true }),
+      n("p", [il.status], [pr.demo ? `Showing ${rows.length} of ${total}` : `Showing ${rows.length}`], { role: "status", "data-status": true }),
+      n("template", [], [ilItem("__title__", "__meta__")], { "data-item-template": true })
+    ], { "data-p8": "infinite", "data-page": "1", "data-size": String(pr.pageSize), "data-total": String(total), "data-demo": String(Boolean(pr.demo)) });
+  }
+};
+var sb = { root: `${p}-split`, main: `${p}-split__main`, toggle: `${p}-split__toggle` };
+var splitButton = {
+  id: "split-button",
+  name: "Split Button",
+  description: "A main action with a menu of related actions.",
+  tags: ["control", "action"],
+  status: "stable",
+  usage: "The left part runs the main action; the chevron opens a Menu of alternatives (arrows move, Enter chooses, Escape closes). Both fire p8-action with { action: label }. Use only when the alternatives are variations of the main action (Save, Save as draft).",
+  composition: "A Button and a chevron Button joined by a hairline; the menu is a Dropdown Menu.",
+  props: [
+    P.text("label", "Save", "Main action."),
+    P.area("items", "Save as draft\nSave and publish\n---\nSchedule\u2026", 'Menu items, one per line; "---" is a divider.', "string (one per line)"),
+    P.select("variant", ["default", "primary"], "primary", "Fill of both parts."),
+    P.bool("open", false, "Initially open."),
+    P.bool("disabled", false, "Disables both parts.")
+  ],
+  rules: [
+    ...popRules,
+    { cls: sb.root, base: { display: "inline-flex", "align-items": "stretch" } },
+    { cls: sb.main, base: { "border-start-end-radius": "0", "border-end-end-radius": "0" } },
+    { cls: sb.toggle, base: { "border-start-start-radius": "0", "border-end-start-radius": "0", "border-inline-start": `${v("border-hairline")} solid ${v("color-ring")}` } },
+    iconRule
+  ],
+  render(pr) {
+    const variant = pr.variant === "primary" ? "primary" : "default";
+    const off = dis2(pr.disabled);
+    const open2 = Boolean(pr.open) && !pr.disabled;
+    const main = btn3(pr.label, variant, { "data-main": true, ...off });
+    const toggle = n("button", variant === "primary" ? [c.root, c.primary, sb.toggle] : [c.root, sb.toggle], [iconNode("chevron-down", 14)], { type: "button", "aria-label": `More ${String(pr.label).toLowerCase()} options`, "aria-haspopup": "menu", "aria-expanded": String(open2), "data-trigger": true, ...off });
+    const panel = n("div", [po.panel, po.bare, po.end], [menu.render({ items: pr.items, active: "" })], open2 ? { "data-panel": true } : { "data-panel": true, hidden: true });
+    return n("div", [po.root, sb.root], [{ ...main, cls: [...main.cls ?? [], sb.main] }, toggle, panel], { role: "group", "aria-label": pr.label, "data-p8": "popover split", "data-select-closes": true });
+  }
+};
+
+// src/components/screens.ts
+var btn4 = (label, variant, extra = {}, icon = "none") => {
+  const b2 = button.render({ label, variant, size: "md", icon, iconSize: "14", iconPosition: "start", fullWidth: false, disabled: false });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var ibtn2 = (icon, label, extra = {}, variant = "ghost-flat", size = "16") => {
+  const b2 = iconButton.render({ icon, label, size, variant, disabled: false });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var dis3 = (on) => on ? { disabled: true } : {};
+var slug = (s2) => s2.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "field";
+var es = { root: `${p}-empty`, bordered: `${p}-empty--bordered`, icon: `${p}-empty__icon`, title: `${p}-empty__title`, desc: `${p}-empty__desc`, actions: `${p}-empty__actions` };
+var emptyState = {
+  id: "empty-state",
+  name: "Empty State",
+  description: "What to show when there is nothing here yet, with the next step.",
+  tags: ["feedback", "content"],
+  status: "stable",
+  usage: 'Say what will appear here and how to make it appear, in two short lines. One primary action; an optional secondary one. Buttons fire p8-action with { action: label }. For "no search results" use the search icon and offer to clear filters.',
+  composition: "An icon, a Heading, Text and one or two Buttons.",
+  props: [
+    P.select("icon", ICON_NAMES, "folder", "Icon from the Primitive8 pack."),
+    P.text("title", "No projects yet", "What is missing."),
+    P.area("description", "Projects keep tasks, files and people together. Create one to get started.", "One or two sentences: why it is empty and what to do."),
+    P.text("action", "New project", "Primary action. Empty to omit."),
+    P.text("secondary", "Import projects", "Secondary action. Empty to omit."),
+    P.select("variant", ["plain", "bordered"], "plain", "Plain, or inside a hairline panel.")
+  ],
+  rules: [
+    { cls: es.root, base: { display: "flex", "flex-direction": "column", "align-items": "center", gap: v("space-12"), "box-sizing": "border-box", width: v("size-400"), "max-width": "100%", "padding-block": v("space-32"), "padding-inline": v("space-16"), "text-align": "center", color: v("color-ink"), ...text("sm") } },
+    { cls: es.bordered, base: { padding: v("space-16"), "border-radius": v("radius-12"), ...ringDecl } },
+    { cls: es.icon, base: { display: "inline-flex", "align-items": "center", "justify-content": "center", width: v("size-48"), height: v("size-48"), "border-radius": v("radius-full"), background: v("color-control"), color: v("color-ink") } },
+    { cls: es.title, base: { margin: "0", ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: es.desc, base: { margin: "0", "max-width": v("size-320"), color: v("color-ink-muted") } },
+    { cls: es.actions, base: { display: "flex", "flex-wrap": "wrap", "justify-content": "center", gap: v("space-8"), "margin-top": v("space-4") } },
+    iconRule
+  ],
+  render(pr) {
+    const acts = [pr.action ? btn4(pr.action, "primary", { "data-action": pr.action }, "plus") : null, pr.secondary ? btn4(pr.secondary, "ghost", { "data-action": pr.secondary }) : null].filter(Boolean);
+    return n("section", pr.variant === "bordered" ? [es.root, es.bordered] : [es.root], [
+      n("span", [es.icon], [iconNode(pr.icon, 16)]),
+      n("h3", [es.title], [pr.title]),
+      ...pr.description ? [n("p", [es.desc], [pr.description])] : [],
+      ...acts.length ? [n("div", [es.actions], acts)] : []
+    ], { "aria-label": pr.title || "Empty", "data-p8": "action" });
+  }
+};
+var fm = { root: `${p}-form`, title: `${p}-form__title`, field: `${p}-form__field`, opt: `${p}-form__optional`, control: `${p}-form__control`, err: `${p}-form__error`, actions: `${p}-form__actions`, status: `${p}-form__status` };
+function parseFormFields(s2) {
+  const seen = /* @__PURE__ */ new Set();
+  return lines(s2).map((l2) => {
+    const [label = "", kind = "text", flags2 = ""] = l2.split("|").map((x) => x.trim());
+    const [type, opts] = kind.includes(":") ? [kind.slice(0, kind.indexOf(":")).trim(), kind.slice(kind.indexOf(":") + 1)] : [kind, ""];
+    let name = slug(label);
+    while (seen.has(name)) name += "-2";
+    seen.add(name);
+    const t4 = ["text", "email", "password", "number", "url", "tel", "textarea", "select", "checkbox"].includes(type) ? type : "text";
+    return { label, name, type: t4, options: opts.split(",").map((x) => x.trim()).filter(Boolean), required: /\brequired\b/.test(flags2), min: Number(/\bmin:(\d+)/.exec(flags2)?.[1] ?? 0) };
+  }).filter((x) => x.label);
+}
+var form = {
+  id: "form",
+  name: "Form",
+  description: "Fields with validation, error messages and submit wiring.",
+  tags: ["form", "composition"],
+  status: "stable",
+  usage: 'One field per line: "Label | type | flags". Types: text, email, password, number, url, tel, textarea, checkbox, or "select: A, B, C". Flags: required, min:N (characters). Errors show under each field on submit and then update as you type; focus moves to the first invalid field and a status line says how many need attention. A valid submit fires a cancelable p8-submit with { values, done(result) }: call event.preventDefault(), save, then done({ ok: true, message }) or done({ errors: { name: "message" } }). Without a handler it shows the success message.',
+  composition: "Text Inputs, Select, Textarea and Checkbox in Fields, with a primary Button.",
+  props: [
+    P.text("title", "", "Optional heading above the fields."),
+    P.area("fields", "Full name | text | required\nWork email | email | required\nPassword | password | required min:8\nRole | select: Designer, Engineer, Manager\nAbout you | textarea\nI agree to the terms | checkbox | required", 'One per line: "Label | type | flags".', "string (one per line)"),
+    P.text("submit", "Create account", "Submit button label."),
+    P.text("cancel", "", 'Optional secondary button (fires p8-action { action: "cancel" }).'),
+    P.text("success", "Account created.", "Status message after a successful submit."),
+    P.bool("disabled", false, "Disables every field.")
+  ],
+  rules: [
+    { cls: fm.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", margin: "0", color: v("color-ink"), "font-family": v("type-family") } },
+    { cls: fm.title, base: { margin: "0", ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: fm.field, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), "min-width": "0" } },
+    { cls: fm.opt, base: { color: v("color-ink-muted"), "font-weight": v("type-weight") } },
+    { cls: fm.control, base: {}, nested: [{ sel: '[aria-invalid="true"]', decls: { outline: `${v("border-hairline")} solid ${v("color-ink")}`, "outline-offset": `calc(-1 * ${v("border-hairline")})` } }] },
+    { cls: fm.err, base: { margin: "0", "min-height": v("type-line-sm"), color: v("color-ink"), ...text("sm"), "font-weight": v("type-weight-strong") } },
+    { cls: fm.actions, base: { display: "flex", "align-items": "center", gap: v("space-8") } },
+    { cls: fm.status, base: { margin: "0", "min-height": v("type-line-sm"), color: v("color-ink-muted"), ...text("sm") } },
+    iconRule
+  ],
+  render(pr) {
+    const fields = parseFormFields(pr.fields);
+    const off = dis3(pr.disabled);
+    const fieldNode = (x) => {
+      const id = `form-${x.name}`;
+      const err = n("p", [fm.err], [], { id: `${id}-error`, "data-error": true });
+      const a2 = { id, name: x.name, "aria-describedby": `${id}-error`, "data-field": x.label, ...x.required ? { required: true, "aria-required": "true" } : {}, ...x.min ? { "data-min": String(x.min) } : {}, ...off };
+      const label = n("label", [f.label], [x.label, ...x.required ? [] : [n("span", [fm.opt], [" (optional)"])]], { for: id });
+      if (x.type === "checkbox") {
+        const cb3 = checkbox.render({ label: x.label, checked: false, disabled: Boolean(pr.disabled) });
+        const box2 = cb3.children?.[0];
+        return n("div", [fm.field], [{ ...cb3, children: [{ ...box2, cls: [...box2.cls ?? [], fm.control], attrs: { ...box2.attrs, ...a2, id } }, x.label] }, err]);
+      }
+      if (x.type === "select") {
+        const opts = x.options.length ? x.options : ["Choose\u2026"];
+        return n("div", [fm.field], [label, n("div", [s.wrap], [n("select", [s.root, fm.control], opts.map((o2, i2) => n("option", [], [o2], i2 === 0 ? { value: o2, selected: true } : { value: o2 })), a2), { ...iconNode("chevron-down", 16), cls: [c.icon, s.icon, ...pr.disabled ? [s.iconOff] : []] }]), err]);
+      }
+      if (x.type === "textarea") return n("div", [fm.field], [label, n("textarea", [i.root, fm.control], [], { ...a2, rows: "3" }), err]);
+      const auto = { email: "email", password: "new-password", tel: "tel", url: "url" };
+      return n("div", [fm.field], [label, n("input", [i.root, fm.control], void 0, { ...a2, type: x.type, ...auto[x.type] ? { autocomplete: auto[x.type] } : x.name.includes("name") ? { autocomplete: "name" } : {} }), err]);
+    };
+    return n("form", [fm.root], [
+      ...pr.title ? [n("h2", [fm.title], [pr.title])] : [],
+      ...fields.map(fieldNode),
+      n("div", [fm.actions], [btn4(pr.submit || "Submit", "primary", { type: "submit", "data-submit": true, ...off }), ...pr.cancel ? [btn4(pr.cancel, "ghost", { "data-action": "cancel", ...off })] : []]),
+      n("p", [fm.status], [], { role: "status", "data-status": true })
+    ], { novalidate: true, "aria-label": pr.title || "Form", "data-p8": "form action", "data-success": pr.success || "Saved." });
+  }
+};
+var mc = { root: `${p}-mcal`, head: `${p}-mcal__head`, title: `${p}-mcal__title`, nav: `${p}-mcal__nav`, grid: `${p}-mcal__grid`, dow: `${p}-mcal__dow`, cell: `${p}-mcal__cell`, out: `${p}-mcal__cell--out`, on: `${p}-mcal__cell--on`, num: `${p}-mcal__num`, ev: `${p}-mcal__event`, more: `${p}-mcal__more`, agenda: `${p}-mcal__agenda`, agendaHead: `${p}-mcal__agenda-head`, agendaList: `${p}-mcal__agenda-list` };
+var parseEvents = (s2) => {
+  const out = {};
+  for (const l2 of lines(s2)) {
+    const [d2 = "", t4 = ""] = l2.split("|").map((x) => x.trim());
+    if (validDate(d2) && t4) (out[d2] ??= []).push(t4);
+  }
+  return out;
+};
+var longDate = (iso) => new Intl.DateTimeFormat("en", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" }).format(/* @__PURE__ */ new Date(`${iso}T00:00:00Z`));
+var evCount = (k2) => k2 ? `${k2} event${k2 === 1 ? "" : "s"}` : "No events";
+var calendar = {
+  id: "calendar",
+  name: "Calendar",
+  description: "A month view with events per day and an agenda for the selected day.",
+  tags: ["data", "layout"],
+  status: "stable",
+  usage: 'Events are "YYYY-MM-DD | Title", one per line; each day shows up to two and "+N more". Click a day (or move with the arrows and press Enter) to select it: the agenda below lists all its events and p8-select fires with { date, events }. Arrows move by day and week, Home/End to the week edges, PageUp/PageDown change the month, Today jumps to the current date. For picking a date in a form use Date Picker.',
+  composition: "Icon Buttons and a Button in the header; days are buttons in a 7-column grid.",
+  props: [
+    P.text("month", "2026-11", "Month shown, YYYY-MM."),
+    P.text("selected", "2026-11-12", "Selected day, YYYY-MM-DD. Empty for none."),
+    P.area("events", "2026-11-03 | Design review\n2026-11-03 | 1:1 with Ada\n2026-11-12 | Launch\n2026-11-12 | Retro\n2026-11-12 | Team dinner\n2026-11-20 | Quarterly planning\n2026-11-26 | Office closed", 'One per line: "YYYY-MM-DD | Title".', "string (one per line)"),
+    P.select("weekStart", ["mon", "sun"], "mon", "First day of the week.")
+  ],
+  rules: [
+    { cls: mc.root, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: mc.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: mc.title, base: { margin: "0", ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: mc.nav, base: { display: "flex", "align-items": "center", gap: v("space-4") } },
+    { cls: mc.grid, base: { display: "grid", "grid-template-columns": "repeat(7, minmax(0, 1fr))", "border-radius": v("radius-12"), overflow: "hidden", ...ringDecl } },
+    { cls: mc.dow, base: { "padding-block": v("space-8"), "padding-inline": v("space-8"), color: v("color-ink-muted"), "text-align": "left", "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}` } },
+    { cls: mc.cell, base: { position: "relative", display: "flex", "flex-direction": "column", "align-items": "stretch", gap: v("space-4"), "min-width": "0", height: v("size-72"), padding: v("space-4"), border: "none", "border-radius": "0", background: v("color-canvas"), color: v("color-ink"), "text-align": "left", cursor: "pointer", overflow: "hidden", "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}`, "border-inline-end": `${v("border-hairline")} solid ${v("color-ring")}`, transition: `background ${motion}`, ...text("sm") }, hover: { background: v("color-control") }, focus: { "box-shadow": `inset 0 0 0 ${v("border-focus")} ${v("color-ring-focus")}`, outline: "none" } },
+    { cls: mc.out, base: { color: v("color-ink-muted") } },
+    { cls: mc.on, base: { background: v("color-control-strong") }, hover: { background: v("color-control-strong") } },
+    { cls: mc.num, base: { "padding-inline": v("space-4") }, nested: [{ sel: "[data-today]", decls: { "align-self": "flex-start", "border-radius": v("radius-full"), background: v("color-ink"), color: v("color-ink-inverse") } }] },
+    { cls: mc.ev, base: { "padding-inline": v("space-4"), "border-radius": v("radius-4"), background: v("color-control-strong"), color: v("color-ink"), overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    { cls: mc.more, base: { "padding-inline": v("space-4"), color: v("color-ink-muted"), "white-space": "nowrap" } },
+    { cls: mc.agenda, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), height: v("size-72"), "overflow-y": "auto" } },
+    { cls: mc.agendaHead, base: { margin: "0", "font-weight": v("type-weight-strong") } },
+    { cls: mc.agendaList, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), margin: "0", padding: "0", "list-style": "none", color: v("color-ink-muted") } },
+    iconRule
+  ],
+  render(pr) {
+    const events = parseEvents(pr.events);
+    const selected = validDate(String(pr.selected)) ? String(pr.selected) : "";
+    const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(String(pr.month)) ? String(pr.month) : selected.slice(0, 7) || "2026-11";
+    const [y, m2] = month.split("-").map(Number);
+    const ws = pr.weekStart === "sun" ? 0 : 1;
+    const days2 = [...DOW.slice(ws), ...DOW.slice(0, ws)];
+    const grid = monthGrid(y, m2 - 1, ws);
+    const focusIso = grid.some((g2) => g2.iso === selected) ? selected : grid.find((g2) => !g2.out).iso;
+    const cell = (g2) => {
+      const ev = events[g2.iso] ?? [];
+      const cls = [mc.cell, ...g2.out ? [mc.out] : [], ...g2.iso === selected ? [mc.on] : []];
+      return n("button", cls, [
+        n("span", [mc.num], [String(g2.n)], { "aria-hidden": "true" }),
+        ...ev.slice(0, ev.length > 2 ? 1 : 2).map((t4) => n("span", [mc.ev], [t4], { "aria-hidden": "true" })),
+        ...ev.length > 2 ? [n("span", [mc.more], [`+${ev.length - 1} more`], { "aria-hidden": "true" })] : []
+      ], { type: "button", "data-date": g2.iso, "aria-pressed": String(g2.iso === selected), "aria-label": `${longDate(g2.iso)}, ${evCount(ev.length).toLowerCase()}`, tabindex: g2.iso === focusIso ? "0" : "-1" });
+    };
+    const sel = selected ? events[selected] ?? [] : [];
+    return n("section", [mc.root], [
+      n("div", [mc.head], [
+        n("h2", [mc.title], [monthLabel(y, m2 - 1)], { "aria-live": "polite", "data-label": true }),
+        n("div", [mc.nav], [btn4("Today", "ghost", { "data-today-btn": true }), ibtn2("chevron-left", "Previous month", { "data-dir": "-1" }), ibtn2("chevron-right", "Next month", { "data-dir": "1" })])
+      ]),
+      n("div", [mc.grid], [...days2.map((d2) => n("span", [mc.dow], [d2], { "aria-hidden": "true" })), ...grid.map(cell)], { role: "group", "aria-label": "Days", "data-grid": true }),
+      n("div", [mc.agenda], [
+        n("p", [mc.agendaHead], [selected ? `${longDate(selected)} \xB7 ${evCount(sel.length)}` : "Select a day to see its events"], { "data-agenda-head": true }),
+        n("ul", [mc.agendaList], sel.map((t4) => n("li", [], [t4])), { "data-agenda": true })
+      ], { "aria-live": "polite" }),
+      n("template", [], [n("span", [mc.num], [""], { "aria-hidden": "true" }), n("span", [mc.ev], [""], { "aria-hidden": "true" }), n("span", [mc.more], [""], { "aria-hidden": "true" })], { "data-parts": true })
+    ], { "aria-label": "Calendar", "data-p8": "monthcal", "data-month": month, "data-week": String(ws), "data-selected": selected, "data-events": JSON.stringify(events) });
+  }
+};
+var chc = { root: `${p}-chart`, head: `${p}-chart__head`, title: `${p}-chart__title`, legend: `${p}-chart__legend`, key: `${p}-chart__key`, sw: `${p}-chart__swatch`, plot: `${p}-chart__plot`, y: `${p}-chart__y`, area: `${p}-chart__area`, svg: `${p}-chart__svg`, gridline: `${p}-chart__gridline`, series: `${p}-chart__series`, band: `${p}-chart__band`, x: `${p}-chart__x`, tip: `${p}-chart__tip`, tipRow: `${p}-chart__tip-row`, sr: `${p}-chart__sr`, s: [`${p}-chart__s1`, `${p}-chart__s2`, `${p}-chart__s3`] };
+var SERIES_COLORS = ["color-ink", "color-ink-muted", "color-placeholder"];
+function parseChart(s2) {
+  const rows = lines(s2).map((l2) => l2.split("|").map((x) => x.trim()));
+  const head = rows.shift() ?? [];
+  const names = head.slice(1, 4);
+  const body = rows.filter((r3) => r3[0]);
+  return { labels: body.map((r3) => r3[0]), series: names.map((name, i2) => ({ name: name || `Series ${i2 + 1}`, values: body.map((r3) => Math.max(0, Number(r3[i2 + 1]) || 0)) })) };
+}
+var niceMax = (mx) => {
+  if (mx <= 0) return 4;
+  const e = 10 ** Math.floor(Math.log10(mx));
+  const f2 = [1, 2, 2.5, 5, 10].find((k2) => k2 * e >= mx);
+  return f2 * e;
+};
+var compact = (x) => x >= 1e6 ? `${+(x / 1e6).toFixed(1)}M` : x >= 1e3 ? `${+(x / 1e3).toFixed(1)}k` : String(+x.toFixed(2));
+var chart = {
+  id: "chart",
+  name: "Chart",
+  description: "Bar, line or area chart with legend toggles, hover values and a data table for screen readers.",
+  tags: ["data"],
+  status: "stable",
+  usage: 'Data is a small table: the first line names the columns ("Month | Revenue | Costs"), each next line is a label and up to three values. Hover (or focus the plot and use \u2190 \u2192) to read the values of a point. Legend buttons hide and show a series. The same numbers are in a visually hidden table, so screen readers get the data, not a picture. Series are ink, muted and light grey; keep to three.',
+  composition: "Legend keys are toggle buttons; the tooltip is a Popover-style panel.",
+  props: [
+    P.text("title", "Revenue vs costs", "Chart title (also the accessible name)."),
+    P.select("type", ["bar", "line", "area"], "bar", "Chart type."),
+    P.area("data", "Month | Revenue | Costs\nJan | 120 | 80\nFeb | 150 | 95\nMar | 170 | 110\nApr | 140 | 100\nMay | 190 | 120\nJun | 230 | 130", 'Header line, then "Label | value | value" per line (up to three series).', "string (one per line)"),
+    P.bool("legend", true, "Show the legend toggles.")
+  ],
+  rules: [
+    { cls: chc.root, base: { position: "relative", display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-500"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: chc.head, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+    { cls: chc.title, base: { margin: "0", "font-weight": v("type-weight-strong"), ...text("sm") } },
+    { cls: chc.legend, base: { display: "flex", gap: v("space-4") } },
+    { cls: chc.key, base: { display: "inline-flex", "align-items": "center", gap: v("space-8"), "padding-block": v("space-4"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), border: "none", background: "transparent", color: v("color-ink"), cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus, nested: [{ sel: '[aria-pressed="false"]', decls: { color: v("color-ink-muted") } }, { sel: `[aria-pressed="false"] .${chc.sw}`, decls: { opacity: "0.3" } }] },
+    { cls: chc.sw, base: { width: v("space-8"), height: v("space-8"), "border-radius": v("radius-full"), "flex-shrink": "0" } },
+    { cls: chc.plot, base: { display: "grid", "grid-template-columns": "auto minmax(0, 1fr)", "column-gap": v("space-8"), "row-gap": v("space-4") } },
+    { cls: chc.y, base: { display: "flex", "flex-direction": "column", "justify-content": "space-between", height: v("size-160"), color: v("color-ink-muted"), "text-align": "right", "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    { cls: chc.area, base: { position: "relative", height: v("size-160"), "border-radius": v("radius-4"), cursor: "crosshair" }, focus },
+    { cls: chc.svg, base: { display: "block", width: "100%", height: "100%", overflow: "visible" } },
+    { cls: chc.gridline, base: { stroke: v("color-ring"), "stroke-width": v("border-hairline"), "vector-effect": "non-scaling-stroke" } },
+    { cls: chc.series, base: {}, nested: [{ sel: "[data-off]", decls: { display: "none" } }] },
+    { cls: chc.band, base: { fill: v("color-control"), opacity: "0" }, nested: [{ sel: "[data-show]", decls: { opacity: "1" } }] },
+    ...chc.s.map((cls, i2) => ({ cls, base: { fill: v(SERIES_COLORS[i2]), stroke: v(SERIES_COLORS[i2]), "stroke-width": v("border-focus"), "vector-effect": "non-scaling-stroke", "stroke-linejoin": "round", "stroke-linecap": "round" }, nested: [{ sel: "[data-line]", decls: { fill: "none" } }, { sel: "[data-fill]", decls: { stroke: "none", "fill-opacity": "0.15" } }, { sel: "[data-bar]", decls: { stroke: "none" } }] })),
+    { cls: chc.x, base: { display: "grid", color: v("color-ink-muted"), "text-align": "center", "grid-column": "2" } },
+    { cls: chc.tip, base: { position: "absolute", top: "0", "z-index": "10", display: "flex", "flex-direction": "column", gap: v("space-4"), "box-sizing": "border-box", "min-width": v("size-160"), "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-canvas"), color: v("color-ink"), "pointer-events": "none", translate: "-50% 0", ...ringDecl, ...text("sm") }, nested: [hiddenRule] },
+    { cls: chc.tipRow, base: { display: "flex", "align-items": "center", gap: v("space-8"), "white-space": "nowrap" } },
+    { cls: chc.sr, base: srOnly2 }
+  ],
+  render(pr) {
+    const { labels, series } = parseChart(pr.data);
+    const nL = Math.max(1, labels.length);
+    const max = niceMax(Math.max(0, ...series.flatMap((s2) => s2.values)));
+    const W = nL * 100;
+    const y = (val) => +(100 - val / max * 100).toFixed(2);
+    const type = String(pr.type);
+    const marks = series.map((s2, si) => {
+      let kids;
+      if (type === "bar") {
+        const bw = 60 / series.length;
+        kids = s2.values.map((val, i2) => n("rect", [chc.s[si]], void 0, { x: String(i2 * 100 + 20 + si * bw), y: String(y(val)), width: String(+(bw - 4).toFixed(2)), height: String(+(100 - y(val)).toFixed(2)), rx: "2", "data-bar": true }));
+      } else {
+        const pts = s2.values.map((val, i2) => `${i2 * 100 + 50} ${y(val)}`);
+        const d2 = pts.length ? `M${pts.join(" L")}` : "";
+        kids = [...type === "area" && pts.length ? [n("path", [chc.s[si]], void 0, { d: `${d2} L${(nL - 1) * 100 + 50} 100 L50 100 Z`, "data-fill": true })] : [], n("path", [chc.s[si]], void 0, { d: d2, "data-line": true })];
+      }
+      return n("g", [chc.series], kids, { "data-series": String(si) });
+    });
+    const ticks = [max, max * 3 / 4, max / 2, max / 4, 0];
+    const summary = `${pr.title || "Chart"}: ${type} chart of ${series.map((s2) => s2.name).join(", ")} over ${labels.length} points`;
+    return n("figure", [chc.root], [
+      n("div", [chc.head], [
+        n("figcaption", [chc.title], [pr.title || "Chart"]),
+        ...pr.legend && series.length ? [n("div", [chc.legend], series.map((s2, i2) => n("button", [chc.key], [n("span", [chc.sw], [], { style: `background: var(--p8-${SERIES_COLORS[i2]})` }), s2.name], { type: "button", "aria-pressed": "true", "data-key": String(i2) })), { role: "group", "aria-label": "Series" })] : []
+      ]),
+      n("div", [chc.plot], [
+        n("div", [chc.y], ticks.map((t4) => n("span", [], [compact(t4)])), { "aria-hidden": "true" }),
+        n("div", [chc.area], [
+          n("svg", [chc.svg], [
+            ...[0, 25, 50, 75, 100].map((gy) => n("line", [chc.gridline], void 0, { x1: "0", x2: String(W), y1: String(gy), y2: String(gy) })),
+            n("rect", [chc.band], void 0, { x: "0", y: "0", width: "100", height: "100", "data-band": true }),
+            ...marks
+          ], { viewBox: `0 0 ${W} 100`, preserveAspectRatio: "none", "aria-hidden": "true", focusable: "false" }),
+          n("div", [chc.tip], [], { "data-tip": true, hidden: true, "aria-hidden": "true" })
+        ], { tabindex: "0", role: "img", "aria-label": `${summary}. Use the left and right arrow keys to read values.`, "data-plot": true }),
+        n("div", [chc.x], labels.map((l2) => n("span", [], [l2])), { style: `grid-template-columns: repeat(${nL}, minmax(0, 1fr))`, "aria-hidden": "true" })
+      ]),
+      n("p", [chc.sr], [], { "aria-live": "polite", "data-live": true }),
+      n("template", [], [n("div", [chc.tipRow], [n("span", [chc.sw], []), n("span", [], [""])])], { "data-row": true }),
+      n("table", [chc.sr], [
+        n("caption", [], [pr.title || "Chart"]),
+        n("thead", [], [n("tr", [], [n("th", [], [""], { scope: "col" }), ...series.map((s2) => n("th", [], [s2.name], { scope: "col" }))])]),
+        n("tbody", [], labels.map((l2, i2) => n("tr", [], [n("th", [], [l2], { scope: "row" }), ...series.map((s2) => n("td", [], [String(s2.values[i2])]))])))
+      ])
+    ], { "data-p8": "chart", "data-chart": JSON.stringify({ labels, series }) });
+  }
+};
+var spk = { root: `${p}-sparkline`, svg: `${p}-sparkline__svg`, line: `${p}-sparkline__line`, fill: `${p}-sparkline__fill`, bar: `${p}-sparkline__bar`, dot: `${p}-sparkline__dot`, value: `${p}-sparkline__value`, delta: `${p}-sparkline__delta` };
+var sparkline = {
+  id: "sparkline",
+  name: "Sparkline",
+  description: "A tiny trend line, area or bars to sit next to a number.",
+  tags: ["data", "content"],
+  status: "stable",
+  usage: 'Values are comma-separated numbers, oldest first. It is a picture with a summary for screen readers ("Signups: 12 to 24, up 100%"); put the exact number next to it. For axes, labels or several series use Chart.',
+  props: [
+    P.text("values", "12, 14, 13, 18, 17, 21, 24", "Comma-separated numbers, oldest first."),
+    P.select("type", ["line", "area", "bar"], "line", "Drawing."),
+    P.text("label", "Signups", "What the numbers are (for the summary)."),
+    P.select("size", ["sm", "md"], "md", "sm is 72\xD724, md is 160\xD732."),
+    P.bool("showValue", true, "Show the last value and the change.")
+  ],
+  rules: [
+    { cls: spk.root, base: { display: "inline-flex", "align-items": "center", gap: v("space-8"), color: v("color-ink"), ...text("sm") } },
+    { cls: spk.svg, base: { display: "block", "flex-shrink": "0", overflow: "visible" } },
+    { cls: spk.line, base: { fill: "none", stroke: v("color-ink"), "stroke-width": v("border-focus"), "stroke-linejoin": "round", "stroke-linecap": "round" } },
+    { cls: spk.fill, base: { fill: v("color-ink"), "fill-opacity": "0.12", stroke: "none" } },
+    { cls: spk.bar, base: { fill: v("color-ink-muted") } },
+    { cls: spk.dot, base: { fill: v("color-ink") } },
+    { cls: spk.value, base: { "font-weight": v("type-weight-strong"), "font-variant-numeric": "tabular-nums" } },
+    { cls: spk.delta, base: { color: v("color-ink-muted"), "font-variant-numeric": "tabular-nums" } }
+  ],
+  render(pr) {
+    const vals = String(pr.values).split(/[,\s]+/).map(Number).filter((x) => Number.isFinite(x));
+    const data = vals.length ? vals : [0];
+    const [W, H] = pr.size === "sm" ? [72, 24] : [160, 32];
+    const lo = Math.min(...data), hi = Math.max(...data), span = hi - lo || 1;
+    const pad = 2;
+    const X = (i2) => +(data.length === 1 ? W / 2 : pad + i2 * (W - pad * 2) / (data.length - 1)).toFixed(2);
+    const Y = (val) => +(H - pad - (val - lo) / span * (H - pad * 2)).toFixed(2);
+    const first = data[0], last = data[data.length - 1];
+    const pct = first ? Math.round((last - first) / Math.abs(first) * 100) : 0;
+    const trend = last > first ? `up ${pct}%` : last < first ? `down ${Math.abs(pct)}%` : "no change";
+    let kids;
+    if (pr.type === "bar") {
+      const bw = Math.max(1, (W - pad * 2) / data.length - 2);
+      kids = data.map((val, i2) => n("rect", [spk.bar], void 0, { x: String(+(pad + i2 * (W - pad * 2) / data.length + 1).toFixed(2)), y: String(Y(val)), width: String(+bw.toFixed(2)), height: String(+(H - pad - Y(val) + 1).toFixed(2)), rx: "1" }));
+    } else {
+      const d2 = `M${data.map((val, i2) => `${X(i2)} ${Y(val)}`).join(" L")}`;
+      kids = [...pr.type === "area" ? [n("path", [spk.fill], void 0, { d: `${d2} L${X(data.length - 1)} ${H} L${X(0)} ${H} Z` })] : [], n("path", [spk.line], void 0, { d: d2 }), n("circle", [spk.dot], void 0, { cx: String(X(data.length - 1)), cy: String(Y(last)), r: "2.5" })];
+    }
+    const svg = n("svg", [spk.svg], kids, { width: String(W), height: String(H), viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${pr.label || "Trend"}: ${compact(first)} to ${compact(last)}, ${trend}` });
+    return n("span", [spk.root], [svg, ...pr.showValue ? [n("span", [spk.value], [compact(last)], { "aria-hidden": "true" }), n("span", [spk.delta], [last >= first ? `+${pct}%` : `${pct}%`], { "aria-hidden": "true" })] : []]);
+  }
+};
+var cm = { root: `${p}-chatmsg`, user: `${p}-chatmsg--user`, body: `${p}-chatmsg__body`, meta: `${p}-chatmsg__meta`, name: `${p}-chatmsg__name`, bubble: `${p}-chatmsg__bubble`, para: `${p}-chatmsg__p`, code: `${p}-chatmsg__code`, pre: `${p}-chatmsg__pre`, actions: `${p}-chatmsg__actions`, status: `${p}-chatmsg__status`, typing: `${p}-chatmsg__typing` };
+function messageNodes(body) {
+  const out = [];
+  const parts = body.split(/```/);
+  parts.forEach((part, i2) => {
+    if (i2 % 2) {
+      const code = part.replace(/^[a-z]*\n/, "").replace(/\n$/, "");
+      if (code) out.push(n("pre", [cm.pre], [n("code", [], [code])]));
+      return;
+    }
+    for (const para of part.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean)) {
+      const kids = para.split(/`([^`]+)`/).map((t4, j) => j % 2 ? n("code", [cm.code], [t4]) : t4).filter((t4) => t4 !== "");
+      out.push(n("p", [cm.para], kids));
+    }
+  });
+  return out;
+}
+var dots = () => n("svg", [cm.typing], [0, 1, 2].map((k2) => n("circle", [], [n("animate", [], void 0, { attributeName: "opacity", values: "0.3;1;0.3", dur: "1.2s", begin: `${k2 * 0.2}s`, repeatCount: "indefinite" })], { cx: String(4 + k2 * 8), cy: "4", r: "3", fill: "currentColor", opacity: "0.3" })), { width: "24", height: "8", viewBox: "0 0 24 8", role: "img", "aria-label": "Typing" });
+var chatMessage = {
+  id: "chat-message",
+  name: "Chat Message",
+  description: "One message in a conversation: user bubble or assistant reply, with status and actions.",
+  tags: ["content", "ai"],
+  status: "stable",
+  usage: 'User messages sit on the right in a bubble; assistant replies sit on the left as plain text. The body supports paragraphs (blank line), `inline code` and ``` code blocks ```. Streaming shows a typing indicator until text arrives. Copy copies the text; Retry, Edit and Try again fire p8-action with { action }. Keep the list in a log region (role="log") so new messages are announced.',
+  composition: "Avatar, Copy Button and ghost Buttons around formatted text.",
+  props: [
+    P.select("role", ["assistant", "user"], "assistant", "Who wrote it."),
+    P.text("name", "Assistant", "Author name."),
+    P.text("time", "10:24", "Time shown next to the name."),
+    P.area("body", "Here is a summary of the review:\n\nThe layout passes, but `gap: 10px` is off the grid. Use 12:\n\n```css\n.list { gap: var(--p8-space-12); }\n```", "Message text. Blank line = new paragraph; `code`; ``` blocks ```."),
+    P.select("status", ["sent", "sending", "error"], "sent", "Delivery state (user messages)."),
+    P.bool("streaming", false, "Show the typing indicator (assistant is still writing)."),
+    P.bool("actions", true, "Show Copy and Retry / Edit.")
+  ],
+  rules: [
+    { cls: cm.root, base: { display: "flex", "align-items": "flex-start", gap: v("space-12"), width: v("size-500"), "max-width": "100%", color: v("color-ink"), ...text("sm") } },
+    { cls: cm.user, base: { "flex-direction": "row-reverse" } },
+    { cls: cm.body, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), "min-width": "0", flex: "1" }, nested: [{ sel: `:where(.${cm.user} *)`, decls: { "align-items": "flex-end" } }] },
+    { cls: cm.meta, base: { display: "flex", "align-items": "baseline", gap: v("space-8"), color: v("color-ink-muted") } },
+    { cls: cm.name, base: { color: v("color-ink"), "font-weight": v("type-weight-strong") } },
+    { cls: cm.bubble, base: { display: "flex", "flex-direction": "column", gap: v("space-8"), "min-width": "0", "max-width": "100%" } },
+    { cls: `${cm.bubble}--user`, base: { "max-width": "85%", "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-12"), background: v("color-control") } },
+    { cls: cm.para, base: { margin: "0", "overflow-wrap": "anywhere" } },
+    { cls: cm.code, base: { "padding-inline": v("space-4"), "border-radius": v("radius-4"), background: v("color-control-strong"), "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono") } },
+    { cls: cm.pre, base: { margin: "0", "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), background: v("color-control"), overflow: "auto", "font-family": v("type-mono"), "letter-spacing": v("type-tracking-mono"), "white-space": "pre" } },
+    { cls: cm.actions, base: { display: "flex", "align-items": "center", gap: v("space-4") } },
+    { cls: cm.status, base: { display: "flex", "align-items": "center", gap: v("space-8"), color: v("color-ink-muted") } },
+    { cls: cm.typing, base: { color: v("color-ink-muted"), "margin-block": v("space-8") } },
+    iconRule
+  ],
+  render(pr) {
+    const user = pr.role === "user";
+    const body = String(pr.body);
+    const content = messageNodes(body);
+    const streaming = Boolean(pr.streaming) && !user;
+    const bubbleKids = streaming && !content.length ? [dots()] : content;
+    const actions = [];
+    if (pr.actions && !streaming && pr.status !== "sending") {
+      const cp3 = copyButton.render({ text: body, label: "", variant: "ghost" });
+      actions.push({ ...cp3, attrs: { ...cp3.attrs, "aria-label": "Copy message" } });
+      actions.push(user ? ibtn2("edit", "Edit message", { "data-action": "edit" }, "ghost", "14") : btn4("Retry", "ghost", { "data-action": "retry" }));
+    }
+    const status = user && pr.status === "sending" ? [n("p", [cm.status], ["Sending\u2026"], { role: "status" })] : user && pr.status === "error" ? [n("p", [cm.status], ["Not delivered.", btn4("Try again", "ghost", { "data-action": "retry" })], { role: "alert" })] : [];
+    return n("article", user ? [cm.root, cm.user] : [cm.root], [
+      avatar.render({ name: pr.name || (user ? "You" : "Assistant"), src: "", size: "32" }),
+      n("div", [cm.body], [
+        n("div", [cm.meta], [n("span", [cm.name], [pr.name || (user ? "You" : "Assistant")]), ...pr.time ? [n("time", [], [pr.time])] : []]),
+        n("div", user ? [cm.bubble, `${cm.bubble}--user`] : [cm.bubble], bubbleKids, streaming ? { "aria-busy": "true" } : void 0),
+        ...status,
+        ...actions.length ? [n("div", [cm.actions], actions)] : []
+      ])
+    ], { "aria-label": `${pr.name || (user ? "You" : "Assistant")}${pr.time ? ` at ${pr.time}` : ""}`, "data-p8": "action" });
+  }
+};
+var cc = { root: `${p}-composer`, box: `${p}-composer__box`, input: `${p}-composer__input`, bar: `${p}-composer__bar`, tools: `${p}-composer__tools`, send: `${p}-composer__send`, hint: `${p}-composer__hint`, files: `${p}-composer__files`, file: `${p}-composer__file` };
+var chatComposer = {
+  id: "chat-composer",
+  name: "Chat Composer",
+  description: "The message box of a chat: grows as you type, Enter sends, Shift+Enter adds a line.",
+  tags: ["control", "form", "ai"],
+  status: "stable",
+  usage: 'Enter sends and Shift+Enter starts a new line (except while an input method is composing). The box grows up to 160px, then scrolls. Send is disabled while empty. Sending fires p8-send with { text } and clears the box. While busy (the assistant is answering) the send button becomes Stop, which fires p8-stop; dispatch new CustomEvent("p8-busy", { detail: { busy } }) on the element to switch. Attach opens a file picker and fires p8-attach with { files }.',
+  composition: "A Textarea with Icon Buttons in a control surface.",
+  props: [
+    P.text("placeholder", "Message the assistant\u2026", "Placeholder."),
+    P.area("value", "", "Initial text."),
+    P.bool("busy", false, "The assistant is answering: show Stop instead of Send."),
+    P.bool("attach", true, "Show the attach button."),
+    P.bool("hint", true, "Show the keyboard hint below."),
+    P.bool("disabled", false, "Disables the composer.")
+  ],
+  rules: [
+    { cls: cc.root, base: { display: "flex", "flex-direction": "column", gap: v("space-4"), width: v("size-500"), "max-width": "100%", margin: "0", "font-family": v("type-family") } },
+    { cls: cc.box, base: { display: "flex", "flex-direction": "column", gap: v("space-8"), "box-sizing": "border-box", "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-12"), background: v("color-control"), transition: `background ${motion}` }, nested: [{ sel: ":focus-within", decls: { background: v("color-control-strong") } }] },
+    { cls: cc.input, base: { display: "block", width: "100%", "box-sizing": "border-box", "max-height": v("size-160"), padding: "0", border: "none", background: "transparent", color: v("color-ink"), resize: "none", outline: "none", "overflow-y": "auto", ...text("sm") }, placeholder: { color: v("color-placeholder") }, disabled: { cursor: "not-allowed" } },
+    { cls: cc.bar, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-8") } },
+    { cls: cc.tools, base: { display: "flex", "align-items": "center", gap: v("space-8"), "min-width": "0", color: v("color-ink-muted"), ...text("sm") } },
+    { cls: cc.send, base: { background: v("color-ink"), color: v("color-ink-inverse") }, hover: { background: v("color-ink"), opacity: v("opacity-hover") }, nested: [hiddenRule] },
+    { cls: cc.files, base: { overflow: "hidden", "text-overflow": "ellipsis", "white-space": "nowrap" } },
+    { cls: cc.file, base: srOnly2 },
+    { cls: cc.hint, base: { margin: "0", color: v("color-ink-muted"), ...text("sm") }, nested: [hiddenRule] },
+    iconRule
+  ],
+  render(pr) {
+    const value = String(pr.value);
+    const busy = Boolean(pr.busy);
+    const off = dis3(pr.disabled);
+    const send = ibtn2("arrow-right", "Send message", { type: "submit", "data-send": true, ...busy ? { hidden: true } : {}, ...!value.trim() || pr.disabled ? { disabled: true } : {} }, "default");
+    const stop = ibtn2("close", "Stop generating", { type: "button", "data-stop": true, ...busy ? {} : { hidden: true }, ...off }, "default");
+    return n("form", [cc.root], [
+      n("div", [cc.box], [
+        n("textarea", [cc.input], value ? [value] : [], { rows: "1", placeholder: pr.placeholder, "aria-label": "Message", "aria-describedby": "composer-hint", enterkeyhint: "send", "data-input": true, ...off }),
+        n("div", [cc.bar], [
+          n("div", [cc.tools], pr.attach ? [ibtn2("plus", "Attach files", { "data-attach": true, ...off }), n("input", [cc.file], void 0, { type: "file", multiple: true, tabindex: "-1", "aria-hidden": "true", "aria-label": "Attach files", "data-file": true }), n("span", [cc.files], [], { "aria-live": "polite", "data-files": true })] : []),
+          n("div", [cc.tools], [{ ...stop, cls: [...stop.cls ?? [], cc.send] }, { ...send, cls: [...send.cls ?? [], cc.send] }])
+        ])
+      ]),
+      n("p", [cc.hint], ["Enter to send, Shift+Enter for a new line"], pr.hint ? { id: "composer-hint" } : { id: "composer-hint", hidden: true })
+    ], { "aria-label": "Send a message", "data-p8": "composer", "data-busy": String(busy) });
+  }
+};
+var nb = { root: `${p}-navbar`, brand: `${p}-navbar__brand`, logo: `${p}-navbar__logo`, links: `${p}-navbar__links`, link: `${p}-navbar__link`, on: `${p}-navbar__link--active`, right: `${p}-navbar__right` };
+var navbar = {
+  id: "navbar",
+  name: "Navbar",
+  description: "The top bar of an app: brand, main links, search, action and account.",
+  tags: ["navigation", "page"],
+  status: "stable",
+  usage: 'The current page link has aria-current="page"; clicking a link moves it and fires p8-navigate with { label, href }. On narrow screens the links scroll sideways instead of wrapping. Keep five links or fewer; put the rest in a Sidebar Nav or a menu.',
+  composition: "Links, an Icon Button, a Button and an Avatar in a header.",
+  props: [
+    P.text("brand", "Acme", "Product name."),
+    P.area("links", "Overview\nProjects\nTeam\nSettings", "Main links, one per line.", "string (one per line)"),
+    P.text("active", "Projects", "Label of the current page."),
+    P.text("action", "New project", "Primary action. Empty to omit."),
+    P.bool("search", true, "Show the search button."),
+    P.text("user", "Ada Lovelace", "Signed-in user (avatar). Empty to omit.")
+  ],
+  rules: [
+    { cls: nb.root, base: { display: "flex", "align-items": "center", gap: v("space-12"), width: "100%", "box-sizing": "border-box", "padding-block": v("space-8"), "padding-inline": v("space-16"), background: v("color-canvas"), color: v("color-ink"), "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}`, ...text("sm") } },
+    { cls: nb.brand, base: { display: "inline-flex", "align-items": "center", gap: v("space-8"), "flex-shrink": "0", color: v("color-ink"), "font-weight": v("type-weight-strong"), "text-decoration": "none", "border-radius": v("radius-4") }, focus },
+    { cls: nb.logo, base: { width: v("size-24"), height: v("size-24"), "border-radius": v("radius-8"), background: v("color-ink") } },
+    { cls: nb.links, base: { display: "flex", "align-items": "center", gap: v("space-4"), flex: "1", "min-width": "0", "overflow-x": "auto", "scrollbar-width": "none" } },
+    { cls: nb.link, base: { "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), color: v("color-ink-muted"), "text-decoration": "none", "white-space": "nowrap", cursor: "pointer", transition: `background ${motion}, color ${motion}` }, hover: { color: v("color-ink"), background: v("color-control") }, focus },
+    { cls: nb.on, base: { color: v("color-ink"), background: v("color-control-strong") } },
+    { cls: nb.right, base: { display: "flex", "align-items": "center", gap: v("space-8"), "flex-shrink": "0" } },
+    iconRule
+  ],
+  render(pr) {
+    const links = lines(pr.links);
+    const right = [];
+    if (pr.search) right.push(ibtn2("search", "Search", { "data-action": "search" }));
+    if (pr.action) right.push(btn4(pr.action, "primary", { "data-action": pr.action }, "plus"));
+    if (pr.user) right.push(avatar.render({ name: pr.user, src: "", size: "32" }));
+    return n("header", [nb.root], [
+      n("a", [nb.brand], [n("span", [nb.logo], [], { "aria-hidden": "true" }), pr.brand || "Home"], { href: "/" }),
+      n("nav", [nb.links], links.map((l2) => n("a", l2 === pr.active ? [nb.link, nb.on] : [nb.link], [l2], { href: `#${slug(l2)}`, "data-nav": true, ...l2 === pr.active ? { "aria-current": "page" } : {} })), { "aria-label": "Main" }),
+      ...right.length ? [n("div", [nb.right], right)] : []
+    ], { "data-p8": "nav action" });
+  }
+};
+var as = { root: `${p}-shell`, framed: `${p}-shell--framed`, side: `${p}-shell__side`, sideOn: `${p}-shell__side--on`, sideHead: `${p}-shell__side-head`, brand: `${p}-shell__brand`, logo: `${p}-shell__logo`, nav: `${p}-shell__nav`, item: `${p}-shell__item`, itemOn: `${p}-shell__item--active`, label: `${p}-shell__label`, toggle: `${p}-shell__toggle`, main: `${p}-shell__main`, header: `${p}-shell__header`, title: `${p}-shell__title`, content: `${p}-shell__content`, placeholder: `${p}-shell__placeholder` };
+var parseNavItems = (s2) => lines(s2).map((l2) => {
+  const at = l2.indexOf(":");
+  const ic = at > 0 ? l2.slice(0, at).trim() : "";
+  return { icon: ICON_NAMES.includes(ic) ? ic : "file", label: at > 0 && ICON_NAMES.includes(ic) ? l2.slice(at + 1).trim() : l2.trim() };
+}).filter((x) => x.label);
+var appShell = {
+  id: "app-shell",
+  name: "App Shell",
+  description: "The frame of an app: collapsible sidebar, page header and a scrolling content area.",
+  tags: ["layout", "navigation", "page"],
+  status: "stable",
+  usage: 'Put your page in the content area. The sidebar collapses to an icon rail with its toggle (labels stay available to screen readers and as tooltips); the current item has aria-current="page" and clicking an item fires p8-navigate. Set fill to take the whole viewport (100dvh); otherwise it is a 400px tall framed preview. Only the content area scrolls.',
+  composition: "Sidebar links, an Icon Button toggle, a Heading and a Button.",
+  props: [
+    P.text("brand", "Acme", "Product name."),
+    P.area("items", "home: Home\nfolder: Projects\nuser: Team\nsettings: Settings", 'Sidebar items, one per line: "icon: Label" (icon from the pack).', "string (one per line)"),
+    P.text("active", "Projects", "Label of the current page."),
+    P.text("title", "Projects", "Page title in the header."),
+    P.text("action", "New project", "Header action. Empty to omit."),
+    P.bool("collapsed", false, "Start with the sidebar collapsed to icons."),
+    P.bool("fill", false, "Fill the viewport height instead of a framed 400px preview.")
+  ],
+  rules: [
+    { cls: as.root, base: { display: "grid", "grid-template-columns": "auto minmax(0, 1fr)", width: "100%", "min-height": "100dvh", "box-sizing": "border-box", background: v("color-canvas"), color: v("color-ink"), ...text("sm") } },
+    { cls: as.framed, base: { width: v("size-720"), "max-width": "100%", height: v("size-400"), "min-height": "0", overflow: "hidden", "border-radius": v("radius-12"), ...ringDecl } },
+    { cls: as.side, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), width: v("size-240"), "box-sizing": "border-box", "padding-block": v("space-12"), "padding-inline": v("space-12"), background: v("color-surface"), "border-right": `${v("border-hairline")} solid ${v("color-ring")}`, overflow: "hidden", transition: `width ${motion}` }, nested: [{ sel: ` .${as.label}`, decls: { transition: `opacity ${motion}` } }] },
+    { cls: as.sideOn, base: { width: v("size-72") }, nested: [{ sel: ` .${as.label}`, decls: { ...srOnly2 } }, { sel: ` .${as.brand}`, decls: { display: "none" } }, { sel: ` .${as.sideHead}`, decls: { "justify-content": "center" } }, { sel: ` .${as.toggle} svg`, decls: { rotate: "180deg" } }] },
+    { cls: as.sideHead, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-8") } },
+    { cls: as.brand, base: { display: "inline-flex", "align-items": "center", gap: v("space-8"), "font-weight": v("type-weight-strong"), "white-space": "nowrap", "min-width": "0" } },
+    { cls: as.logo, base: { width: v("size-24"), height: v("size-24"), "flex-shrink": "0", "border-radius": v("radius-8"), background: v("color-ink") } },
+    { cls: as.nav, base: { display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: as.item, base: { position: "relative", display: "flex", "align-items": "center", gap: v("space-8"), "padding-block": v("space-8"), "padding-inline": v("space-12"), "border-radius": v("radius-8"), color: v("color-ink-muted"), "text-decoration": "none", "white-space": "nowrap", cursor: "pointer" }, hover: { color: v("color-ink"), background: v("color-control") }, focus },
+    { cls: as.itemOn, base: { color: v("color-ink"), background: v("color-control-strong") } },
+    { cls: as.label, base: {} },
+    { cls: as.toggle, base: {}, nested: [{ sel: " svg", decls: { transition: `rotate ${motion}` } }] },
+    { cls: as.main, base: { display: "flex", "flex-direction": "column", "min-width": "0", "min-height": "0" } },
+    { cls: as.header, base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12"), "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-bottom": `${v("border-hairline")} solid ${v("color-ring")}` } },
+    { cls: as.title, base: { margin: "0", ...text("md"), "font-weight": v("type-weight-strong") } },
+    { cls: as.content, base: { flex: "1", "min-height": "0", "overflow-y": "auto", "padding-block": v("space-16"), "padding-inline": v("space-16") } },
+    { cls: as.placeholder, base: { margin: "0", color: v("color-ink-muted") } },
+    iconRule
+  ],
+  render(pr) {
+    const items = parseNavItems(pr.items);
+    const collapsed = Boolean(pr.collapsed);
+    const toggle = ibtn2("chevron-left", collapsed ? "Expand sidebar" : "Collapse sidebar", { "aria-expanded": String(!collapsed), "aria-controls": "shell-nav", "data-collapse": true });
+    return n("div", pr.fill ? [as.root] : [as.root, as.framed], [
+      n("aside", collapsed ? [as.side, as.sideOn] : [as.side], [
+        n("div", [as.sideHead], [n("span", [as.brand], [n("span", [as.logo], [], { "aria-hidden": "true" }), pr.brand || "App"]), { ...toggle, cls: [...toggle.cls ?? [], as.toggle] }]),
+        n("nav", [as.nav], items.map((x) => n("a", x.label === pr.active ? [as.item, as.itemOn] : [as.item], [iconNode(x.icon, 16), n("span", [as.label], [x.label])], { href: `#${slug(x.label)}`, "data-nav": true, ...collapsed ? { title: x.label } : {}, ...x.label === pr.active ? { "aria-current": "page" } : {} })), { id: "shell-nav", "aria-label": "Sidebar" })
+      ], { "aria-label": "Sidebar" }),
+      n("div", [as.main], [
+        n("header", [as.header], [n("h1", [as.title], [pr.title || "Page"]), ...pr.action ? [btn4(pr.action, "primary", { "data-action": pr.action }, "plus")] : []]),
+        n("main", [as.content], [n("p", [as.placeholder], ["Page content goes here."])], { tabindex: "-1" })
+      ])
+    ], { "data-p8": "shell nav action" });
+  }
+};
+
+// src/components/types.ts
+function defaultsOf(props2) {
+  return Object.fromEntries(props2.map((p4) => [p4.name, p4.default]));
+}
+function schemaOf(props2) {
+  const shape = {};
+  for (const p4 of props2) {
+    if (p4.control.kind === "select") {
+      shape[p4.name] = external_exports.enum(p4.control.options).default(p4.default);
+    } else if (p4.control.kind === "boolean") {
+      shape[p4.name] = external_exports.boolean().default(p4.default);
+    } else {
+      shape[p4.name] = external_exports.string().default(p4.default);
+    }
+  }
+  return external_exports.object(shape).strict();
+}
+function parseProps(def, input3 = {}) {
+  return schemaOf(def.props).parse(input3);
+}
+
+// src/components/templates.ts
+var r2 = (d2, o2 = {}) => d2.render({ ...defaultsOf(d2.props), ...o2 });
+var h = (level, t4, description = "", size = "md") => r2(heading, { text: t4, level: String(level), size, description });
+var t3 = (txt, tone = "default", size = "sm") => r2(textC, { text: txt, tone, size, as: "p" });
+var btn5 = (label, variant, extra = {}, fullWidth = false) => {
+  const b2 = r2(button, { label, variant, fullWidth });
+  return { ...b2, attrs: { ...b2.attrs, ...extra } };
+};
+var lnk = (label, href = "#") => r2(link, { label, href });
+var T = (id) => `${p}-tpl-${id}`;
+var page = [
+  { cls: T("page"), base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", width: "100%", "max-width": v("size-500"), color: v("color-ink") } },
+  { cls: T("bar"), base: { display: "flex", "align-items": "center", "justify-content": "space-between", gap: v("space-12") } },
+  { cls: T("grid"), base: { display: "grid", "grid-template-columns": `repeat(auto-fit, minmax(${v("size-160")}, 1fr))`, gap: v("space-12") } },
+  { cls: T("center"), base: { display: "flex", "align-items": "center", "justify-content": "center", "box-sizing": "border-box", width: "100%", "min-height": v("size-320"), "padding-block": v("space-24"), "padding-inline": v("space-16") } },
+  { cls: T("panel"), base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", width: v("size-400"), "max-width": "100%", padding: v("space-16"), "border-radius": v("radius-12"), background: v("color-surface"), color: v("color-ink"), ...ringDecl } },
+  { cls: T("row"), base: { display: "flex", "align-items": "center", gap: v("space-12"), "flex-wrap": "wrap" } },
+  { cls: T("split"), base: { display: "flex", "flex-wrap": "wrap", gap: v("space-12"), width: "100%", "max-width": v("size-500"), color: v("color-ink") } },
+  { cls: T("main"), base: { flex: `1 1 ${v("size-320")}`, "min-width": "0" } },
+  { cls: T("section"), base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "min-width": "0" } },
+  { cls: T("danger"), base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), ...ringDecl } },
+  { cls: T("prefs"), base: { display: "flex", "flex-direction": "column", gap: v("space-12") } },
+  { cls: T("foot"), base: { display: "flex", "justify-content": "center", "flex-wrap": "wrap", gap: v("space-4"), color: v("color-ink-muted"), ...text("sm") } },
+  { cls: T("wide"), base: { "min-width": "0", overflow: "auto" } }
+];
+var signIn = {
+  id: "sign-in",
+  name: "Sign-in",
+  description: "A centered sign-in card: email, password, forgot link, SSO and a sign-up line.",
+  tags: ["template", "auth", "page"],
+  status: "stable",
+  usage: 'Put it on an empty page. The form validates on submit and fires p8-submit with { values, done } (call event.preventDefault(), sign the user in, then done({ ok: true }) or done({ errors: { email: "\u2026" } })). Set sso off to drop the SSO button.',
+  uses: ["heading", "form", "link", "divider", "button", "text"],
+  props: [
+    P.text("title", "Sign in", "Page heading."),
+    P.text("subtitle", "Welcome back. Enter your details to continue.", "Line under the heading."),
+    P.bool("remember", true, 'Show the "Keep me signed in" checkbox.'),
+    P.bool("sso", true, 'Show the "Continue with SSO" button.'),
+    P.bool("signup", true, 'Show the "Create an account" line.')
+  ],
+  rules: page,
+  render(pr) {
+    const fields = ["Email | email | required", "Password | password | required", ...pr.remember ? ["Keep me signed in | checkbox"] : []].join("\n");
+    return n("div", [T("center")], [n("section", [T("panel")], [
+      h(1, pr.title, pr.subtitle),
+      r2(form, { fields, submit: "Sign in", success: "Signed in." }),
+      n("div", [T("row")], [lnk("Forgot your password?")]),
+      ...pr.sso ? [r2(divider, { orientation: "horizontal", label: "or", spacing: "none" }), btn5("Continue with SSO", "ghost", { "data-action": "sso" }, true)] : [],
+      ...pr.signup ? [n("p", [T("foot")], ["No account yet?", lnk("Create one")])] : []
+    ], { "aria-label": pr.title, "data-p8": "action" })]);
+  }
+};
+var settingsPage = {
+  id: "settings",
+  name: "Settings page",
+  description: "Sidebar of sections with a profile form, notification switches and a danger zone.",
+  tags: ["template", "page", "form"],
+  status: "stable",
+  usage: "The sidebar lists the sections; this template shows Profile, Notifications and the danger zone together so you can copy the parts you need. Each switch toggles on its own; the profile form fires p8-submit.",
+  uses: ["sidebar-nav", "heading", "form", "switch", "button", "text"],
+  props: [
+    P.area("sections", "Profile\nAccount\nNotifications\nBilling", "Sidebar sections, one per line.", "string (one per line)"),
+    P.text("active", "Profile", "Current section."),
+    P.area("preferences", "Email me about product updates\nEmail me when someone mentions me\nSend a weekly summary", "Notification switches, one per line.", "string (one per line)"),
+    P.bool("danger", true, "Show the delete-account section.")
+  ],
+  rules: page,
+  render(pr) {
+    return n("div", [T("split")], [
+      r2(sidebarNav, { items: lines(pr.sections).join("\n"), active: pr.active }),
+      n("div", [T("page"), T("main")], [
+        n("section", [T("section")], [h(2, "Profile", "How you appear to others."), r2(form, { fields: "Display name | text | required\nEmail | email | required\nBio | textarea", submit: "Save changes", success: "Profile saved." })], { "aria-label": "Profile" }),
+        r2(divider, { orientation: "horizontal", label: "", spacing: "none" }),
+        n("section", [T("section")], [h(2, "Notifications", "Choose what we email you about."), n("div", [T("prefs")], lines(pr.preferences).map((x, i2) => r2(switchC, { label: x, checked: i2 === 0, disabled: false })))], { "aria-label": "Notifications" }),
+        ...pr.danger ? [r2(divider, { orientation: "horizontal", label: "", spacing: "none" }), n("section", [T("danger")], [h(2, "Delete account", "Permanently remove your account and all its data. This cannot be undone.", "sm"), n("div", [T("row")], [btn5("Delete account", "ghost", { "data-action": "delete-account" })])], { "aria-label": "Danger zone", "data-p8": "action" })] : []
+      ])
+    ]);
+  }
+};
+var dashboard = {
+  id: "dashboard",
+  name: "Dashboard",
+  description: "A page header, three stat cards, a chart and a recent-activity table.",
+  tags: ["template", "page", "data"],
+  status: "stable",
+  usage: "Change the numbers and the table rows; the chart reads its data from one small table (first line names the columns). Keep three stat cards; add rows, not more cards.",
+  uses: ["heading", "button", "stat-card", "sparkline", "chart", "table"],
+  props: [
+    P.text("title", "Overview", "Page heading."),
+    P.text("action", "New report", "Header action. Empty to omit."),
+    P.area("stats", "Revenue | 12,400 | 12% | up\nSignups | 1,820 | 4% | up\nChurn | 2.1% | 0.3% | down", 'Three stats: "Label | Value | Change | up/down/flat".', "string (one per line)"),
+    P.area("chart", "Month | Revenue | Costs\nJan | 120 | 80\nFeb | 150 | 95\nMar | 170 | 110\nApr | 140 | 100\nMay | 190 | 120\nJun | 230 | 130", "Chart data (see Chart).", "string (one per line)"),
+    P.area("activity", "Event | Owner | When\nInvoice 1042 paid | Ada | 2 min ago\nNew signup | Alan | 1 hour ago\nPlan upgraded | Grace | Yesterday", "Recent activity table (see Table).", "string (one per line)")
+  ],
+  rules: page,
+  render(pr) {
+    const stats = lines(pr.stats).slice(0, 3).map((l2) => {
+      const [label = "", value = "", change = "", trend = "flat"] = l2.split("|").map((x) => x.trim());
+      return r2(statCard, { label, value, change, trend: ["up", "down", "flat"].includes(trend) ? trend : "flat" });
+    });
+    return n("div", [T("page")], [
+      n("div", [T("bar")], [h(1, pr.title), ...pr.action ? [btn5(pr.action, "primary", { "data-action": pr.action })] : []]),
+      n("div", [T("grid")], stats),
+      n("div", [T("wide")], [r2(chart, { title: "Revenue vs costs", type: "bar", data: pr.chart, legend: true })]),
+      n("section", [T("section")], [h(2, "Recent activity", "", "sm"), n("div", [T("wide")], [r2(table, { rows: pr.activity, header: true })])])
+    ], { "data-p8": "action" });
+  }
+};
+var ld = { root: T("master"), list: T("master-list"), row: T("master-row"), on: T("master-row--active"), detail: T("master-detail"), meta: T("master-meta") };
+var listDetail = {
+  id: "list-detail",
+  name: "List to detail",
+  description: "A list on the left; choosing a row shows its detail on the right.",
+  tags: ["template", "page", "navigation"],
+  status: "stable",
+  usage: 'Write each item as "Title | Meta | Detail". Click a row or use the arrow keys to move; the detail panel switches and the row carries aria-current. On narrow screens the list stacks above the detail.',
+  uses: ["list-row", "heading", "text", "button"],
+  props: [
+    P.area("items", "Order 1042 | Paid | Placed on 12 Nov by Ada Lovelace. Two items, shipped to London.\nOrder 1041 | Pending | Waiting for payment confirmation from the bank.\nOrder 1040 | Refunded | Refunded on 9 Nov at the customer's request.", 'One per line: "Title | Meta | Detail".', "string (one per line)"),
+    P.text("selected", "Order 1042", "Title of the item shown first."),
+    P.text("action", "Open order", "Button in the detail panel. Empty to omit.")
+  ],
+  rules: [
+    ...page,
+    { cls: ld.root, base: { display: "grid", "grid-template-columns": `repeat(auto-fit, minmax(${v("size-240")}, 1fr))`, gap: v("space-12"), width: "100%", "max-width": v("size-500"), color: v("color-ink"), ...text("sm") } },
+    { cls: ld.list, base: { display: "flex", "flex-direction": "column", gap: v("space-4") } },
+    { cls: ld.row, base: { display: "flex", "flex-direction": "column", "align-items": "flex-start", gap: v("space-4"), width: "100%", "box-sizing": "border-box", "padding-block": v("space-8"), "padding-inline": v("space-12"), border: "none", "border-radius": v("radius-8"), background: "transparent", color: v("color-ink"), "text-align": "left", cursor: "pointer", ...text("sm") }, hover: { background: v("color-control") }, focus: { "box-shadow": `0 0 0 ${v("border-focus")} ${v("color-ring-focus")}` } },
+    { cls: ld.on, base: { background: v("color-control-strong") } },
+    { cls: ld.meta, base: { color: v("color-ink-muted") } },
+    { cls: ld.detail, base: { display: "flex", "flex-direction": "column", gap: v("space-12"), "box-sizing": "border-box", "padding-block": v("space-12"), "padding-inline": v("space-16"), "border-radius": v("radius-8"), background: v("color-surface"), ...ringDecl }, nested: [hiddenRule] }
+  ],
+  render(pr) {
+    const items = lines(pr.items).map((l2, i2) => {
+      const [title = "", meta3 = "", detail2 = ""] = l2.split("|").map((x) => x.trim());
+      return { id: `detail-${i2}`, title, meta: meta3, detail: detail2 };
+    });
+    const first = Math.max(0, items.findIndex((x) => x.title === pr.selected));
+    return n("div", [ld.root], [
+      n("div", [ld.list], items.map((x, i2) => n("button", i2 === first ? [ld.row, ld.on] : [ld.row], [n("span", [], [x.title]), n("span", [ld.meta], [x.meta])], { type: "button", "data-target": x.id, "aria-controls": x.id, ...i2 === first ? { "aria-current": "true" } : {} })), { role: "group", "aria-label": "Items" }),
+      n("div", [T("section")], items.map((x, i2) => n("article", [ld.detail], [h(2, x.title, x.meta), t3(x.detail), ...pr.action ? [n("div", [T("row")], [btn5(pr.action, "default", { "data-action": `${pr.action}: ${x.title}` })])] : []], i2 === first ? { id: x.id, "data-detail": true, "aria-label": x.title } : { id: x.id, "data-detail": true, "aria-label": x.title, hidden: true })))
+    ], { "data-p8": "listdetail action" });
+  }
+};
+var emptyPage = {
+  id: "empty-page",
+  name: "Empty page",
+  description: "A navbar over a centered empty state: what to show a new user with nothing yet.",
+  tags: ["template", "page", "feedback"],
+  status: "stable",
+  usage: "Use for first-run screens. Say what will appear and give one clear action; the secondary action is for importing. Both fire p8-action.",
+  uses: ["navbar", "empty-state"],
+  props: [
+    P.text("brand", "Acme", "Product name in the navbar."),
+    P.text("active", "Projects", "Current page."),
+    P.text("title", "No projects yet", "What is missing."),
+    P.text("description", "Projects keep tasks, files and people together. Create one to get started.", "Why it is empty and what to do."),
+    P.text("action", "New project", "Primary action."),
+    P.text("secondary", "Import projects", "Secondary action. Empty to omit.")
+  ],
+  rules: page,
+  render(pr) {
+    return n("div", [T("page")], [
+      r2(navbar, { brand: pr.brand, links: "Overview\nProjects\nTeam\nSettings", active: pr.active, action: "", search: true, user: "Ada Lovelace" }),
+      n("div", [T("center")], [r2(emptyState, { icon: "folder", title: pr.title, description: pr.description, action: pr.action, secondary: pr.secondary, variant: "plain" })])
+    ]);
+  }
+};
+var templates = [signIn, settingsPage, dashboard, listDetail, emptyPage];
 
 // src/components/guidelines.ts
 var GUIDELINES = {
@@ -22600,6 +23676,28 @@ var GUIDELINES = {
   "filter-bar": { do: ["Show every active filter as a chip.", "Offer Clear all once a filter is set."], dont: ["Do not apply filters the user cannot see.", "Do not use for a single filter; use Segmented Control or Select."] },
   "notification-list": { do: ["Mark unread with both a dot and stronger text.", "Keep titles short and put detail on the second line."], dont: ["Do not delete notifications when they are read.", "Do not use for urgent messages; use Alert or Toast."] },
   "image-viewer": { do: ["Give every image a caption; it becomes the alt text.", "Keep thumbnails the same shape."], dont: ["Do not auto-advance.", "Do not open the viewer for a single small image; link it instead."] },
+  "toggle-group": { do: ["Use for formatting toggles (bold, italic) or view options.", "Label the group for screen readers."], dont: ["Do not use when exactly one option must always be chosen; use Segmented Control.", "Do not mix single and multiple behavior in one toolbar."] },
+  link: { do: ['Say where it goes ("Read the docs"), never "click here".', "Mark links that open a new tab."], dont: ["Do not use a link to run an action; use Button.", "Do not remove the underline."] },
+  heading: { do: ["Choose the level from the outline and the size from the design.", "Use one h1 per page and do not skip levels."], dont: ["Do not pick a level for its size.", "Do not style body text as a heading."] },
+  text: { do: ["Use sm for UI text and md for reading.", "Use muted for supporting detail only."], dont: ["Do not use muted text for anything required to act.", "Do not truncate text people need to read in full without a way to see it."] },
+  "color-picker": { do: ["Show the hex value so it can be copied and typed.", "Use Swatch Picker when the palette is fixed."], dont: ["Do not make colour the only way to tell choices apart.", "Do not open it automatically."] },
+  "tag-input": { do: ["Use for free-form labels people make up.", "Say how to add a tag (Enter or comma)."], dont: ["Do not use for choosing from a known list; use Multi-select.", "Do not allow unlimited tags."] },
+  "infinite-list": { do: ["Keep the Load more button so the keyboard works.", "Announce how many rows are shown."], dont: ["Do not use when people need to reach the footer or jump to a page; use Pagination.", "Do not load pages that change the rows already shown."] },
+  "split-button": { do: ["Use when the alternatives are variations of the main action.", "Make the main action the safest and most common one."], dont: ["Do not hide unrelated actions in the menu.", "Do not put a destructive action as the main action."] },
+  "empty-state": { do: ["Say what will appear here and how to make it appear.", "Offer one clear primary action."], dont: ["Do not blame the user.", "Do not use for errors; use Alert."] },
+  form: { do: ["Validate on submit, then as people fix errors.", "Say how to fix each error, and move focus to the first one."], dont: ["Do not disable the submit button to hide errors.", "Do not clear the fields when the server rejects them."] },
+  calendar: { do: ["Show events as short titles and open the full list for the selected day.", "Support keyboard movement by day and week."], dont: ["Do not use for picking a date in a form; use Date Picker.", "Do not show more than two events per cell."] },
+  chart: { do: ["Title the chart and keep to three series.", "Provide the data as a table for screen readers."], dont: ["Do not use colour as the only difference between series.", "Do not use a chart for one number; use Stat Card."] },
+  sparkline: { do: ["Put the exact number next to it.", "Use it for trends over time."], dont: ["Do not use it as the only place a value appears.", "Do not compare sparklines drawn on different scales."] },
+  "chat-message": { do: ['Keep the list in a role="log" region so new messages are announced.', "Show a delivery state for messages that fail."], dont: ["Do not hide the copy action.", "Do not stream text without a typing indicator."] },
+  "chat-composer": { do: ["Send on Enter and add a line on Shift+Enter.", "Switch to Stop while the assistant answers."], dont: ["Do not clear the box if sending failed.", "Do not disable typing while the assistant answers."] },
+  navbar: { do: ["Keep to five links or fewer.", "Mark the current page with aria-current."], dont: ["Do not put more than one primary action in the bar.", "Do not use for in-page tabs."] },
+  "app-shell": { do: ["Put the page in the content area; only it scrolls.", "Collapse the sidebar to icons, never remove it."], dont: ["Do not nest shells.", "Do not put page-level actions in the sidebar."] },
+  "sign-in": { do: ["Keep it to email, password and one alternative.", "Say how to fix a failed sign-in without revealing which part was wrong."], dont: ["Do not add marketing content to the page.", "Do not clear the password field on a failed attempt without saying why."] },
+  settings: { do: ["Group related settings under one heading.", "Save each section on its own button or save switches immediately."], dont: ["Do not put destructive actions beside ordinary ones.", "Do not use switches that need a Save button."] },
+  dashboard: { do: ["Lead with the three numbers that matter.", "Put the exact value next to every visual."], dont: ["Do not show more than three stat cards.", "Do not make people read a chart without its data."] },
+  "list-detail": { do: ["Select the first item so the detail is never empty.", "Keep the list to titles and one line of meta."], dont: ["Do not open the detail in a new page for short content.", "Do not nest a second list-detail inside the detail."] },
+  "empty-page": { do: ["Say what will appear and give one clear first action.", "Keep the navbar so people can leave."], dont: ["Do not use for errors or no-results; use Alert or Empty State."] },
   "tree-view": { do: ["Use for hierarchies with two to four levels.", "Pre-select the current item."], dont: ["Do not use for flat lists; use List Row or Sidebar Nav.", "Do not nest deeper than five levels."] },
   "scroll-area": { do: ["Give it a fixed height.", "Keep it focusable so the keyboard can scroll it."], dont: ["Do not nest scroll areas.", "Do not hide important actions below the fold of a scroll area."] },
   timer: { do: ["Use a countdown for deadlines and a stopwatch for elapsed time.", "Listen for p8-timer-done to react when it ends."], dont: ["Do not announce every second to screen readers.", "Do not use for dates; show a date instead."] },
@@ -22636,6 +23734,28 @@ var MARKS = {
   "inline-edit": { since: "0.8.0" },
   "code-block": { since: "0.8.0" },
   slider: { since: "0.4.0", mark: "refined" },
+  "sign-in": { since: "0.11.0", mark: "new" },
+  settings: { since: "0.11.0", mark: "new" },
+  dashboard: { since: "0.11.0", mark: "new" },
+  "list-detail": { since: "0.11.0", mark: "new" },
+  "empty-page": { since: "0.11.0", mark: "new" },
+  "toggle-group": { since: "0.11.0", mark: "new" },
+  link: { since: "0.11.0", mark: "new" },
+  heading: { since: "0.11.0", mark: "new" },
+  text: { since: "0.11.0", mark: "new" },
+  "color-picker": { since: "0.11.0", mark: "new" },
+  "tag-input": { since: "0.11.0", mark: "new" },
+  "infinite-list": { since: "0.11.0", mark: "new" },
+  "split-button": { since: "0.11.0", mark: "new" },
+  "empty-state": { since: "0.11.0", mark: "new" },
+  form: { since: "0.11.0", mark: "new" },
+  calendar: { since: "0.11.0", mark: "new" },
+  chart: { since: "0.11.0", mark: "new" },
+  sparkline: { since: "0.11.0", mark: "new" },
+  "chat-message": { since: "0.11.0", mark: "new" },
+  "chat-composer": { since: "0.11.0", mark: "new" },
+  navbar: { since: "0.11.0", mark: "new" },
+  "app-shell": { since: "0.11.0", mark: "new" },
   "date-picker": { since: "0.9.0" },
   "time-picker": { since: "0.9.0" },
   "multi-select": { since: "0.9.0" },
@@ -22645,14 +23765,14 @@ var MARKS = {
   timeline: { since: "0.9.0" },
   "context-menu": { since: "0.9.0" },
   "hover-card": { since: "0.9.0" },
-  "password-input": { since: "0.10.0", mark: "new" },
-  "data-table": { since: "0.10.0", mark: "new" },
-  "date-range-picker": { since: "0.10.0", mark: "new" },
-  "resizable-panels": { since: "0.10.0", mark: "new" },
-  "sortable-list": { since: "0.10.0", mark: "new" },
-  "filter-bar": { since: "0.10.0", mark: "new" },
-  "notification-list": { since: "0.10.0", mark: "new" },
-  "image-viewer": { since: "0.10.0", mark: "new" },
+  "password-input": { since: "0.10.0" },
+  "data-table": { since: "0.10.0" },
+  "date-range-picker": { since: "0.10.0" },
+  "resizable-panels": { since: "0.10.0" },
+  "sortable-list": { since: "0.10.0" },
+  "filter-bar": { since: "0.10.0" },
+  "notification-list": { since: "0.10.0" },
+  "image-viewer": { since: "0.10.0" },
   combobox: { since: "0.7.0" },
   "number-input": { since: "0.7.0" },
   "otp-input": { since: "0.7.0" },
@@ -22664,27 +23784,6 @@ var MARKS = {
   "progress-ring": { since: "0.7.0" },
   banner: { since: "0.7.0" }
 };
-
-// src/components/types.ts
-function defaultsOf(props2) {
-  return Object.fromEntries(props2.map((p4) => [p4.name, p4.default]));
-}
-function schemaOf(props2) {
-  const shape = {};
-  for (const p4 of props2) {
-    if (p4.control.kind === "select") {
-      shape[p4.name] = external_exports.enum(p4.control.options).default(p4.default);
-    } else if (p4.control.kind === "boolean") {
-      shape[p4.name] = external_exports.boolean().default(p4.default);
-    } else {
-      shape[p4.name] = external_exports.string().default(p4.default);
-    }
-  }
-  return external_exports.object(shape).strict();
-}
-function parseProps(def, input3 = {}) {
-  return schemaOf(def.props).parse(input3);
-}
 
 // src/components/index.ts
 var components = [
@@ -22761,15 +23860,32 @@ var components = [
   sortableList,
   filterBar,
   notificationList,
-  imageViewer
+  imageViewer,
+  toggleGroup,
+  link,
+  heading,
+  textC,
+  colorPicker,
+  tagInput,
+  infiniteList,
+  splitButton,
+  emptyState,
+  form,
+  calendar,
+  chart,
+  sparkline,
+  chatMessage,
+  chatComposer,
+  navbar,
+  appShell
 ];
-for (const c3 of components) {
+for (const c3 of [...components, ...templates]) {
   c3.guidelines = GUIDELINES[c3.id];
   c3.since = MARKS[c3.id]?.since ?? "0.6.0";
   c3.mark = MARKS[c3.id]?.mark;
 }
-var getDef = (id) => components.find((c3) => c3.id === id);
-var ruleMap = new Map(components.flatMap((c3) => c3.rules).map((r2) => [r2.cls, r2]));
+var getDef = (id) => components.find((c3) => c3.id === id) ?? templates.find((c3) => c3.id === id);
+var ruleMap = new Map([...components, ...templates].flatMap((c3) => c3.rules).map((r3) => [r3.cls, r3]));
 function usedClasses(node2, acc = []) {
   if (typeof node2 === "string") return acc;
   for (const k2 of node2.cls ?? []) if (!acc.includes(k2)) acc.push(k2);
@@ -22805,6 +23921,7 @@ var EXCEPTIONS = [
   { rule: "surface-padding", target: "p8-palette", reason: "Wrapper around an input and options that carry their own control padding." },
   { rule: "surface-padding", target: "p8-combobox__list", reason: "Option list wrapper: 4px inset around options that carry their own 12px control padding." },
   { rule: "surface-padding", target: "p8-multi__list", reason: "Option list wrapper: 4px inset around options that carry their own 12px control padding." },
+  { rule: "control-padding", target: "p8-mcal__cell", reason: "Month-grid cell: a fixed-height cell holding a day number and up to two event labels; the 4px inset keeps labels inside the cell lines." },
   { rule: "control-padding", target: "p8-cal__day", reason: "Fixed 32px calendar cell with no padding; digits are centered in the square." },
   { rule: "control-padding", target: "p8-swatch", reason: "Fixed 24px colour swatch with no padding." },
   { rule: "control-padding", target: "p8-rating__star", reason: "Fixed 24px star target with no padding." },
@@ -22819,12 +23936,491 @@ var EXCEPTIONS = [
 
 // src/rules/contrast.ts
 var lum = (hex4) => {
-  const [r2, g2, b2] = [1, 3, 5].map((i2) => parseInt(hex4.slice(i2, i2 + 2), 16) / 255).map((c3) => c3 <= 0.03928 ? c3 / 12.92 : ((c3 + 0.055) / 1.055) ** 2.4);
-  return 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
+  const [r3, g2, b2] = [1, 3, 5].map((i2) => parseInt(hex4.slice(i2, i2 + 2), 16) / 255).map((c3) => c3 <= 0.03928 ? c3 / 12.92 : ((c3 + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * r3 + 0.7152 * g2 + 0.0722 * b2;
 };
 var contrast = (a2, b2) => {
   const [x, y] = [lum(a2.slice(0, 7)), lum(b2.slice(0, 7))].sort((m2, n2) => n2 - m2);
   return (x + 0.05) / (y + 0.05);
+};
+
+// src/codegen/behavior2.ts
+var SIG = "{ signal: ac.signal }";
+var KINDS2 = {
+  action: `
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="action"] [data-action]');
+    if (!b || b.disabled) return;
+    b.dispatchEvent(new CustomEvent('p8-action', { bubbles: true, detail: { action: b.getAttribute('data-action') } }));
+  }, ${SIG});`,
+  togglegroup: `
+  function tgItems(g) { return Array.from(g.querySelectorAll('[data-value]')); }
+  function tgSet(b, on) { b.setAttribute('aria-pressed', String(on)); b.classList.toggle('p8-togglegroup__item--on', on); }
+  function tgEmit(g) { g.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: tgItems(g).filter(function (x) { return x.getAttribute('aria-pressed') === 'true'; }).map(function (x) { return x.getAttribute('data-value'); }) } })); }
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="togglegroup"] [data-value]');
+    if (!b || b.disabled) return;
+    var g = b.closest('[data-p8~="togglegroup"]'), on = b.getAttribute('aria-pressed') !== 'true';
+    if (g.getAttribute('data-type') === 'single') tgItems(g).forEach(function (x) { tgSet(x, false); });
+    tgSet(b, on);
+    tgItems(g).forEach(function (x) { x.tabIndex = x === b ? 0 : -1; });
+    tgEmit(g);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var b = cl(e, '[data-p8~="togglegroup"] [data-value]');
+    if (!b) return;
+    var list = tgItems(b.closest('[data-p8~="togglegroup"]')).filter(function (x) { return !x.disabled; }), i = list.indexOf(b), k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown') i = (i + 1) % list.length;
+    else if (k === 'ArrowLeft' || k === 'ArrowUp') i = (i - 1 + list.length) % list.length;
+    else if (k === 'Home') i = 0;
+    else if (k === 'End') i = list.length - 1;
+    else return;
+    e.preventDefault();
+    list.forEach(function (x) { x.tabIndex = -1; });
+    list[i].tabIndex = 0; list[i].focus();
+  }, ${SIG});`,
+  color: `
+  function colHex(h, s, v) {
+    var S = s / 100, V = v / 100;
+    function f(n) { var k = (n + h / 60) % 6; return Math.round(255 * (V - V * S * Math.max(0, Math.min(k, 4 - k, 1)))); }
+    return '#' + [f(5), f(3), f(1)].map(function (x) { return ('0' + x.toString(16)).slice(-2); }).join('').toUpperCase();
+  }
+  function colParse(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    if (!m) return null;
+    var r = parseInt(m[1].slice(0, 2), 16) / 255, g = parseInt(m[1].slice(2, 4), 16) / 255, b = parseInt(m[1].slice(4, 6), 16) / 255;
+    var mx = Math.max(r, g, b), d = mx - Math.min(r, g, b), h = 0;
+    if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return [Math.round((h * 60 + 360) % 360), Math.round(mx ? (d / mx) * 100 : 0), Math.round(mx * 100)];
+  }
+  function colGet(c) { return [Number(c.getAttribute('data-h')), Number(c.getAttribute('data-s')), Number(c.getAttribute('data-v'))]; }
+  function colPaint(c, skipHex) {
+    var a = colGet(c), hex = colHex(a[0], a[1], a[2]), label = c.getAttribute('data-label') || 'Colour';
+    var sv = c.querySelector('[data-thumb="sv"]'), hue = c.querySelector('[data-thumb="hue"]');
+    c.querySelector('[data-area="sv"]').style.background = 'linear-gradient(to top, black, transparent), linear-gradient(to right, white, hsl(' + a[0] + ' 100% 50%))';
+    sv.style.left = a[1] + '%'; sv.style.top = (100 - a[2]) + '%';
+    sv.setAttribute('aria-valuenow', String(a[1])); sv.setAttribute('aria-valuetext', 'Saturation ' + a[1] + '%, brightness ' + a[2] + '%');
+    hue.style.left = (a[0] / 360 * 100) + '%'; hue.setAttribute('aria-valuenow', String(a[0]));
+    c.querySelector('[data-preview]').style.background = hex;
+    c.querySelector('[data-readout]').textContent = hex;
+    var tr = c.querySelector('[data-trigger]'); tr.style.background = hex; tr.setAttribute('aria-label', label + ': ' + hex);
+    if (!skipHex) c.querySelector('[data-hex]').value = hex;
+    return hex;
+  }
+  function colSet(c, h, s, v, skipHex) {
+    c.setAttribute('data-h', String(Math.round(h))); c.setAttribute('data-s', String(Math.round(s))); c.setAttribute('data-v', String(Math.round(v)));
+    var hex = colPaint(c, skipHex);
+    c.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: hex } }));
+  }
+  function colPoint(area, e) {
+    var r = area.getBoundingClientRect(), w = r.width || 1, h = r.height || 1;
+    return [Math.min(1, Math.max(0, (e.clientX - r.left) / w)), Math.min(1, Math.max(0, (e.clientY - r.top) / h))];
+  }
+  function colMove(c, area, e) {
+    var p = colPoint(area, e), a = colGet(c);
+    if (area.getAttribute('data-area') === 'sv') colSet(c, a[0], p[0] * 100, (1 - p[1]) * 100); else colSet(c, p[0] * 360, a[1], a[2]);
+  }
+  var colDrag = null;
+  root.addEventListener('pointerdown', function (e) {
+    var area = cl(e, '[data-p8~="color"] [data-area]');
+    if (!area) return;
+    e.preventDefault();
+    colDrag = area;
+    if (area.setPointerCapture && e.pointerId !== undefined) try { area.setPointerCapture(e.pointerId); } catch (err) { }
+    colMove(area.closest('[data-p8~="color"]'), area, e);
+    var th = area.querySelector('[data-thumb]'); if (th) th.focus();
+  }, ${SIG});
+  doc.addEventListener('pointermove', function (e) { if (colDrag) colMove(colDrag.closest('[data-p8~="color"]'), colDrag, e); }, ${SIG});
+  doc.addEventListener('pointerup', function () { colDrag = null; }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var th = cl(e, '[data-p8~="color"] [data-thumb]');
+    if (!th) return;
+    var c = th.closest('[data-p8~="color"]'), a = colGet(c), step = e.shiftKey ? 10 : 1, k = e.key, kind = th.getAttribute('data-thumb');
+    if (kind === 'sv') {
+      if (k === 'ArrowRight') a[1] = Math.min(100, a[1] + step); else if (k === 'ArrowLeft') a[1] = Math.max(0, a[1] - step);
+      else if (k === 'ArrowUp') a[2] = Math.min(100, a[2] + step); else if (k === 'ArrowDown') a[2] = Math.max(0, a[2] - step); else return;
+    } else {
+      if (k === 'ArrowRight' || k === 'ArrowUp') a[0] = Math.min(360, a[0] + step); else if (k === 'ArrowLeft' || k === 'ArrowDown') a[0] = Math.max(0, a[0] - step);
+      else if (k === 'Home') a[0] = 0; else if (k === 'End') a[0] = 360; else return;
+    }
+    e.preventDefault();
+    colSet(c, a[0], a[1], a[2]);
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var hx = cl(e, '[data-p8~="color"] [data-hex]');
+    if (!hx) return;
+    var p = colParse(hx.value);
+    if (p) colSet(hx.closest('[data-p8~="color"]'), p[0], p[1], p[2], true);
+  }, ${SIG});
+  root.addEventListener('change', function (e) {
+    var hx = cl(e, '[data-p8~="color"] [data-hex]');
+    if (hx) { var c = hx.closest('[data-p8~="color"]'); var a = colGet(c); hx.value = colHex(a[0], a[1], a[2]); }
+  }, ${SIG});`,
+  split: `
+  root.addEventListener('click', function (e) {
+    var s = cl(e, '[data-p8~="split"]');
+    if (!s) return;
+    var main = cl(e, '[data-p8~="split"] [data-main]'), item = cl(e, '[data-p8~="split"] [role="menuitem"]');
+    if (main && !main.disabled) main.dispatchEvent(new CustomEvent('p8-action', { bubbles: true, detail: { action: main.textContent.trim() } }));
+    else if (item) item.dispatchEvent(new CustomEvent('p8-action', { bubbles: true, detail: { action: (item.firstChild ? item.firstChild.textContent : item.textContent).trim() } }));
+  }, ${SIG});`,
+  taginput: `
+  function tiEl(t, sel) { return t.querySelector(sel); }
+  function tiTags(t) { return Array.from(t.querySelectorAll('[data-chips] [data-chip]')).map(function (c) { return c.getAttribute('data-chip'); }); }
+  function tiSync(t) {
+    var tags = tiTags(t), max = Number(t.getAttribute('data-max')) || 10, entry = tiEl(t, '[data-entry]');
+    tiEl(t, '[data-value]').value = tags.join(',');
+    tiEl(t, '[data-count]').textContent = tags.length + ' / ' + max;
+    entry.placeholder = tags.length >= max ? 'Limit reached' : (t.getAttribute('data-placeholder') || '');
+    t.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { tags: tags } }));
+  }
+  function tiAdd(t, raw) {
+    var label = raw.replace(/,/g, '').trim(), max = Number(t.getAttribute('data-max')) || 10, tags = tiTags(t);
+    if (!label || tags.length >= max || tags.some(function (x) { return x.toLowerCase() === label.toLowerCase(); })) return false;
+    var tpl = tiEl(t, 'template[data-chip-template]');
+    var src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild;
+    var chip = src.cloneNode(true);
+    chip.setAttribute('data-chip', label); chip.firstChild.textContent = label;
+    chip.querySelector('[data-close]').setAttribute('aria-label', 'Remove ' + label);
+    tiEl(t, '[data-chips]').appendChild(chip);
+    return true;
+  }
+  root.addEventListener('keydown', function (e) {
+    var en = cl(e, '[data-p8~="taginput"] [data-entry]');
+    if (!en) return;
+    var t = en.closest('[data-p8~="taginput"]');
+    if ((e.key === 'Enter' || e.key === ',') && !e.isComposing) { e.preventDefault(); if (tiAdd(t, en.value)) { en.value = ''; tiSync(t); } else if (!en.value.trim()) return; else en.value = ''; }
+    else if (e.key === 'Backspace' && !en.value) { var chips = t.querySelectorAll('[data-chips] [data-chip]'); if (chips.length) { chips[chips.length - 1].remove(); tiSync(t); } }
+  }, ${SIG});
+  root.addEventListener('paste', function (e) {
+    var en = cl(e, '[data-p8~="taginput"] [data-entry]');
+    if (!en) return;
+    var text = (e.clipboardData && e.clipboardData.getData('text')) || '';
+    if (text.indexOf(',') < 0 && text.indexOf('\\n') < 0) return;
+    e.preventDefault();
+    var t = en.closest('[data-p8~="taginput"]'), any = false;
+    text.split(/[,\\n]/).forEach(function (x) { if (tiAdd(t, x)) any = true; });
+    if (any) tiSync(t);
+  }, ${SIG});
+  root.addEventListener('focusout', function (e) {
+    var en = cl(e, '[data-p8~="taginput"] [data-entry]');
+    if (en && en.value.trim()) { var t = en.closest('[data-p8~="taginput"]'); if (tiAdd(t, en.value)) { en.value = ''; tiSync(t); } }
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var t = cl(e, '[data-p8~="taginput"]');
+    if (!t) return;
+    var close = cl(e, '[data-p8~="taginput"] [data-chip] [data-close]');
+    if (close) { close.closest('[data-chip]').remove(); tiSync(t); tiEl(t, '[data-entry]').focus(); return; }
+    if (cl(e, '[data-p8~="taginput"] [data-chips]') === null) { var en = tiEl(t, '[data-entry]'); if (!en.disabled) en.focus(); }
+  }, ${SIG});`,
+  infinite: `
+  function infRows(c) { return c.querySelectorAll('[data-list] [data-item]').length; }
+  function infStatus(c, more) {
+    var n = infRows(c), total = Number(c.getAttribute('data-total')), demo = c.getAttribute('data-demo') === 'true';
+    c.querySelector('[data-status]').textContent = demo ? 'Showing ' + n + ' of ' + total : 'Showing ' + n;
+    c.querySelector('[data-foot]').hidden = !more;
+    c.querySelector('[data-end]').hidden = more;
+  }
+  function infAppend(c, items, more) {
+    var tpl = c.querySelector('template[data-item-template]'), src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild, list = c.querySelector('[data-list]');
+    items.forEach(function (it) { var li = src.cloneNode(true), sp = li.querySelectorAll('span'); sp[0].textContent = it.title; sp[1].textContent = it.meta || ''; list.appendChild(li); });
+    c.__loading = false; c.removeAttribute('aria-busy');
+    infStatus(c, more);
+  }
+  function infLoad(c) {
+    if (c.__loading) return;
+    var foot = c.querySelector('[data-foot]');
+    if (foot.hidden) return;
+    c.__loading = true; c.setAttribute('aria-busy', 'true');
+    var page = Number(c.getAttribute('data-page')) + 1;
+    c.setAttribute('data-page', String(page));
+    var ev = new CustomEvent('p8-load-more', { bubbles: true, cancelable: true, detail: { page: page, append: function (items, more) { infAppend(c, items, more); } } });
+    var handled = !c.dispatchEvent(ev);
+    if (handled || c.getAttribute('data-demo') !== 'true') return;
+    var size = Number(c.getAttribute('data-size')) || 10, total = Number(c.getAttribute('data-total')), have = infRows(c), items = [];
+    for (var i = have; i < Math.min(total, have + size); i++) items.push({ title: 'Item ' + (i + 1), meta: 'Page ' + page });
+    infAppend(c, items, have + items.length < total);
+  }
+  root.addEventListener('scroll', function (e) {
+    var s = e.target;
+    if (!s.matches || !s.matches('[data-scroller]')) return;
+    if (s.scrollTop + s.clientHeight >= s.scrollHeight - 32) infLoad(s.closest('[data-p8~="infinite"]'));
+  }, { signal: ac.signal, capture: true });
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="infinite"] [data-more]');
+    if (b) infLoad(b.closest('[data-p8~="infinite"]'));
+  }, ${SIG});`,
+  monthcal: `
+  var mcLong = new Intl.DateTimeFormat('en', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
+  var mcMonth = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function mcEvents(c) { try { return JSON.parse(c.getAttribute('data-events') || '{}'); } catch (err) { return {}; } }
+  function mcCount(k) { return k ? k + ' event' + (k === 1 ? '' : 's') : 'No events'; }
+  function mcIso(d) { return d.toISOString().slice(0, 10); }
+  function mcYM(c) { var p = c.getAttribute('data-month').split('-'); return [Number(p[0]), Number(p[1]) - 1]; }
+  function mcMk(c, i, text) { var tpl = c.querySelector('template[data-parts]'), kids = (tpl.content && tpl.content.children.length ? tpl.content : tpl).children; var s = kids[i].cloneNode(true); s.textContent = text; return s; }
+  function mcPaint(c, focusIso) {
+    var ym = mcYM(c), ws = Number(c.getAttribute('data-week')), ev = mcEvents(c), sel = c.getAttribute('data-selected'), today = mcIso(new Date());
+    var off = (new Date(Date.UTC(ym[0], ym[1], 1)).getUTCDay() - ws + 7) % 7;
+    var cells = Array.from(c.querySelectorAll('[data-grid] [data-date]'));
+    var firstIn = null;
+    cells.forEach(function (b, i) {
+      var d = new Date(Date.UTC(ym[0], ym[1], 1 - off + i)), iso = mcIso(d), out = d.getUTCMonth() !== ym[1], list = ev[iso] || [];
+      if (!out && !firstIn) firstIn = iso;
+      b.classList.toggle('p8-mcal__cell--out', out); b.classList.toggle('p8-mcal__cell--on', iso === sel);
+      b.setAttribute('data-date', iso); b.setAttribute('aria-pressed', String(iso === sel));
+      b.setAttribute('aria-label', mcLong.format(d) + ', ' + mcCount(list.length).toLowerCase());
+      b.textContent = '';
+      var num = mcMk(c, 0, String(d.getUTCDate())); if (iso === today) num.setAttribute('data-today', ''); b.appendChild(num);
+      list.slice(0, list.length > 2 ? 1 : 2).forEach(function (t) { b.appendChild(mcMk(c, 1, t)); });
+      if (list.length > 2) b.appendChild(mcMk(c, 2, '+' + (list.length - 1) + ' more'));
+    });
+    var target = focusIso && cells.some(function (b) { return b.getAttribute('data-date') === focusIso; }) ? focusIso : (cells.some(function (b) { return b.getAttribute('data-date') === sel; }) ? sel : firstIn);
+    cells.forEach(function (b) { b.tabIndex = b.getAttribute('data-date') === target ? 0 : -1; });
+    c.querySelector('[data-label]').textContent = mcMonth.format(new Date(Date.UTC(ym[0], ym[1], 1)));
+    var list2 = sel ? (ev[sel] || []) : [];
+    c.querySelector('[data-agenda-head]').textContent = sel ? mcLong.format(new Date(sel + 'T00:00:00Z')) + ' \xB7 ' + mcCount(list2.length) : 'Select a day to see its events';
+    var ul = c.querySelector('[data-agenda]'); ul.textContent = '';
+    list2.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    return target;
+  }
+  function mcGoto(c, iso, focus) {
+    c.setAttribute('data-month', iso.slice(0, 7));
+    mcPaint(c, iso);
+    if (focus) { var b = c.querySelector('[data-grid] [data-date="' + iso + '"]'); if (b) b.focus(); }
+  }
+  function mcSelect(c, iso) {
+    c.setAttribute('data-selected', iso);
+    mcPaint(c, iso);
+    c.dispatchEvent(new CustomEvent('p8-select', { bubbles: true, detail: { date: iso, events: mcEvents(c)[iso] || [] } }));
+  }
+  function mcShift(c, months, keepDay) {
+    var ym = mcYM(c), cur = c.querySelector('[data-grid] [tabindex="0"]'), day = cur ? Number(cur.getAttribute('data-date').slice(8)) : 1;
+    var d = new Date(Date.UTC(ym[0], ym[1] + months, 1)), last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+    return mcIso(new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), keepDay ? Math.min(day, last) : 1)));
+  }
+  root.addEventListener('click', function (e) {
+    var c = cl(e, '[data-p8~="monthcal"]');
+    if (!c) return;
+    var dir = cl(e, '[data-p8~="monthcal"] [data-dir]'), day = cl(e, '[data-p8~="monthcal"] [data-date]'), td = cl(e, '[data-p8~="monthcal"] [data-today-btn]');
+    if (dir) mcGoto(c, mcShift(c, Number(dir.getAttribute('data-dir')), true), false);
+    else if (td) { var iso = mcIso(new Date()); mcGoto(c, iso, false); mcSelect(c, iso); var b = c.querySelector('[data-grid] [data-date="' + iso + '"]'); if (b) b.focus(); }
+    else if (day) mcSelect(c, day.getAttribute('data-date'));
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var day = cl(e, '[data-p8~="monthcal"] [data-date]');
+    if (!day) return;
+    var c = day.closest('[data-p8~="monthcal"]'), iso = day.getAttribute('data-date'), d = new Date(iso + 'T00:00:00Z'), ws = Number(c.getAttribute('data-week')), k = e.key, n = null;
+    var dow = (d.getUTCDay() - ws + 7) % 7;
+    if (k === 'ArrowRight') n = 1; else if (k === 'ArrowLeft') n = -1; else if (k === 'ArrowDown') n = 7; else if (k === 'ArrowUp') n = -7;
+    else if (k === 'Home') n = -dow; else if (k === 'End') n = 6 - dow;
+    else if (k === 'PageDown' || k === 'PageUp') { e.preventDefault(); var ym = mcYM(c); var m = k === 'PageDown' ? 1 : -1; var t = new Date(Date.UTC(ym[0], ym[1] + m, Math.min(d.getUTCDate(), new Date(Date.UTC(ym[0], ym[1] + m + 1, 0)).getUTCDate()))); mcGoto(c, mcIso(t), true); return; }
+    else return;
+    e.preventDefault();
+    mcGoto(c, mcIso(new Date(d.getTime() + n * 86400000)), true);
+  }, ${SIG});`,
+  chart: `
+  var chColors = ['color-ink', 'color-ink-muted', 'color-placeholder'];
+  function chData(c) { try { return JSON.parse(c.getAttribute('data-chart')); } catch (err) { return { labels: [], series: [] }; } }
+  function chOff(c, i) { var g = c.querySelector('[data-series="' + i + '"]'); return !!(g && g.hasAttribute('data-off')); }
+  function chShow(c, idx) {
+    var d = chData(c), n = d.labels.length, band = c.querySelector('[data-band]'), tip = c.querySelector('[data-tip]'), live = c.querySelector('[data-live]');
+    if (idx === null || idx < 0 || idx >= n) { band.removeAttribute('data-show'); tip.hidden = true; return; }
+    c.__idx = idx;
+    band.setAttribute('x', String(idx * 100)); band.setAttribute('data-show', '');
+    tip.textContent = '';
+    var h = document.createElement('strong'); h.textContent = d.labels[idx]; tip.appendChild(h);
+    var spoken = [];
+    d.series.forEach(function (s, i) {
+      if (chOff(c, i)) return;
+      var tpl = c.querySelector('template[data-row]'), row = ((tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild).cloneNode(true);
+      row.firstElementChild.style.background = 'var(--p8-' + chColors[i] + ')';
+      row.lastElementChild.textContent = s.name + ': ' + s.values[idx];
+      tip.appendChild(row); spoken.push(s.name + ' ' + s.values[idx]);
+    });
+    tip.hidden = false;
+    var pct = (idx + 0.5) / n * 100;
+    tip.style.left = pct + '%'; tip.style.translate = pct > 60 ? '-100% 0' : '0 0';
+    live.textContent = d.labels[idx] + ': ' + spoken.join(', ');
+  }
+  function chIndex(plot, e) { var d = chData(plot.closest('[data-p8~="chart"]')), r = plot.getBoundingClientRect(); return Math.min(d.labels.length - 1, Math.max(0, Math.floor((e.clientX - r.left) / (r.width || 1) * d.labels.length))); }
+  root.addEventListener('pointermove', function (e) {
+    var plot = cl(e, '[data-p8~="chart"] [data-plot]');
+    if (plot) chShow(plot.closest('[data-p8~="chart"]'), chIndex(plot, e));
+  }, ${SIG});
+  root.addEventListener('pointerleave', function (e) {
+    var c = cl(e, '[data-p8~="chart"]');
+    if (c && !c.contains(doc.activeElement)) chShow(c, null);
+  }, { signal: ac.signal, capture: true });
+  root.addEventListener('keydown', function (e) {
+    var plot = cl(e, '[data-p8~="chart"] [data-plot]');
+    if (!plot) return;
+    var c = plot.closest('[data-p8~="chart"]'), n = chData(c).labels.length, i = c.__idx === undefined ? -1 : c.__idx;
+    if (e.key === 'ArrowRight') i = Math.min(n - 1, i + 1); else if (e.key === 'ArrowLeft') i = Math.max(0, i < 0 ? 0 : i - 1);
+    else if (e.key === 'Home') i = 0; else if (e.key === 'End') i = n - 1;
+    else if (e.key === 'Escape') { chShow(c, null); return; } else return;
+    e.preventDefault();
+    chShow(c, i);
+  }, ${SIG});
+  root.addEventListener('blur', function (e) { var c = cl(e, '[data-p8~="chart"]'); if (c && e.target.matches && e.target.matches('[data-plot]')) chShow(c, null); }, { signal: ac.signal, capture: true });
+  root.addEventListener('click', function (e) {
+    var k = cl(e, '[data-p8~="chart"] [data-key]');
+    if (!k) return;
+    var c = k.closest('[data-p8~="chart"]'), i = k.getAttribute('data-key'), g = c.querySelector('[data-series="' + i + '"]');
+    var on = k.getAttribute('aria-pressed') === 'true';
+    var visible = c.querySelectorAll('[data-key][aria-pressed="true"]').length;
+    if (on && visible <= 1) return;
+    k.setAttribute('aria-pressed', String(!on));
+    if (on) g.setAttribute('data-off', ''); else g.removeAttribute('data-off');
+    if (c.__idx !== undefined && !c.querySelector('[data-tip]').hidden) chShow(c, c.__idx);
+  }, ${SIG});`,
+  composer: `
+  function cmpFit(t) { t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 160) + 'px'; }
+  function cmpSync(f) {
+    var t = f.querySelector('[data-input]'), send = f.querySelector('[data-send]');
+    send.disabled = !t.value.trim() || t.disabled || f.getAttribute('data-busy') === 'true';
+  }
+  function cmpBusy(f, busy) {
+    f.setAttribute('data-busy', String(busy));
+    f.querySelector('[data-send]').hidden = busy; f.querySelector('[data-stop]').hidden = !busy;
+    cmpSync(f);
+  }
+  function cmpSend(f) {
+    var t = f.querySelector('[data-input]'), text = t.value.trim();
+    if (!text || f.getAttribute('data-busy') === 'true' || t.disabled) return;
+    f.dispatchEvent(new CustomEvent('p8-send', { bubbles: true, detail: { text: text } }));
+    t.value = ''; cmpFit(t); cmpSync(f); t.focus();
+  }
+  root.addEventListener('input', function (e) { var f = cl(e, '[data-p8~="composer"]'); if (f && e.target.hasAttribute('data-input')) { cmpFit(e.target); cmpSync(f); } }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var f = cl(e, '[data-p8~="composer"]');
+    if (!f || !e.target.hasAttribute('data-input')) return;
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); cmpSend(f); }
+  }, ${SIG});
+  root.addEventListener('submit', function (e) { var f = cl(e, '[data-p8~="composer"]'); if (f) { e.preventDefault(); cmpSend(f); } }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var f = cl(e, '[data-p8~="composer"]');
+    if (!f) return;
+    if (cl(e, '[data-p8~="composer"] [data-stop]')) f.dispatchEvent(new CustomEvent('p8-stop', { bubbles: true }));
+    else if (cl(e, '[data-p8~="composer"] [data-attach]')) f.querySelector('[data-file]').click();
+  }, ${SIG});
+  root.addEventListener('change', function (e) {
+    var f = cl(e, '[data-p8~="composer"]');
+    if (!f || !e.target.hasAttribute('data-file')) return;
+    var files = Array.from(e.target.files || []);
+    f.querySelector('[data-files]').textContent = files.length ? files.length + (files.length === 1 ? ' file' : ' files') : '';
+    f.dispatchEvent(new CustomEvent('p8-attach', { bubbles: true, detail: { files: files } }));
+  }, ${SIG});
+  all('[data-p8~="composer"]').forEach(function (f) {
+    var t = f.querySelector('[data-input]');
+    if (t.value) cmpFit(t);
+    cmpSync(f);
+    f.addEventListener('p8-busy', function (e) { cmpBusy(f, !!(e.detail && e.detail.busy)); }, ${SIG});
+  });`,
+  form: `
+  var frmEmail = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+  function frmValue(el) { return el.getAttribute('role') === 'checkbox' ? el.getAttribute('aria-checked') === 'true' : el.value; }
+  function frmCheck(el) {
+    var label = el.getAttribute('data-field') || 'This field', v = frmValue(el), type = el.getAttribute('type'), min = Number(el.getAttribute('data-min')) || 0;
+    var empty = v === false || (typeof v === 'string' && !v.trim());
+    if (el.hasAttribute('required') && empty) return el.getAttribute('role') === 'checkbox' ? 'You must accept: ' + label : label + ' is required';
+    if (empty) return '';
+    if (type === 'email' && !frmEmail.test(v)) return 'Enter a valid email address';
+    if (type === 'url') { try { new URL(v); } catch (err) { return 'Enter a full URL, like https://example.com'; } }
+    if (type === 'number' && isNaN(Number(v))) return 'Enter a number';
+    if (type === 'tel' && !/^[+\\d][\\d\\s().-]{5,}$/.test(v)) return 'Enter a valid phone number';
+    if (min && typeof v === 'string' && v.length < min) return label + ' must be at least ' + min + ' characters';
+    return '';
+  }
+  function frmShow(el, msg) {
+    var err = el.id ? el.closest('form').querySelector('#' + el.id + '-error') : null;
+    if (err) err.textContent = msg;
+    if (msg) el.setAttribute('aria-invalid', 'true'); else el.removeAttribute('aria-invalid');
+  }
+  function frmFields(f) { return Array.from(f.querySelectorAll('[data-field]')); }
+  function frmStatus(f, msg) { f.querySelector('[data-status]').textContent = msg; }
+  root.addEventListener('submit', function (e) {
+    var f = cl(e, '[data-p8~="form"]');
+    if (!f) return;
+    e.preventDefault();
+    f.__tried = true;
+    var bad = frmFields(f).filter(function (el) { var m = frmCheck(el); frmShow(el, m); return !!m; });
+    if (bad.length) { frmStatus(f, bad.length + (bad.length === 1 ? ' field needs' : ' fields need') + ' attention'); bad[0].focus(); return; }
+    var values = {};
+    frmFields(f).forEach(function (el) { values[el.getAttribute('name') || el.id] = frmValue(el); });
+    var btn = f.querySelector('[data-submit]');
+    function done(r) {
+      r = r || { ok: true };
+      btn.disabled = false; btn.removeAttribute('aria-busy');
+      if (r.errors) {
+        var first = null;
+        Object.keys(r.errors).forEach(function (k) { var el = f.querySelector('[name="' + k + '"]'); if (el) { frmShow(el, r.errors[k]); first = first || el; } });
+        frmStatus(f, 'Could not save: fix the highlighted fields');
+        if (first) first.focus();
+      } else if (r.ok !== false) frmStatus(f, r.message || f.getAttribute('data-success') || 'Saved.');
+      else frmStatus(f, r.message || 'Could not save.');
+    }
+    var ev = new CustomEvent('p8-submit', { bubbles: true, cancelable: true, detail: { values: values, done: done } });
+    var handled = !f.dispatchEvent(ev);
+    if (handled) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); frmStatus(f, 'Saving\u2026'); } else done({ ok: true });
+  }, ${SIG});
+  function frmLive(e) {
+    var f = cl(e, '[data-p8~="form"]');
+    if (!f || !f.__tried || !e.target.hasAttribute || !e.target.hasAttribute('data-field')) return;
+    frmShow(e.target, frmCheck(e.target));
+  }
+  root.addEventListener('input', frmLive, ${SIG});
+  root.addEventListener('change', frmLive, ${SIG});
+  root.addEventListener('click', function (e) { var cb = cl(e, '[data-p8~="form"] [role="checkbox"][data-field]'); if (cb) setTimeout(function () { frmLive({ target: cb }); }, 0); }, ${SIG});`,
+  nav: `
+  root.addEventListener('click', function (e) {
+    var a = cl(e, '[data-p8~="nav"] [data-nav]');
+    if (!a) return;
+    e.preventDefault();
+    var host = a.parentNode;
+    Array.from(host.querySelectorAll('[data-nav]')).forEach(function (x) {
+      var on = x === a;
+      if (on) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current');
+      ['p8-navbar__link', 'p8-shell__item'].forEach(function (b) { if (x.classList.contains(b)) x.classList.toggle(b + '--active', on); });
+    });
+    var label = a.lastElementChild && a.querySelector('svg') ? a.lastElementChild.textContent : a.textContent;
+    a.dispatchEvent(new CustomEvent('p8-navigate', { bubbles: true, detail: { label: label.trim(), href: a.getAttribute('href') } }));
+  }, ${SIG});`,
+  listdetail: `
+  function ldSelect(c, row) {
+    Array.from(c.querySelectorAll('[data-target]')).forEach(function (x) {
+      var on = x === row;
+      if (on) x.setAttribute('aria-current', 'true'); else x.removeAttribute('aria-current');
+      x.classList.toggle('p8-tpl-master-row--active', on); x.tabIndex = on ? 0 : -1;
+    });
+    Array.from(c.querySelectorAll('[data-detail]')).forEach(function (d) { d.hidden = d.id !== row.getAttribute('data-target'); });
+    c.dispatchEvent(new CustomEvent('p8-select', { bubbles: true, detail: { id: row.getAttribute('data-target'), title: row.firstElementChild.textContent.trim() } }));
+  }
+  root.addEventListener('click', function (e) {
+    var row = cl(e, '[data-p8~="listdetail"] [data-target]');
+    if (row) ldSelect(row.closest('[data-p8~="listdetail"]'), row);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var row = cl(e, '[data-p8~="listdetail"] [data-target]');
+    if (!row) return;
+    var c = row.closest('[data-p8~="listdetail"]'), rows = Array.from(c.querySelectorAll('[data-target]')), i = rows.indexOf(row), k = e.key;
+    if (k === 'ArrowDown') i = Math.min(rows.length - 1, i + 1); else if (k === 'ArrowUp') i = Math.max(0, i - 1);
+    else if (k === 'Home') i = 0; else if (k === 'End') i = rows.length - 1; else return;
+    e.preventDefault();
+    rows[i].focus(); ldSelect(c, rows[i]);
+  }, ${SIG});`,
+  shell: `
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="shell"] [data-collapse]');
+    if (!b) return;
+    var sh = b.closest('[data-p8~="shell"]'), side = sh.querySelector('aside'), on = !side.classList.contains('p8-shell__side--on');
+    side.classList.toggle('p8-shell__side--on', on);
+    b.setAttribute('aria-expanded', String(!on)); b.setAttribute('aria-label', on ? 'Expand sidebar' : 'Collapse sidebar');
+    Array.from(sh.querySelectorAll('[data-nav]')).forEach(function (a) {
+      var l = a.lastElementChild;
+      if (on && l) a.setAttribute('title', l.textContent.trim()); else a.removeAttribute('title');
+    });
+    sh.dispatchEvent(new CustomEvent('p8-toggle', { bubbles: true, detail: { collapsed: on } }));
+  }, ${SIG});`
 };
 
 // src/codegen/behavior.ts
@@ -22835,8 +24431,9 @@ function kindsIn(node2, acc = /* @__PURE__ */ new Set()) {
   node2.children?.forEach((c3) => kindsIn(c3, acc));
   return acc;
 }
-var SIG = "{ signal: ac.signal }";
+var SIG2 = "{ signal: ac.signal }";
 var KINDS = {
+  ...KINDS2,
   toggle: `
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="toggle"] [role="checkbox"], [data-p8~="toggle"] [role="switch"]');
@@ -22844,7 +24441,7 @@ var KINDS = {
     var on = b.getAttribute('aria-checked') !== 'true';
     b.setAttribute('aria-checked', String(on));
     [b].concat(Array.from(b.querySelectorAll('*'))).forEach(function (el) { setOn(el, on); });
-  }, ${SIG});`,
+  }, ${SIG2});`,
   group: `
   var ITEM = '[data-p8~="group"] [role="tab"], [data-p8~="group"] [role="radio"]';
   function gItems(g) { return Array.from(g.querySelectorAll('[role="tab"], [role="radio"]')); }
@@ -22859,7 +24456,7 @@ var KINDS = {
   root.addEventListener('click', function (e) {
     var it = cl(e, ITEM);
     if (it && !it.disabled) gSelect(it.closest('[data-p8~="group"]'), it);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var it = cl(e, ITEM);
     if (!it) return;
@@ -22874,18 +24471,18 @@ var KINDS = {
     e.preventDefault();
     gSelect(g, list[i]);
     list[i].focus();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   menu: `
   function mItems(m) { return Array.from(m.querySelectorAll('[role="menuitem"]')).filter(function (x) { return !x.disabled; }); }
   function mMark(m, it) { mItems(m).forEach(function (x) { setOn(x, x === it); }); }
   root.addEventListener('click', function (e) {
     var it = cl(e, '[data-p8~="menu"] [role="menuitem"]');
     if (it) mMark(it.closest('[data-p8~="menu"]'), it);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('focusin', function (e) {
     var it = cl(e, '[data-p8~="menu"] [role="menuitem"]');
     if (it) mMark(it.closest('[data-p8~="menu"]'), it);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var m = cl(e, '[data-p8~="menu"]');
     if (!m) return;
@@ -22898,7 +24495,7 @@ var KINDS = {
     else return;
     e.preventDefault();
     list[i].focus();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   tooltip: `
   function place(e) {
     var t = cl(e, '[data-p8~="tooltip"]');
@@ -22919,8 +24516,8 @@ var KINDS = {
     var w = win.innerWidth, dx = r.left < 8 ? 8 - r.left : (r.right > w - 8 ? w - 8 - r.right : 0);
     if (dx) b.style.translate = 'calc(-50% + ' + dx + 'px) 0';
   }
-  root.addEventListener('mouseover', place, ${SIG});
-  root.addEventListener('focusin', place, ${SIG});`,
+  root.addEventListener('mouseover', place, ${SIG2});
+  root.addEventListener('focusin', place, ${SIG2});`,
   popover: `
   function pSet(p, open) {
     var panel = p.querySelector('[data-panel]'), tr = p.querySelector('[data-trigger]');
@@ -22935,18 +24532,18 @@ var KINDS = {
     if (p && !tr.disabled) { pSet(p, p.querySelector('[data-panel]').hidden); return; }
     var item = cl(e, '[data-select-closes] [role="menuitem"]');
     if (item) { var host = item.closest('[data-p8~="popover"]'); pSet(host, false); host.querySelector('[data-trigger]').focus(); }
-  }, ${SIG});
+  }, ${SIG2});
   doc.addEventListener('click', function (e) {
     pAll().forEach(function (p) { if (!p.contains(e.target)) pSet(p, false); });
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     pAll().forEach(function (p) { if (!p.querySelector('[data-panel]').hidden) { pSet(p, false); p.querySelector('[data-trigger]').focus(); } });
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('p8-close', function (e) {
     var p = cl(e, '[data-p8~="popover"]');
     if (p) { pSet(p, false); p.querySelector('[data-trigger]').focus(); }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   overlay: `
   function oClose(o) { o.hidden = true; o.dispatchEvent(new CustomEvent('p8-closed', { bubbles: true })); }
   function oOpen() { return all('[data-p8~="overlay"]').filter(function (o) { return !o.hidden; }); }
@@ -22954,7 +24551,7 @@ var KINDS = {
     var o = cl(e, '[data-p8~="overlay"]');
     if (!o) return;
     if (e.target === o || cl(e, '[data-close]')) oClose(o);
-  }, ${SIG});
+  }, ${SIG2});
   doc.addEventListener('keydown', function (e) {
     var open = oOpen();
     var o = open[open.length - 1];
@@ -22972,7 +24569,7 @@ var KINDS = {
     if (!o.contains(act)) { e.preventDefault(); first.focus(); }
     else if (e.shiftKey && act === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && act === last) { e.preventDefault(); first.focus(); }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   palette: `
   function pOpts(p) { return Array.from(p.querySelectorAll('[role="option"]')).filter(function (x) { return !x.hidden; }); }
   function pMark(p, it) { Array.from(p.querySelectorAll('[role="option"]')).forEach(function (x) { setOn(x, x === it); }); }
@@ -22982,7 +24579,7 @@ var KINDS = {
     var q = e.target.value.toLowerCase();
     Array.from(p.querySelectorAll('[role="option"]')).forEach(function (x) { x.hidden = x.textContent.toLowerCase().indexOf(q) < 0; });
     pMark(p, pOpts(p)[0]);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var p = cl(e, '[data-p8~="palette"]');
     if (!p) return;
@@ -22993,11 +24590,11 @@ var KINDS = {
     else return;
     e.preventDefault();
     pMark(p, list[cur]);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('click', function (e) {
     var it = cl(e, '[data-p8~="palette"] [role="option"]');
     if (it) pMark(it.closest('[data-p8~="palette"]'), it);
-  }, ${SIG});`,
+  }, ${SIG2});`,
   toast: `
   all('[data-p8~="toast"] [data-duration]').forEach(function (t) {
     var d = Number(t.getAttribute('data-duration'));
@@ -23006,7 +24603,7 @@ var KINDS = {
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="toast"] [data-close]');
     if (c) c.closest('[data-duration]').remove();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   pager: `
   function pgSet(nav, page) {
     Array.from(nav.querySelectorAll('[data-page]')).forEach(function (x) {
@@ -23026,20 +24623,20 @@ var KINDS = {
       var next = Math.min(pages.length - 1, Math.max(0, cur + Number(step.getAttribute('data-step'))));
       pgSet(nav, pages[next]);
     }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   combobox: `
   function cbOpts(c) { return Array.from(c.querySelectorAll('[role="option"]')); }
   function cbVis(c) { return cbOpts(c).filter(function (x) { return !x.hidden; }); }
   function cbOpen(c, open) { c.querySelector('[role="listbox"]').hidden = !open; c.querySelector('[role="combobox"]').setAttribute('aria-expanded', String(open)); }
   function cbMark(c, it) { cbOpts(c).forEach(function (x) { setOn(x, x === it); }); }
   function cbPick(c, it) { var i = c.querySelector('input'); i.value = it.textContent; i.dispatchEvent(new Event('change', { bubbles: true })); cbOpen(c, false); cbMark(c, it); }
-  root.addEventListener('focusin', function (e) { var c = cl(e, '[data-p8~="combobox"]'); if (c && e.target.tagName === 'INPUT') cbOpen(c, true); }, ${SIG});
+  root.addEventListener('focusin', function (e) { var c = cl(e, '[data-p8~="combobox"]'); if (c && e.target.tagName === 'INPUT') cbOpen(c, true); }, ${SIG2});
   root.addEventListener('click', function (e) {
     var it = cl(e, '[data-p8~="combobox"] [role="option"]');
     if (it) { cbPick(it.closest('[data-p8~="combobox"]'), it); return; }
     var c = cl(e, '[data-p8~="combobox"]');
     if (c && e.target.tagName === 'INPUT') cbOpen(c, true);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('input', function (e) {
     var c = cl(e, '[data-p8~="combobox"]');
     if (!c) return;
@@ -23047,7 +24644,7 @@ var KINDS = {
     cbOpts(c).forEach(function (x) { x.hidden = x.textContent.toLowerCase().indexOf(q) < 0; });
     cbOpen(c, true);
     cbMark(c, cbVis(c)[0]);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var c = cl(e, '[data-p8~="combobox"]');
     if (!c || e.target.tagName !== 'INPUT') return;
@@ -23059,8 +24656,8 @@ var KINDS = {
     else return;
     e.preventDefault();
     cbMark(c, list[cur]);
-  }, ${SIG});
-  doc.addEventListener('click', function (e) { all('[data-p8~="combobox"]').forEach(function (c) { if (!c.contains(e.target)) cbOpen(c, false); }); }, ${SIG});`,
+  }, ${SIG2});
+  doc.addEventListener('click', function (e) { all('[data-p8~="combobox"]').forEach(function (c) { if (!c.contains(e.target)) cbOpen(c, false); }); }, ${SIG2});`,
   number: `
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="number"] [data-step]');
@@ -23068,7 +24665,7 @@ var KINDS = {
     var inp = b.closest('[data-p8~="number"]').querySelector('input');
     if (Number(b.getAttribute('data-step')) > 0) inp.stepUp(); else inp.stepDown();
     inp.dispatchEvent(new Event('input', { bubbles: true }));
-  }, ${SIG});`,
+  }, ${SIG2});`,
   otp: `
   function oCells(g) { return Array.from(g.querySelectorAll('input')); }
   root.addEventListener('input', function (e) {
@@ -23078,7 +24675,7 @@ var KINDS = {
     t.value = t.value.replace(/D/g, '').slice(-1);
     var i = cells.indexOf(t);
     if (t.value && cells[i + 1]) cells[i + 1].focus();
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var g = cl(e, '[data-p8~="otp"]');
     if (!g) return;
@@ -23086,7 +24683,7 @@ var KINDS = {
     if (e.key === 'Backspace' && !e.target.value && cells[i - 1]) { cells[i - 1].value = ''; cells[i - 1].focus(); e.preventDefault(); }
     else if (e.key === 'ArrowLeft' && cells[i - 1]) { cells[i - 1].focus(); e.preventDefault(); }
     else if (e.key === 'ArrowRight' && cells[i + 1]) { cells[i + 1].focus(); e.preventDefault(); }
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('paste', function (e) {
     var g = cl(e, '[data-p8~="otp"]');
     if (!g) return;
@@ -23096,7 +24693,7 @@ var KINDS = {
     var cells = oCells(g), i = Math.max(0, cells.indexOf(e.target));
     for (var k = 0; k < digits.length && cells[i + k]; k++) cells[i + k].value = digits[k];
     cells[Math.min(cells.length - 1, i + digits.length)].focus();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   rating: `
   function rSet(g, it) {
     var items = Array.from(g.querySelectorAll('[role="radio"]')), idx = items.indexOf(it);
@@ -23105,7 +24702,7 @@ var KINDS = {
   root.addEventListener('click', function (e) {
     var it = cl(e, '[data-p8~="rating"] [role="radio"]');
     if (it && !it.disabled) rSet(it.closest('[data-p8~="rating"]'), it);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var it = cl(e, '[data-p8~="rating"] [role="radio"]');
     if (!it) return;
@@ -23116,7 +24713,7 @@ var KINDS = {
     e.preventDefault();
     rSet(g, items[i]);
     items[i].focus();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   tree: `
   function tItems(t) { return Array.from(t.querySelectorAll('[role="treeitem"]')).filter(function (x) { return !x.closest('[role="group"][hidden]'); }); }
   function tGroup(it) { var g = it.nextElementSibling; return g && g.getAttribute('role') === 'group' ? g : null; }
@@ -23127,7 +24724,7 @@ var KINDS = {
     if (!it) return;
     if (tGroup(it)) tOpen(it, it.getAttribute('aria-expanded') !== 'true');
     tSelect(it.closest('[data-p8~="tree"]'), it);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var it = cl(e, '[data-p8~="tree"] [role="treeitem"]');
     if (!it) return;
@@ -23141,7 +24738,7 @@ var KINDS = {
     else return;
     e.preventDefault();
     if (list[i]) { list[i].focus(); tSelect(t, list[i]); }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   timer: `
   function tFmt(s) { var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60; var pad = function (n) { return (n < 10 ? '0' : '') + n; }; return h > 0 ? h + ':' + pad(m) + ':' + pad(x) : pad(m) + ':' + pad(x); }
   all('[data-p8~="timer"]').forEach(function (t) {
@@ -23163,7 +24760,7 @@ var KINDS = {
     if (!b) return;
     var t = b.closest('[data-p8~="timer"]');
     if (t.__p8) t.__p8[b.getAttribute('data-timer')]();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   inline: `
   function iDone(w, save) {
     var inp = w.querySelector('[data-edit]'), view = w.querySelector('[data-view]');
@@ -23184,17 +24781,17 @@ var KINDS = {
     var w = v.closest('[data-p8~="inline"]'), inp = w.querySelector('[data-edit]');
     inp.setAttribute('data-old', inp.value);
     v.hidden = true; inp.hidden = false; inp.focus(); inp.select();
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var inp = cl(e, '[data-p8~="inline"] [data-edit]');
     if (!inp) return;
     if (e.key === 'Enter') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), true); }
     else if (e.key === 'Escape') { e.preventDefault(); iDone(inp.closest('[data-p8~="inline"]'), false); }
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('focusout', function (e) {
     var inp = cl(e, '[data-p8~="inline"] [data-edit]');
     if (inp) iDone(inp.closest('[data-p8~="inline"]'), true);
-  }, ${SIG});`,
+  }, ${SIG2});`,
   calendar: `
   var CFMT = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
   function cCells(y, m, ws) {
@@ -23230,13 +24827,13 @@ var KINDS = {
       cPaint(c);
       c.dispatchEvent(new CustomEvent('p8-close', { bubbles: true }));
     }
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('input', function (e) {
     var c = cl(e, '[data-p8~="calendar"]');
     if (!c || !e.target.hasAttribute('data-input')) return;
     var v = e.target.value;
     if (/^\\d{4}-\\d{2}-\\d{2}$/.test(v) && !isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v) { c.setAttribute('data-month', v.slice(0, 7)); cPaint(c); }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   multi: `
   all('[data-p8~="multi"]').forEach(function (m) {
     var id = 'p8-multi-' + crypto.randomUUID(), list = m.querySelector('[role="listbox"]');
@@ -23265,7 +24862,7 @@ var KINDS = {
     if (on) mChip(m, label);
     m.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: Array.from(m.querySelectorAll('[data-chips] [data-chip]')).map(function (c) { return c.getAttribute('data-chip'); }) } }));
   }
-  root.addEventListener('focusin', function (e) { var m = cl(e, '[data-p8~="multi"]'); if (m && e.target.tagName === 'INPUT') mOpen(m, true); }, ${SIG});
+  root.addEventListener('focusin', function (e) { var m = cl(e, '[data-p8~="multi"]'); if (m && e.target.tagName === 'INPUT') mOpen(m, true); }, ${SIG2});
   root.addEventListener('click', function (e) {
     var m = cl(e, '[data-p8~="multi"]');
     if (!m || m.querySelector('input').disabled) return;
@@ -23273,7 +24870,7 @@ var KINDS = {
     if (opt) { mSet(m, opt, opt.getAttribute('aria-selected') !== 'true'); m.querySelector('input').focus(); return; }
     if (close) { var chip = close.closest('[data-chip]'), label = chip.getAttribute('data-chip'); mOpts(m).forEach(function (o) { if (mLabel(o) === label) o.setAttribute('aria-selected', 'false'); }); mUnchip(m, label); m.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { value: Array.from(m.querySelectorAll('[data-chips] [data-chip]')).map(function (c) { return c.getAttribute('data-chip'); }) } })); return; }
     if (e.target.tagName === 'INPUT' || e.target.closest('[data-chips]') === null) mOpen(m, true);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('input', function (e) {
     var m = cl(e, '[data-p8~="multi"]');
     if (!m) return;
@@ -23281,7 +24878,7 @@ var KINDS = {
     mOpts(m).forEach(function (x) { x.hidden = mLabel(x).toLowerCase().indexOf(q) < 0; });
     mOpen(m, true);
     mMark(m, mVis(m)[0]);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var m = cl(e, '[data-p8~="multi"]');
     if (!m || e.target.disabled || e.target.tagName !== 'INPUT') return;
@@ -23294,8 +24891,8 @@ var KINDS = {
     else return;
     e.preventDefault();
     mMark(m, list[cur]);
-  }, ${SIG});
-  doc.addEventListener('click', function (e) { all('[data-p8~="multi"]').forEach(function (m) { if (!m.contains(e.target)) mOpen(m, false); }); }, ${SIG});`,
+  }, ${SIG2});
+  doc.addEventListener('click', function (e) { all('[data-p8~="multi"]').forEach(function (m) { if (!m.contains(e.target)) mOpen(m, false); }); }, ${SIG2});`,
   upload: `
   function uSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
   function uFiles(u) { return u.__files || Array.from(u.querySelector('input[type="file"]').files || []); }
@@ -23314,7 +24911,7 @@ var KINDS = {
     var u = cl(e, '[data-p8~="upload"]');
     if (!u || e.target.type !== 'file') return;
     u.__files = null; uRender(u);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="upload"] [data-remove]');
     if (!b) return;
@@ -23322,14 +24919,14 @@ var KINDS = {
     u.__files = uFiles(u).filter(function (f, i) { return i !== idx; });
     try { var dt = new DataTransfer(); u.__files.forEach(function (f) { dt.items.add(f); }); u.querySelector('input[type="file"]').files = dt.files; } catch (err) { }
     uRender(u);
-  }, ${SIG});
+  }, ${SIG2});
   ['dragenter', 'dragover'].forEach(function (t) { root.addEventListener(t, function (e) {
     var z = cl(e, '[data-p8~="upload"] [data-zone]');
     if (!z) return;
     e.preventDefault();
     if (!z.querySelector('input').disabled) z.classList.add('p8-upload__zone--over');
-  }, ${SIG}); });
-  root.addEventListener('dragleave', function (e) { var z = cl(e, '[data-p8~="upload"] [data-zone]'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('p8-upload__zone--over'); }, ${SIG});
+  }, ${SIG2}); });
+  root.addEventListener('dragleave', function (e) { var z = cl(e, '[data-p8~="upload"] [data-zone]'); if (z && !z.contains(e.relatedTarget)) z.classList.remove('p8-upload__zone--over'); }, ${SIG2});
   root.addEventListener('drop', function (e) {
     var z = cl(e, '[data-p8~="upload"] [data-zone]');
     if (!z) return;
@@ -23341,25 +24938,25 @@ var KINDS = {
     if (!inp.multiple) files = files.slice(0, 1);
     var dt = new DataTransfer(); files.forEach(function (f) { dt.items.add(f); }); inp.files = dt.files;
     inp.dispatchEvent(new Event('change', { bubbles: true }));
-  }, ${SIG});`,
+  }, ${SIG2});`,
   carousel: `
   all('[data-p8~="carousel"]').forEach(function (c) {
     var tr = c.querySelector('[data-track]'), prev = c.querySelector('[data-dir="-1"]'), next = c.querySelector('[data-dir="1"]');
     function upd() { prev.disabled = tr.scrollLeft <= 1; next.disabled = tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 1; }
-    tr.addEventListener('scroll', upd, ${SIG});
+    tr.addEventListener('scroll', upd, ${SIG2});
     upd();
   });
   function cGo(c, dir) { var tr = c.querySelector('[data-track]'); if (tr.scrollBy) tr.scrollBy({ left: dir * tr.clientWidth, behavior: 'smooth' }); else tr.scrollLeft += dir * tr.clientWidth; }
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="carousel"] [data-dir]');
     if (b && !b.disabled) cGo(b.closest('[data-p8~="carousel"]'), Number(b.getAttribute('data-dir')));
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var tr = cl(e, '[data-p8~="carousel"] [data-track]');
     if (!tr || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
     e.preventDefault();
     cGo(tr.closest('[data-p8~="carousel"]'), e.key === 'ArrowRight' ? 1 : -1);
-  }, ${SIG});`,
+  }, ${SIG2});`,
   context: `
   function xPanel(c) { return c.querySelector('[data-panel]'); }
   function xClose(c) { xPanel(c).hidden = true; c.querySelector('[data-area]').setAttribute('aria-expanded', 'false'); }
@@ -23373,23 +24970,23 @@ var KINDS = {
     if (!a) return;
     e.preventDefault();
     xOpen(a.closest('[data-p8~="context"]'), e.clientX, e.clientY);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('keydown', function (e) {
     var a = cl(e, '[data-p8~="context"] [data-area]');
     if (!a || !(e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) return;
     e.preventDefault();
     var r = a.getBoundingClientRect();
     xOpen(a.closest('[data-p8~="context"]'), r.left + r.width / 2, r.top + r.height / 2);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('p8-close', function (e) {
     var c = cl(e, '[data-p8~="context"]');
     if (c) { xClose(c); c.querySelector('[data-area]').focus(); }
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('click', function (e) {
     var item = cl(e, '[data-p8~="context"] [role="menuitem"]');
     if (item) xClose(item.closest('[data-p8~="context"]'));
-  }, ${SIG});
-  doc.addEventListener('click', function (e) { all('[data-p8~="context"]').forEach(function (c) { if (!c.contains(e.target)) xClose(c); }); }, ${SIG});`,
+  }, ${SIG2});
+  doc.addEventListener('click', function (e) { all('[data-p8~="context"]').forEach(function (c) { if (!c.contains(e.target)) xClose(c); }); }, ${SIG2});`,
   password: `
   var PWT = { number: /\\d/, upper: /[A-Z]/, lower: /[a-z]/, symbol: /[^A-Za-z0-9\\s]/ };
   function pwCheck(w) {
@@ -23407,7 +25004,7 @@ var KINDS = {
     if (!w || !e.target.hasAttribute('data-password')) return;
     var ok = pwCheck(w);
     w.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { valid: ok } }));
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="password"] [data-reveal]');
     if (!b || b.disabled) return;
@@ -23415,7 +25012,7 @@ var KINDS = {
     i.type = show ? 'text' : 'password';
     b.setAttribute('aria-pressed', String(show)); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
     b.classList.toggle('p8-password__toggle--on', show);
-  }, ${SIG});`,
+  }, ${SIG2});`,
   datatable: `
   function dtBox(b, state) {
     b.setAttribute('aria-checked', state === 'mixed' ? 'mixed' : String(state));
@@ -23460,7 +25057,7 @@ var KINDS = {
       dtBox(col, show);
       Array.from(t.querySelectorAll('th[data-col="' + col.getAttribute('data-col') + '"], td[data-col="' + col.getAttribute('data-col') + '"]')).forEach(function (c) { c.hidden = !show; });
     }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   range: `
   var RFMT = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
   function drOk(v) { return /^\\d{4}-\\d{2}-\\d{2}$/.test(v) && !isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v; }
@@ -23494,20 +25091,20 @@ var KINDS = {
     else { en.value = iso; done = true; }
     drPaint(c); drEmit(c);
     if (done) c.dispatchEvent(new CustomEvent('p8-close', { bubbles: true }));
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('input', function (e) {
     var c = cl(e, '[data-p8~="range"]');
     if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
     if (drOk(e.target.value)) c.setAttribute('data-month', e.target.value.slice(0, 7));
     drPaint(c);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('change', function (e) {
     var c = cl(e, '[data-p8~="range"]');
     if (!c || !(e.target.hasAttribute('data-start') || e.target.hasAttribute('data-end'))) return;
     var s = c.querySelector('[data-start]'), en = c.querySelector('[data-end]');
     if (drOk(s.value) && drOk(en.value) && en.value < s.value) { var t = s.value; s.value = en.value; en.value = t; }
     drPaint(c); drEmit(c);
-  }, ${SIG});`,
+  }, ${SIG2});`,
   resize: `
   function rzSet(h, pct) {
     var min = Number(h.getAttribute('aria-valuemin')), max = Number(h.getAttribute('aria-valuemax'));
@@ -23527,7 +25124,7 @@ var KINDS = {
     else if (k === 'End') rzSet(h, 100);
     else return;
     e.preventDefault();
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('pointerdown', function (e) {
     var h = cl(e, '[data-p8~="resize"] [data-handle]');
     if (!h || e.button !== 0) return;
@@ -23536,8 +25133,8 @@ var KINDS = {
     if (h.setPointerCapture) try { h.setPointerCapture(e.pointerId); } catch (err) { }
     function move(ev) { var r = box.getBoundingClientRect(); rzSet(h, vert ? (ev.clientY - r.top) / r.height * 100 : (ev.clientX - r.left) / r.width * 100); }
     function up() { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up); }
-    h.addEventListener('pointermove', move, ${SIG}); h.addEventListener('pointerup', up, ${SIG}); h.addEventListener('pointercancel', up, ${SIG});
-  }, ${SIG});`,
+    h.addEventListener('pointermove', move, ${SIG2}); h.addEventListener('pointerup', up, ${SIG2}); h.addEventListener('pointercancel', up, ${SIG2});
+  }, ${SIG2});`,
   sortable: `
   function soItems(l) { return Array.from(l.querySelectorAll('[data-item]')); }
   function soDone(w, li, announce) {
@@ -23556,7 +25153,7 @@ var KINDS = {
     else if (k === 'End' && li.nextElementSibling) list.appendChild(li);
     else { if (k === 'ArrowUp' || k === 'ArrowDown' || k === 'Home' || k === 'End') e.preventDefault(); return; }
     e.preventDefault(); h.focus(); soDone(w, li, true);
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('pointerdown', function (e) {
     var h = cl(e, '[data-p8~="sortable"] [data-handle]');
     if (!h || e.button !== 0) return;
@@ -23575,8 +25172,8 @@ var KINDS = {
       if (moved) soDone(w, li, true);
     }
     // Listen on the document: moving the item in the DOM would drop pointer capture on the handle.
-    doc.addEventListener('pointermove', move, ${SIG}); doc.addEventListener('pointerup', up, ${SIG}); doc.addEventListener('pointercancel', up, ${SIG});
-  }, ${SIG});`,
+    doc.addEventListener('pointermove', move, ${SIG2}); doc.addEventListener('pointerup', up, ${SIG2}); doc.addEventListener('pointercancel', up, ${SIG2});
+  }, ${SIG2});`,
   filters: `
   function fbData(b) { try { return JSON.parse(b.getAttribute('data-fields') || '{}'); } catch (err) { return {}; } }
   function fbChips(b) { return Array.from(b.querySelectorAll('[data-chips] [data-chip]')); }
@@ -23592,7 +25189,7 @@ var KINDS = {
     var vs = fbData(b)[e.target.value] || [], sel = b.querySelector('[data-value]');
     sel.textContent = '';
     vs.forEach(function (v) { var o = doc.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="filters"]');
     if (!b) return;
@@ -23607,7 +25204,7 @@ var KINDS = {
     }
     if (x) { x.closest('[data-chip]').remove(); fbSync(b); b.querySelector('[data-add]').focus(); return; }
     if (clear && !clear.disabled) { fbChips(b).forEach(function (c) { c.remove(); }); fbSync(b); b.querySelector('[data-field]').focus(); }
-  }, ${SIG});`,
+  }, ${SIG2});`,
   notify: `
   function ntSync(w) {
     var n = w.querySelectorAll('[data-unread="true"]').length;
@@ -23632,7 +25229,7 @@ var KINDS = {
       ntSync(w); w.focus();
       w.dispatchEvent(new CustomEvent('p8-read', { bubbles: true, detail: { all: true } }));
     }
-  }, ${SIG});
+  }, ${SIG2});
   all('[data-p8~="notify"]').forEach(function (w) { Array.from(w.querySelectorAll('[data-unread="false"] [data-read]')).forEach(function (b) { b.disabled = true; }); });`,
   lightbox: `
   function lbThumbs(g) { return Array.from(g.querySelectorAll('[data-open]')); }
@@ -23650,7 +25247,7 @@ var KINDS = {
     var th = cl(e, '[data-open]'), dir = cl(e, '[data-lightbox] [data-dir]');
     if (th) { g.__opener = th; lbShow(g, Number(th.getAttribute('data-open'))); var o = g.querySelector('[data-lightbox]'); o.hidden = false; o.querySelector('[data-close]').focus(); return; }
     if (dir && !dir.disabled) lbShow(g, Number(g.getAttribute('data-index') || 0) + Number(dir.getAttribute('data-dir')));
-  }, ${SIG});
+  }, ${SIG2});
   doc.addEventListener('keydown', function (e) {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     all('[data-p8~="lightbox"]').forEach(function (g) {
@@ -23658,16 +25255,16 @@ var KINDS = {
       e.preventDefault();
       lbShow(g, Number(g.getAttribute('data-index') || 0) + (e.key === 'ArrowRight' ? 1 : -1));
     });
-  }, ${SIG});
+  }, ${SIG2});
   root.addEventListener('p8-closed', function (e) {
     var g = cl(e, '[data-p8~="lightbox"]');
     if (g && g.__opener) g.__opener.focus();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
     if (c) c.closest('[data-p8~="dismiss"]').remove();
-  }, ${SIG});`,
+  }, ${SIG2});`,
   copy: `
   root.addEventListener('click', function (e) {
     var b = cl(e, '[data-p8~="copy"]');
@@ -23677,7 +25274,7 @@ var KINDS = {
     var icons = Array.from(b.querySelectorAll('svg'));
     icons.forEach(function (i) { setOn(i, !i.classList.contains('p8-copybtn__icon--on')); });
     timers.push(setTimeout(function () { icons.forEach(function (i) { setOn(i, !i.classList.contains('p8-copybtn__icon--on')); }); }, 1500));
-  }, ${SIG});`
+  }, ${SIG2});`
 };
 function pairs() {
   const out = [];
@@ -23771,8 +25368,8 @@ var KIND_KEYS = {
 };
 function keyboardReport(node2) {
   const out = [];
-  const push = (rows) => rows.forEach((r2) => {
-    if (!out.some((o2) => o2.keys === r2.keys && o2.does === r2.does)) out.push(r2);
+  const push = (rows) => rows.forEach((r3) => {
+    if (!out.some((o2) => o2.keys === r3.keys && o2.does === r3.does)) out.push(r3);
   });
   const tags = /* @__PURE__ */ new Set();
   const types = /* @__PURE__ */ new Set();
@@ -23788,7 +25385,7 @@ function keyboardReport(node2) {
   if (tags.has("summary")) push([{ keys: "Enter / Space", does: "Open or close" }]);
   if (tags.has("select")) push([{ keys: "\u2191 \u2193", does: "Change the option" }, { keys: "Type", does: "Jump to an option" }]);
   if (types.has("range")) push([{ keys: "\u2190 \u2192", does: "Change the value" }, { keys: "Home / End", does: "Minimum / maximum" }, { keys: "PgUp / PgDn", does: "Larger step" }]);
-  if (tags.has("input") && ![...types].every((t3) => ["range", "number"].includes(t3)) || tags.has("textarea")) {
+  if (tags.has("input") && ![...types].every((t4) => ["range", "number"].includes(t4)) || tags.has("textarea")) {
     if (!kinds.has("otp") && !kinds.has("combobox") && !kinds.has("palette") && !kinds.has("number")) push([{ keys: "Type", does: "Enter text" }]);
   }
   for (const k2 of kinds) push(KIND_KEYS[k2] ?? []);
@@ -23826,17 +25423,17 @@ function a11yReport(def, node2) {
 
 // src/tokens/builder.ts
 var HEX = /^#[0-9a-fA-F]{6}$/;
-var toRgb = (h) => [1, 3, 5].map((i2) => parseInt(h.slice(i2, i2 + 2), 16));
+var toRgb = (h2) => [1, 3, 5].map((i2) => parseInt(h2.slice(i2, i2 + 2), 16));
 var toHex = (c3) => `#${c3.map((x) => Math.round(Math.min(255, Math.max(0, x))).toString(16).padStart(2, "0")).join("").toUpperCase()}`;
-var mix = (a2, b2, t3) => toHex(toRgb(a2).map((x, i2) => x + (toRgb(b2)[i2] - x) * t3));
+var mix = (a2, b2, t4) => toHex(toRgb(a2).map((x, i2) => x + (toRgb(b2)[i2] - x) * t4));
 function derive(ink, canvas, mode) {
   const dark = mode === "dark";
   const strong = mix(canvas, ink, dark ? 0.13 : 0.1);
-  let t3 = 0.4;
-  let muted = mix(ink, canvas, t3);
-  while (contrast(muted, strong) < 4.5 && t3 > 0) {
-    t3 -= 0.02;
-    muted = mix(ink, canvas, Math.max(0, t3));
+  let t4 = 0.4;
+  let muted = mix(ink, canvas, t4);
+  while (contrast(muted, strong) < 4.5 && t4 > 0) {
+    t4 -= 0.02;
+    muted = mix(ink, canvas, Math.max(0, t4));
   }
   return {
     canvas,
@@ -23876,12 +25473,12 @@ function buildTheme(input3 = {}) {
   const block = (sel, o2) => `${sel} {
 ${Object.entries(o2).map(([k2, v2]) => `  --p8-color-${k2}: ${v2};`).join("\n")}
 }`;
-  const r2 = Number(radius);
+  const r3 = Number(radius);
   const css2 = [
     block(":root", light).replace(/\n}$/, `
-  --p8-radius-8: ${r2}px;
-  --p8-radius-12: ${r2 + 4}px;
-  --p8-radius-16: ${r2 + 8}px;
+  --p8-radius-8: ${r3}px;
+  --p8-radius-12: ${r3 + 4}px;
+  --p8-radius-16: ${r3 + 8}px;
 }`),
     block('[data-theme="dark"]', dark)
   ].join("\n\n");
@@ -23895,18 +25492,26 @@ ${Object.entries(o2).map(([k2, v2]) => `  --p8-color-${k2}: ${v2};`).join("\n")}
 // src/lint/spacing.ts
 var PROP = "(padding|margin|gap|row-gap|column-gap|border-radius|border-(?:top|bottom)-(?:left|right)-radius|padding-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?|margin-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)";
 var CAMEL = "(padding|margin|gap|rowGap|columnGap|borderRadius|padding(?:Top|Right|Bottom|Left|Inline|Block)|margin(?:Top|Right|Bottom|Left|Inline|Block))";
-function judge(px) {
+var GAP_VALUES = [4, 8, 12];
+var snapGap = (px) => GAP_VALUES.reduce((a2, b2) => Math.abs(b2 - px) < Math.abs(a2 - px) || Math.abs(b2 - px) === Math.abs(a2 - px) && b2 > a2 ? b2 : a2);
+var snapGrid = (px) => Math.max(0, Math.round(px / 4) * 4);
+var isGapProp = (prop) => /^(gap|row-gap|column-gap|rowGap|columnGap|gap-[xy]|space-[xy])$/.test(prop);
+function judge(px, prop = "") {
+  if (isGapProp(prop)) {
+    if (GAP_VALUES.includes(Math.abs(px)) || px === 0) return null;
+    return { severity: "error", rule: "gap", fixable: true, message: `${px}px is not an allowed gap (4, 8 or 12) \u2014 use ${snapGap(Math.abs(px))}px` };
+  }
   if (px === 0 || px % 4 === 0) return null;
-  if (px === 2 || px === 6) return { severity: "warn", message: `${px}px is only allowed for line gaps (2) and menu item sides (6)` };
+  if (px === 2 || px === 6) return { severity: "warn", rule: "grid", fixable: false, message: `${px}px is only allowed for menu item sides (6) and insets (2)` };
   const near = Math.round(px / 4) * 4;
-  return { severity: "error", message: `${px}px is off the 4/8 grid \u2014 use ${near}px` };
+  return { severity: "error", rule: "grid", fixable: true, message: `${px}px is off the 4/8 grid \u2014 use ${near}px` };
 }
 function lintSpacing(code) {
   const issues = [];
   const lines2 = code.split("\n");
   const seen = /* @__PURE__ */ new Set();
   const push = (line, property, value, px) => {
-    const j = judge(px);
+    const j = judge(px, property.replace(/^.*-(?=gap)/, ""));
     const key = `${line}|${property}|${px}`;
     if (j && !seen.has(key)) {
       seen.add(key);
@@ -23923,6 +25528,192 @@ function lintSpacing(code) {
   });
   return issues;
 }
+
+// src/lint/fix.ts
+var PROP2 = "(padding|margin|gap|row-gap|column-gap|border-radius|border-(?:top|bottom)-(?:left|right)-radius|padding-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?|margin-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)";
+var CAMEL2 = "(padding|margin|gap|rowGap|columnGap|borderRadius|padding(?:Top|Right|Bottom|Left|Inline|Block)|margin(?:Top|Right|Bottom|Left|Inline|Block))";
+var isGap = (p4) => /^(gap|row-gap|column-gap|rowGap|columnGap|gap-[xy]|space-[xy])$/.test(p4);
+var lineOf = (code, idx) => code.slice(0, idx).split("\n").length;
+var hexToRgb = (h2) => {
+  let x = h2.replace("#", "");
+  if (x.length === 3 || x.length === 4) x = x.split("").map((c3) => c3 + c3).join("");
+  if (![6, 8].includes(x.length)) return null;
+  return [0, 2, 4].map((i2) => parseInt(x.slice(i2, i2 + 2), 16));
+};
+var TOKENS2 = ["canvas", "surface", "control", "control-strong", "ink", "ink-muted", "placeholder"].map((k2) => ({ k: k2, rgb: hexToRgb(theme.color.light[k2]) }));
+function nearestToken(hex4) {
+  const rgb = hexToRgb(hex4);
+  if (!rgb) return null;
+  const best = TOKENS2.map((t4) => ({ token: t4.k, distance: Math.hypot(...t4.rgb.map((c3, i2) => c3 - rgb[i2])) })).sort((a2, b2) => a2.distance - b2.distance)[0];
+  return best;
+}
+var MAX_COLOR_DISTANCE = 48;
+var HEX2 = /(?<![\w&#/-])#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
+function tagEnd(code, from) {
+  let depth = 0;
+  let q2 = "";
+  for (let i2 = from; i2 < code.length; i2++) {
+    const c3 = code[i2];
+    if (q2) {
+      if (c3 === q2 && code[i2 - 1] !== "\\") q2 = "";
+      continue;
+    }
+    if (depth === 0 && (c3 === '"' || c3 === "'")) {
+      q2 = c3;
+      continue;
+    }
+    if (c3 === "{") depth++;
+    else if (c3 === "}") depth = Math.max(0, depth - 1);
+    else if (c3 === ">" && depth === 0) return i2;
+  }
+  return -1;
+}
+var attr = (s2, name) => new RegExp(`(?:^|\\s)${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|\\{([^}]*)\\})`).exec(s2);
+var has = (s2, name) => new RegExp(`(?:^|\\s)${name}(?=[\\s=/>]|$)`).test(s2);
+var cap = (s2) => s2.replace(/[-_]+/g, " ").trim().replace(/^./, (c3) => c3.toUpperCase());
+function labelHits(code) {
+  const hits = [];
+  const re = /<(img|input|textarea|select|button)(?=[\s/>])/g;
+  let m2;
+  while (m2 = re.exec(code)) {
+    const end = tagEnd(code, m2.index + m2[0].length);
+    if (end < 0) continue;
+    const raw = code.slice(m2.index + m2[0].length, end);
+    const selfClose = raw.trimEnd().endsWith("/");
+    const attrs = selfClose ? raw.trimEnd().slice(0, -1) : raw;
+    const line = lineOf(code, m2.index);
+    if (/\{\s*\.\.\./.test(attrs)) continue;
+    const tag2 = m2[1];
+    if (tag2 === "img") {
+      if (!has(attrs, "alt")) hits.push({ start: m2.index, end, tag: tag2, attrs, line, add: ' alt=""', note: "marked decorative; describe the image if it carries meaning", why: "<img> without alt" });
+    } else if (tag2 === "button") {
+      const close = code.indexOf("</button>", end);
+      const inner = close > 0 ? code.slice(end + 1, close) : "";
+      const named = has(attrs, "aria-label") || has(attrs, "aria-labelledby") || has(attrs, "title");
+      if (!named && /<svg|<img|<Icon/i.test(inner) && !inner.replace(/<[^>]*>/g, "").replace(/\{[^}]*\}/g, "").trim()) hits.push({ start: m2.index, end, tag: tag2, attrs, line, why: "icon-only <button> without a name (add aria-label saying what it does)" });
+    } else {
+      const type = attr(attrs, "type")?.[1] ?? attr(attrs, "type")?.[2];
+      if (type === "hidden" || type === "submit" || type === "button" || type === "reset" || type === "image") continue;
+      if (has(attrs, "aria-label") || has(attrs, "aria-labelledby") || has(attrs, "hidden")) continue;
+      const id = attr(attrs, "id");
+      const idv = id?.[1] ?? id?.[2];
+      if (idv && new RegExp(`(?:for|htmlFor)\\s*=\\s*["'{]\\s*["']?${idv}["']?`).test(code)) continue;
+      const name = attr(attrs, "placeholder")?.[1] ?? attr(attrs, "placeholder")?.[2] ?? attr(attrs, "name")?.[1] ?? attr(attrs, "name")?.[2] ?? type ?? (tag2 === "select" ? "Select" : tag2 === "textarea" ? "Message" : "Field");
+      hits.push({ start: m2.index, end, tag: tag2, attrs, line, add: ` aria-label="${cap(name)}"`, note: "label taken from the placeholder/name; use a visible <label> if you can", why: `<${tag2}> without a label` });
+    }
+  }
+  return hits;
+}
+function lintAll(code) {
+  const issues = lintSpacing(code);
+  code.split("\n").forEach((text2, i2) => {
+    if (/^\s*(\/\/|\/\*|\*|<!--)/.test(text2)) return;
+    for (const m2 of text2.matchAll(HEX2)) {
+      const before = text2.slice(0, m2.index);
+      if (/url\($/.test(before) || /(href|id|for)\s*=\s*["']?$/.test(before)) continue;
+      const near = nearestToken(`#${m2[1]}`);
+      const ok = near !== null && near.distance <= MAX_COLOR_DISTANCE;
+      issues.push({ line: i2 + 1, rule: "color", property: "color", value: `#${m2[1]}`, severity: "error", fixable: ok, message: ok ? `raw colour #${m2[1]} \u2014 use var(--p8-color-${near.token})` : `raw colour #${m2[1]} has no close theme colour \u2014 pick a token or build a theme (build_theme)` });
+    }
+  });
+  for (const h2 of labelHits(code)) issues.push({ line: h2.line, rule: "label", property: h2.tag, value: h2.attrs.trim().slice(0, 40), severity: "error", fixable: Boolean(h2.add), message: h2.why });
+  return issues.sort((a2, b2) => a2.line - b2.line);
+}
+function fixCode(code) {
+  const fixes = [];
+  let out = code;
+  const rec = (idx, rule, from, to, note2) => {
+    if (from !== to) fixes.push({ line: lineOf(code, idx), rule, from, to, note: note2 });
+  };
+  const snap = (prop, num) => isGap(prop) ? snapGap(Math.abs(num)) : num === 2 || num === 6 ? num : snapGrid(Math.abs(num)) * (num < 0 ? -1 : 1);
+  out = out.replace(new RegExp(`\\b${PROP2}(\\s*:\\s*)([^;}"'\`]+)`, "g"), (all, prop, sep, val, idx) => prop + sep + val.replace(/(-?\d*\.?\d+)(px|rem)\b/g, (u, n2, unit) => {
+    const px = parseFloat(n2) * (unit === "rem" ? 16 : 1);
+    if (px === 0) return u;
+    const to = snap(prop, px);
+    if (to === px) return u;
+    const next = unit === "rem" ? `${+(to / 16).toFixed(4)}rem` : `${to}px`;
+    rec(idx, isGap(prop) ? "gap" : "grid", `${prop}: ${u}`, `${prop}: ${next}`);
+    return next;
+  }));
+  out = out.replace(new RegExp(`\\b${CAMEL2}(\\s*:\\s*)(['"]?)(-?\\d*\\.?\\d+)(px|rem)?(['"]?)`, "g"), (all, prop, sep, q1, n2, unit, q2, idx) => {
+    const px = parseFloat(n2) * (unit === "rem" ? 16 : 1);
+    if (px === 0 || unit && q1 === "" && q2 !== "") return all;
+    const to = snap(prop, px);
+    if (to === px) return all;
+    rec(idx, isGap(prop) ? "gap" : "grid", `${prop}: ${n2}${unit ?? ""}`, `${prop}: ${to}${unit ?? ""}`);
+    return `${prop}${sep}${q1}${unit === "rem" ? +(to / 16).toFixed(4) : to}${unit ?? ""}${q2}`;
+  });
+  out = out.replace(/\b(p[xytrbl]?|m[xytrbl]?|gap(?:-[xy])?|space-[xy]|rounded(?:-[a-z]{1,2})?)-\[(-?\d*\.?\d+)(px|rem)\]/g, (all, prop, n2, unit, idx) => {
+    const px = parseFloat(n2) * (unit === "rem" ? 16 : 1);
+    if (px === 0) return all;
+    const to = snap(prop, px);
+    if (to === px) return all;
+    const next = `${prop}-[${unit === "rem" ? +(to / 16).toFixed(4) : to}${unit}]`;
+    rec(idx, isGap(prop) ? "gap" : "grid", all, next);
+    return next;
+  });
+  out = out.replace(HEX2, (all, h2, idx, whole) => {
+    const before = whole.slice(Math.max(0, idx - 60), idx);
+    if (/url\($/.test(before) || /(href|id|for)\s*=\s*["']?$/.test(before)) return all;
+    const near = nearestToken(`#${h2}`);
+    if (!near || near.distance > MAX_COLOR_DISTANCE) return all;
+    const to = `var(--p8-color-${near.token})`;
+    rec(idx, "color", all, to, near.distance > 0 ? `nearest theme colour (distance ${Math.round(near.distance)})` : void 0);
+    return to;
+  });
+  for (const h2 of labelHits(out).reverse()) {
+    if (!h2.add) continue;
+    const raw = out.slice(h2.start, h2.end);
+    const selfClose = /\/\s*$/.test(raw);
+    const next = selfClose ? raw.replace(/\s*\/\s*$/, `${h2.add} /`) : raw + h2.add;
+    out = out.slice(0, h2.start) + next + out.slice(h2.end);
+    fixes.push({ line: h2.line, rule: "label", from: `<${h2.tag}>`, to: `<${h2.tag}${h2.add}>`, note: h2.note });
+  }
+  fixes.sort((a2, b2) => a2.line - b2.line);
+  return { fixed: out, fixes, remaining: lintAll(out) };
+}
+
+// src/changelog.ts
+var RELEASES = [
+  { version: "0.11.0", title: "Templates, app components, lint --fix, diff_component", items: [
+    'New templates (whole screens): Sign-in, Settings page, Dashboard, List to detail, Empty page. Page at /templates; tools list_templates and get_template; GET /api/templates. Search finds them ("login screen").',
+    "New app components: Empty State, Form (validation and submit wiring), Calendar (month view with events), Chart and Sparkline, Chat Message and Chat Composer, Navbar, App Shell.",
+    "New primitives: Toggle Group, Link, Heading, Text, Color Picker (full), Tag Input, Infinite List, Split Button.",
+    "lint_code fix: true (CLI: primitive lint --fix) corrects off-grid spacing and radius, gaps other than 4/8/12, raw hex colours (nearest theme token) and missing labels (aria-label, alt), and lists every change. Lint now also reports gaps, colours and labels.",
+    "Version pinning and diff_component: snapshots rebuilt from the real release history (0.1.0, 0.5.0 to 0.10.0). list_versions, diff_component (one component or the whole library, with breaking flag and migration hints), and a version argument on get_component and get_code.",
+    "Code-creating widgets now clone styled template nodes, so they look right in Svelte and Astro scoped styles as well as plain HTML and Tailwind."
+  ] },
+  { version: "0.10.0", title: "App components: data table, range picker, panels", items: [
+    "New: Password Input (show/hide, live requirements), Data Table (sorting, row selection, column visibility, bulk actions), Date Range Picker, Resizable Panels, Sortable List (drag and keyboard), Filter Bar, Notification List, Image Viewer (lightbox).",
+    "Keyboard reports cover focusable widgets that are not buttons (the resize divider)."
+  ] },
+  { version: "0.9.0", title: "Pickers, carousel, timeline, context menu", items: [
+    "New: Date Picker (calendar popover), Time Picker, Multi-select with chips, File Upload (dropzone + list), Swatch Picker, Carousel, Timeline, Context Menu, Hover Card.",
+    "Changelog page at /changelog, GET /api/changelog and the get_changelog tool.",
+    "Nodes can carry an inline style (used by swatches); it is merged into the HTML output and emitted as an object in React."
+  ] },
+  { version: "0.8.0", title: "Usage, tree, timer, code block", items: [
+    "New: Tree View, Scroll Area, Timer (countdown / stopwatch), Inline Edit, Code Block (grey highlighter + copy).",
+    'Refined: Slider thumb stretches into a pill while dragging, like Switch. Menu items accept "Label | \u2318R" to show a shortcut on the right.',
+    "Usage page at /usage: what agents pull from the public MCP and API (aggregate counts only).",
+    "Code highlighter greys darkened so every shade passes 4.5:1; accessibility panel on every component page."
+  ] },
+  { version: "0.7.0", title: "Agent release", items: [
+    "New: Combobox, Number Input, OTP Input, Stepper, Rating, Accordion, Stat Card, Avatar Group, Progress Ring, Banner.",
+    "Rule book and check book: every design rule is data, enforced by tests (pnpm rules). Per-component do/don't guidelines.",
+    "Refined: Icon Button, Toolbar, Popover, Sheet, Disclosure, Dialog (now follow the 12px control / 16-12 surface rules), Stack (gaps limited to 4/8/12).",
+    "Agent surface: remote MCP (/mcp), HTTP API, <p8-*> runtime (/p8.js), CLI (primitive add|search|info|lint|theme|tokens|rules), skill, llms.txt, theme builder, compose and search tools, spacing lint."
+  ] },
+  { version: "0.6.0", title: "25 components", items: ["Form, feedback, navigation, data and overlay components, plus small bits (Icon Button, Kbd, Tag, Copy Button)."] },
+  { version: "0.5.0", title: "Dialog, Toast, Avatar", items: ["Real behavior and backdrops."] },
+  { version: "0.4.0", title: "Select, Checkbox, Switch, Badge, Tooltip", items: ["Form controls and small status pieces."] },
+  { version: "0.3.0", title: "Menu, Tabs, Disclosure, Data List", items: ["Navigation and content pieces."] },
+  { version: "0.2.0", title: "Text Input, Textarea, Divider", items: ["get_tokens (MCP and HTTP)."] },
+  { version: "0.1.0", title: "Foundations", items: ["Tokens, Button, Card, docs site, codegen, MCP and HTTP."] }
+];
+
+// src/versions/snapshots.json
+var snapshots_default = { versions: [{ version: "0.1.0", commit: "17b3966", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "1a1dc247", html: "63a7716b" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "294cd7c1", html: "e8877797" } } }, { version: "0.5.0", commit: "86bdb90", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "1a1dc247", html: "63a7716b" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "294cd7c1", html: "e8877797" }, "text-input": { name: "Text Input", props: [["label", "string", "Name", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "18557929", html: "c2b34051" }, textarea: { name: "Textarea", props: [["label", "string", "Message", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "689cf88a", html: "824843d0" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16"], rules: "bc9b8fae", html: "5cfc71af" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename\nDuplicate\n---\nDelete", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active"], rules: "c0b68603", html: "e7d3336b" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null], ["panel", "string", "Panel content.", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active", "p8-tabs__panel"], rules: "2510597e", html: "f73628c5" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-icon"], rules: "8c31d553", html: "91acc6b9" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '2'", "4", ["4", "2"]]], cls: ["p8-datalist", "p8-datalist--gap2", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "9b2581a5", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "Option", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-icon"], rules: "edc5b2b7", html: "2cdaf27a" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-icon"], rules: "20c68ca7", html: "62202627" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb"], rules: "15c33243", html: "9c5ef48a" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid"], rules: "2a00c324", html: "39c071bb" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", true, null]], cls: ["p8-tooltip", "p8-tooltip__bubble"], rules: "e56623b1", html: "7411ce5b" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null]], cls: ["p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "5551e2d0", html: "db40b3bb" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null]], cls: ["p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "6cb96d7f", html: "4562e07e" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "empty-state": { name: "Empty State", props: [["title", "string", "Nothing here yet", null], ["body", "string", "Items you add will show up here.", null], ["icon", 'IconName | "none"', "inbox", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox"]], ["actionLabel", "string", "Add item", null]], cls: ["p8-empty", "p8-empty__icon", "p8-empty__title", "p8-empty__body", "p8-icon"], rules: "3dc927c8", html: "37d89777" } } }, { version: "0.6.0", commit: "110ddc0", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "e12792f7" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "4301f4b0" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename\nDuplicate\n---\nDelete", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active"], rules: "5aa3a8db", html: "fa3f5385" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "de0c94f2", html: "31306294" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "adad1756" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "b6e873b0", html: "b7e0f85a" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "7c7f6a32", html: "74cdf985" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__icon", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "58db053d", html: "b71f85e3" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "4a0966d9", html: "c8637cb0" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12' | '16' | '24'", "12", ["4", "8", "12", "16", "24"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--gap16", "p8-stack--gap24", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "5ee47417", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\n---\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "6df758d5" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "7096b0a0", html: "fc955563" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename\nDuplicate\n---\nDelete", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "7096b0a0", html: "317d47ad" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-sheet__close", "p8-icon"], rules: "8dfbc7ca", html: "0c6347fd" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "052fc410", html: "c1b00d47" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" } } }, { version: "0.7.0", commit: "c38cf51", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "6c2bd713" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "901de282" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename\nDuplicate\n---\nDelete", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active"], rules: "5aa3a8db", html: "fa3f5385" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "6d370ac6", html: "533fe3a3" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "e9c15a75" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "a2b37f54", html: "b157bbbe" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "7c7f6a32", html: "74cdf985" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "92b6e296", html: "74843866" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "6bb31d28", html: "57ec3d0d" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12'", "12", ["4", "8", "12"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "0b209dbb", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\ndownload\n---\nstar\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "2c9e7448" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "20fc4284" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename\nDuplicate\n---\nDelete", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "532c41ad" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-icon"], rules: "a7da2535", html: "7c3cc401" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "a736c0bc", html: "a04df96e" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" }, combobox: { name: "Combobox", props: [["placeholder", "string", "Search\u2026", null], ["options", "string (one per line)", "Apple\nBanana\nCherry\nDate", null], ["value", "string", "", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-combobox", "p8-combobox__input", "p8-combobox__icon", "p8-combobox__list", "p8-combobox__option", "p8-combobox__option--active", "p8-combobox__option-none", "p8-icon"], rules: "c643b5fc", html: "8f53a60f" }, "number-input": { name: "Number Input", props: [["value", "string", "1", null], ["min", "string", "0", null], ["max", "string", "10", null], ["step", "string", "1", null], ["label", "string", "Quantity", null], ["disabled", "boolean", false, null]], cls: ["p8-number", "p8-number__input"], rules: "ca809316", html: "a619b87e" }, "otp-input": { name: "OTP Input", props: [["length", "'4' | '6' | '8'", "6", ["4", "6", "8"]], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-otp", "p8-otp__cell"], rules: "b2e1287e", html: "abf392fd" }, stepper: { name: "Stepper", props: [["steps", "string (one per line)", "Account\nPlan\nConfirm", null], ["current", "string", "2", null]], cls: ["p8-stepper", "p8-stepper__step", "p8-stepper__dot", "p8-stepper__dot--done", "p8-stepper__dot--now", "p8-stepper__line", "p8-icon"], rules: "55d6d21c", html: "85b08bf0" }, rating: { name: "Rating", props: [["max", "'3' | '5' | '7'", "5", ["3", "5", "7"]], ["value", "string", "3", null], ["disabled", "boolean", false, null]], cls: ["p8-rating", "p8-rating__star", "p8-rating__star--on", "p8-icon"], rules: "2ccb8ffc", html: "224381d9" }, accordion: { name: "Accordion", props: [["items", "string (one per line)", "First | Content one.\nSecond | Content two.\nThird | Content three.", null], ["open", "string", "First", null]], cls: ["p8-accordion"], rules: "c7746714", html: "99cd4ad0" }, "stat-card": { name: "Stat Card", props: [["label", "string", "Label", null], ["value", "string", "0", null], ["change", "string", "0%", null], ["trend", "'up' | 'down' | 'flat'", "up", ["up", "down", "flat"]]], cls: ["p8-stat", "p8-stat__label", "p8-stat__value", "p8-stat__change", "p8-icon"], rules: "79343d6f", html: "b7bc84c8" }, "avatar-group": { name: "Avatar Group", props: [["names", "string (one per line)", "Ada Lovelace\nAlan Turing\nGrace Hopper\nLinus Torvalds\nMargaret Hamilton", null], ["max", "'2' | '3' | '4' | '5'", "3", ["2", "3", "4", "5"]], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatars", "p8-avatars__item"], rules: "e77ffe37", html: "a0c93b1b" }, "progress-ring": { name: "Progress Ring", props: [["value", "string", "65", null], ["size", "'24' | '32' | '40' | '48'", "40", ["24", "32", "40", "48"]], ["label", "boolean", true, null]], cls: ["p8-progress-ring", "p8-progress-ring__track", "p8-progress-ring__bar", "p8-progress-ring__label"], rules: "f4e9b725", html: "1eb4fa63" }, banner: { name: "Banner", props: [["message", "string", "A short announcement.", null], ["action", "string", "", null], ["tone", "'inverted' | 'default'", "inverted", ["inverted", "default"]], ["dismissible", "boolean", true, null]], cls: ["p8-banner", "p8-banner--inverted", "p8-banner__action", "p8-banner__close", "p8-icon"], rules: "dd2748a6", html: "1c8c9581" } } }, { version: "0.8.0", commit: "6fec6d6", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "6c2bd713" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "901de282" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active", "p8-menu__shortcut"], rules: "c85b6bc0", html: "95aa8c46" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "6d370ac6", html: "533fe3a3" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "e9c15a75" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "a2b37f54", html: "b157bbbe" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "c4048d1e", html: "382c6ebf" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "92b6e296", html: "74843866" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "6bb31d28", html: "57ec3d0d" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12'", "12", ["4", "8", "12"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "0b209dbb", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\ndownload\n---\nstar\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "2c9e7448" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "20fc4284" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "0777e97c" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-icon"], rules: "a7da2535", html: "7c3cc401" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "a736c0bc", html: "a04df96e" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" }, combobox: { name: "Combobox", props: [["placeholder", "string", "Search\u2026", null], ["options", "string (one per line)", "Apple\nBanana\nCherry\nDate", null], ["value", "string", "", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-combobox", "p8-combobox__input", "p8-combobox__icon", "p8-combobox__list", "p8-combobox__option", "p8-combobox__option--active", "p8-combobox__option-none", "p8-icon"], rules: "c643b5fc", html: "8f53a60f" }, "number-input": { name: "Number Input", props: [["value", "string", "1", null], ["min", "string", "0", null], ["max", "string", "10", null], ["step", "string", "1", null], ["label", "string", "Quantity", null], ["disabled", "boolean", false, null]], cls: ["p8-number", "p8-number__input"], rules: "ca809316", html: "a619b87e" }, "otp-input": { name: "OTP Input", props: [["length", "'4' | '6' | '8'", "6", ["4", "6", "8"]], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-otp", "p8-otp__cell"], rules: "b2e1287e", html: "abf392fd" }, stepper: { name: "Stepper", props: [["steps", "string (one per line)", "Account\nPlan\nConfirm", null], ["current", "string", "2", null]], cls: ["p8-stepper", "p8-stepper__step", "p8-stepper__dot", "p8-stepper__dot--done", "p8-stepper__dot--now", "p8-stepper__line", "p8-icon"], rules: "55d6d21c", html: "85b08bf0" }, rating: { name: "Rating", props: [["max", "'3' | '5' | '7'", "5", ["3", "5", "7"]], ["value", "string", "3", null], ["disabled", "boolean", false, null]], cls: ["p8-rating", "p8-rating__star", "p8-rating__star--on", "p8-icon"], rules: "2ccb8ffc", html: "224381d9" }, accordion: { name: "Accordion", props: [["items", "string (one per line)", "First | Content one.\nSecond | Content two.\nThird | Content three.", null], ["open", "string", "First", null]], cls: ["p8-accordion"], rules: "c7746714", html: "99cd4ad0" }, "stat-card": { name: "Stat Card", props: [["label", "string", "Label", null], ["value", "string", "0", null], ["change", "string", "0%", null], ["trend", "'up' | 'down' | 'flat'", "up", ["up", "down", "flat"]]], cls: ["p8-stat", "p8-stat__label", "p8-stat__value", "p8-stat__change", "p8-icon"], rules: "79343d6f", html: "b7bc84c8" }, "avatar-group": { name: "Avatar Group", props: [["names", "string (one per line)", "Ada Lovelace\nAlan Turing\nGrace Hopper\nLinus Torvalds\nMargaret Hamilton", null], ["max", "'2' | '3' | '4' | '5'", "3", ["2", "3", "4", "5"]], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatars", "p8-avatars__item"], rules: "e77ffe37", html: "a0c93b1b" }, "progress-ring": { name: "Progress Ring", props: [["value", "string", "65", null], ["size", "'24' | '32' | '40' | '48'", "40", ["24", "32", "40", "48"]], ["label", "boolean", true, null]], cls: ["p8-progress-ring", "p8-progress-ring__track", "p8-progress-ring__bar", "p8-progress-ring__label"], rules: "f4e9b725", html: "1eb4fa63" }, banner: { name: "Banner", props: [["message", "string", "A short announcement.", null], ["action", "string", "", null], ["tone", "'inverted' | 'default'", "inverted", ["inverted", "default"]], ["dismissible", "boolean", true, null]], cls: ["p8-banner", "p8-banner--inverted", "p8-banner__action", "p8-banner__close", "p8-icon"], rules: "dd2748a6", html: "1c8c9581" }, "tree-view": { name: "Tree View", props: [["items", "string (one per line)", "src\n  components\n    Button.tsx\n    Card.tsx\n  tokens\n    theme.ts\nREADME.md", null], ["selected", "string", "Button.tsx", null], ["expand", "'all' | 'none'", "all", ["all", "none"]]], cls: ["p8-tree", "p8-tree__group", "p8-tree__item", "p8-tree__item--on", "p8-tree__item--active", "p8-tree__chev", "p8-tree__icon", "p8-tree__label", "p8-icon"], rules: "c7ce5cbd", html: "9ca33c0e" }, "scroll-area": { name: "Scroll Area", props: [["height", "'160' | '240' | '320'", "160", ["160", "240", "320"]], ["direction", "'vertical' | 'horizontal'", "vertical", ["vertical", "horizontal"]], ["rows", "'12' | '24' | '48'", "24", ["12", "24", "48"]]], cls: ["p8-scroll", "p8-scroll--h160", "p8-scroll--h240", "p8-scroll--h320", "p8-scroll--x", "p8-scroll__row"], rules: "300c3d60", html: "bc136e5e" }, timer: { name: "Timer", props: [["mode", "'countdown' | 'stopwatch'", "countdown", ["countdown", "stopwatch"]], ["seconds", "string", "90", null], ["autostart", "boolean", false, null], ["controls", "boolean", true, null]], cls: ["p8-timer", "p8-timer__time", "p8-timer--done", "p8-timer__actions", "p8-timer__btn"], rules: "cd4bff35", html: "2321177b" }, "inline-edit": { name: "Inline Edit", props: [["value", "string", "Click to edit", null], ["placeholder", "string", "Add a title", null], ["label", "string", "Title", null]], cls: ["p8-inline", "p8-inline__input", "p8-inline__view", "p8-inline__view--empty", "p8-inline__pen", "p8-icon"], rules: "276b1a97", html: "9350032c" }, "code-block": { name: "Code Block", props: [["code", "string", '<p8-button variant="primary">Save</p8-button>', null], ["language", "string", "html", null], ["copy", "boolean", true, null]], cls: ["p8-code", "p8-code__head", "p8-code__lang", "p8-code__pre", "p8-code__tok-t", "p8-code__tok-k", "p8-code__tok-a", "p8-code__tok-s", "p8-code__tok-v", "p8-code__tok-p", "p8-code__tok-c"], rules: "0510f1be", html: "fa223e55" } } }, { version: "0.9.0", commit: "7a8c39f", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "6c2bd713" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "901de282" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active", "p8-menu__shortcut"], rules: "c85b6bc0", html: "95aa8c46" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "6d370ac6", html: "533fe3a3" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "e9c15a75" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "a2b37f54", html: "b157bbbe" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "c4048d1e", html: "382c6ebf" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "92b6e296", html: "74843866" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "6bb31d28", html: "57ec3d0d" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12'", "12", ["4", "8", "12"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "0b209dbb", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\ndownload\n---\nstar\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "2c9e7448" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "20fc4284" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "0777e97c" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-icon"], rules: "a7da2535", html: "7c3cc401" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "a736c0bc", html: "a04df96e" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" }, combobox: { name: "Combobox", props: [["placeholder", "string", "Search\u2026", null], ["options", "string (one per line)", "Apple\nBanana\nCherry\nDate", null], ["value", "string", "", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-combobox", "p8-combobox__input", "p8-combobox__icon", "p8-combobox__list", "p8-combobox__option", "p8-combobox__option--active", "p8-combobox__option-none", "p8-icon"], rules: "c643b5fc", html: "8f53a60f" }, "number-input": { name: "Number Input", props: [["value", "string", "1", null], ["min", "string", "0", null], ["max", "string", "10", null], ["step", "string", "1", null], ["label", "string", "Quantity", null], ["disabled", "boolean", false, null]], cls: ["p8-number", "p8-number__input"], rules: "ca809316", html: "a619b87e" }, "otp-input": { name: "OTP Input", props: [["length", "'4' | '6' | '8'", "6", ["4", "6", "8"]], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-otp", "p8-otp__cell"], rules: "b2e1287e", html: "abf392fd" }, stepper: { name: "Stepper", props: [["steps", "string (one per line)", "Account\nPlan\nConfirm", null], ["current", "string", "2", null]], cls: ["p8-stepper", "p8-stepper__step", "p8-stepper__dot", "p8-stepper__dot--done", "p8-stepper__dot--now", "p8-stepper__line", "p8-icon"], rules: "55d6d21c", html: "85b08bf0" }, rating: { name: "Rating", props: [["max", "'3' | '5' | '7'", "5", ["3", "5", "7"]], ["value", "string", "3", null], ["disabled", "boolean", false, null]], cls: ["p8-rating", "p8-rating__star", "p8-rating__star--on", "p8-icon"], rules: "2ccb8ffc", html: "224381d9" }, accordion: { name: "Accordion", props: [["items", "string (one per line)", "First | Content one.\nSecond | Content two.\nThird | Content three.", null], ["open", "string", "First", null]], cls: ["p8-accordion"], rules: "c7746714", html: "99cd4ad0" }, "stat-card": { name: "Stat Card", props: [["label", "string", "Label", null], ["value", "string", "0", null], ["change", "string", "0%", null], ["trend", "'up' | 'down' | 'flat'", "up", ["up", "down", "flat"]]], cls: ["p8-stat", "p8-stat__label", "p8-stat__value", "p8-stat__change", "p8-icon"], rules: "79343d6f", html: "b7bc84c8" }, "avatar-group": { name: "Avatar Group", props: [["names", "string (one per line)", "Ada Lovelace\nAlan Turing\nGrace Hopper\nLinus Torvalds\nMargaret Hamilton", null], ["max", "'2' | '3' | '4' | '5'", "3", ["2", "3", "4", "5"]], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatars", "p8-avatars__item"], rules: "e77ffe37", html: "a0c93b1b" }, "progress-ring": { name: "Progress Ring", props: [["value", "string", "65", null], ["size", "'24' | '32' | '40' | '48'", "40", ["24", "32", "40", "48"]], ["label", "boolean", true, null]], cls: ["p8-progress-ring", "p8-progress-ring__track", "p8-progress-ring__bar", "p8-progress-ring__label"], rules: "f4e9b725", html: "1eb4fa63" }, banner: { name: "Banner", props: [["message", "string", "A short announcement.", null], ["action", "string", "", null], ["tone", "'inverted' | 'default'", "inverted", ["inverted", "default"]], ["dismissible", "boolean", true, null]], cls: ["p8-banner", "p8-banner--inverted", "p8-banner__action", "p8-banner__close", "p8-icon"], rules: "dd2748a6", html: "1c8c9581" }, "tree-view": { name: "Tree View", props: [["items", "string (one per line)", "src\n  components\n    Button.tsx\n    Card.tsx\n  tokens\n    theme.ts\nREADME.md", null], ["selected", "string", "Button.tsx", null], ["expand", "'all' | 'none'", "all", ["all", "none"]]], cls: ["p8-tree", "p8-tree__group", "p8-tree__item", "p8-tree__item--on", "p8-tree__item--active", "p8-tree__chev", "p8-tree__icon", "p8-tree__label", "p8-icon"], rules: "c7ce5cbd", html: "9ca33c0e" }, "scroll-area": { name: "Scroll Area", props: [["height", "'160' | '240' | '320'", "160", ["160", "240", "320"]], ["direction", "'vertical' | 'horizontal'", "vertical", ["vertical", "horizontal"]], ["rows", "'12' | '24' | '48'", "24", ["12", "24", "48"]]], cls: ["p8-scroll", "p8-scroll--h160", "p8-scroll--h240", "p8-scroll--h320", "p8-scroll--x", "p8-scroll__row"], rules: "300c3d60", html: "bc136e5e" }, timer: { name: "Timer", props: [["mode", "'countdown' | 'stopwatch'", "countdown", ["countdown", "stopwatch"]], ["seconds", "string", "90", null], ["autostart", "boolean", false, null], ["controls", "boolean", true, null]], cls: ["p8-timer", "p8-timer__time", "p8-timer--done", "p8-timer__actions", "p8-timer__btn"], rules: "cd4bff35", html: "2321177b" }, "inline-edit": { name: "Inline Edit", props: [["value", "string", "Click to edit", null], ["placeholder", "string", "Add a title", null], ["label", "string", "Title", null]], cls: ["p8-inline", "p8-inline__input", "p8-inline__view", "p8-inline__view--empty", "p8-inline__pen", "p8-icon"], rules: "276b1a97", html: "9350032c" }, "code-block": { name: "Code Block", props: [["code", "string", '<p8-button variant="primary">Save</p8-button>', null], ["language", "string", "html", null], ["copy", "boolean", true, null]], cls: ["p8-code", "p8-code__head", "p8-code__lang", "p8-code__pre", "p8-code__tok-t", "p8-code__tok-k", "p8-code__tok-a", "p8-code__tok-s", "p8-code__tok-v", "p8-code__tok-p", "p8-code__tok-c"], rules: "0510f1be", html: "fa223e55" }, "date-picker": { name: "Date Picker", props: [["value", "string", "", null], ["month", "string", "2026-11", null], ["weekStart", "'sun' | 'mon'", "sun", ["sun", "mon"]], ["placeholder", "string", "YYYY-MM-DD", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-datepicker", "p8-datepicker__field", "p8-datepicker__trigger", "p8-cal__head", "p8-cal__label", "p8-cal__grid", "p8-cal__dow", "p8-cal__day", "p8-cal__day--out", "p8-cal__day--on", "p8-icon"], rules: "10af5730", html: "fe582d48" }, "time-picker": { name: "Time Picker", props: [["value", "string", "09:30", null], ["format", "'24h' | '12h'", "24h", ["24h", "12h"]], ["minuteStep", "'1' | '5' | '15' | '30'", "5", ["1", "5", "15", "30"]], ["disabled", "boolean", false, null]], cls: ["p8-timepicker", "p8-timepicker__part", "p8-timepicker__sep"], rules: "e43e9e0d", html: "01cbfaa6" }, "multi-select": { name: "Multi-select", props: [["options", "string (one per line)", "Design\nEngineering\nResearch\nSupport", null], ["value", "string (one per line)", "Design", null], ["placeholder", "string", "Add\u2026", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-multi", "p8-multi__box", "p8-multi__chips", "p8-multi__input", "p8-multi__list", "p8-multi__option", "p8-multi__option--active", "p8-multi__check", "p8-icon"], rules: "87894951", html: "c5ec70be" }, "file-upload": { name: "File Upload", props: [["label", "string", "Drop files here or click to browse", null], ["accept", "string", "", null], ["multiple", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-upload", "p8-upload__zone", "p8-upload__zone--over", "p8-upload__input", "p8-upload__hint", "p8-upload__list", "p8-upload__item", "p8-upload__name", "p8-upload__size", "p8-icon"], rules: "4b9156a6", html: "ba78474d" }, "swatch-picker": { name: "Swatch Picker", props: [["colors", "string (one per line)", "ink\nink-muted\ncontrol-strong\ncontrol\ncanvas", null], ["value", "string", "ink", null]], cls: ["p8-swatches", "p8-swatch", "p8-swatch--on", "p8-swatch--canvas", "p8-swatch--surface", "p8-swatch--control", "p8-swatch--control-strong", "p8-swatch--ink", "p8-swatch--ink-inverse", "p8-swatch--ink-muted", "p8-swatch--placeholder"], rules: "b1ac6625", html: "7316fc4e" }, carousel: { name: "Carousel", props: [["slides", "'3' | '5' | '8'", "5", ["3", "5", "8"]], ["perView", "'1' | '2'", "1", ["1", "2"]]], cls: ["p8-carousel", "p8-carousel__track", "p8-carousel__slide", "p8-carousel__slide--half", "p8-carousel__nav"], rules: "ce67004f", html: "05387861" }, timeline: { name: "Timeline", props: [["items", "string (one per line)", "Created | 09:00\nReviewed | 10:30 | Two comments\nPublished | 12:00", null]], cls: ["p8-timeline", "p8-timeline__item", "p8-timeline__dot", "p8-timeline__body", "p8-timeline__title", "p8-timeline__time", "p8-timeline__detail", "p8-timeline__item--last"], rules: "c1be2f50", html: "30d6de97" }, "context-menu": { name: "Context Menu", props: [["label", "string", "Right-click here", null], ["items", "string (one per line)", "Copy | \u2318C\nPaste | \u2318V\n---\nDelete | \u232B", null], ["open", "boolean", true, null]], cls: ["p8-context", "p8-context__area", "p8-context__panel"], rules: "17205992", html: "7cba9300" }, "hover-card": { name: "Hover Card", props: [["trigger", "string", "@primitive", null], ["title", "string", "Primitive 8", null], ["body", "string", "A short preview of what this link points to.", null], ["open", "boolean", false, null]], cls: ["p8-hovercard", "p8-hovercard__trigger", "p8-hovercard__wrap", "p8-hovercard__wrap--open", "p8-hovercard__card", "p8-hovercard__text", "p8-hovercard__title", "p8-hovercard__body", "p8-icon"], rules: "f4d2fd5b", html: "70b17b2a" } } }, { version: "0.10.0", commit: "33d7531", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "6c2bd713" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "901de282" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active", "p8-menu__shortcut"], rules: "c85b6bc0", html: "95aa8c46" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "6d370ac6", html: "533fe3a3" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "e9c15a75" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "a2b37f54", html: "b157bbbe" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "c4048d1e", html: "382c6ebf" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "92b6e296", html: "74843866" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "6bb31d28", html: "57ec3d0d" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12'", "12", ["4", "8", "12"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "0b209dbb", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\ndownload\n---\nstar\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "2c9e7448" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "20fc4284" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "0777e97c" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-icon"], rules: "a7da2535", html: "7c3cc401" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "a736c0bc", html: "a04df96e" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" }, combobox: { name: "Combobox", props: [["placeholder", "string", "Search\u2026", null], ["options", "string (one per line)", "Apple\nBanana\nCherry\nDate", null], ["value", "string", "", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-combobox", "p8-combobox__input", "p8-combobox__icon", "p8-combobox__list", "p8-combobox__option", "p8-combobox__option--active", "p8-combobox__option-none", "p8-icon"], rules: "c643b5fc", html: "8f53a60f" }, "number-input": { name: "Number Input", props: [["value", "string", "1", null], ["min", "string", "0", null], ["max", "string", "10", null], ["step", "string", "1", null], ["label", "string", "Quantity", null], ["disabled", "boolean", false, null]], cls: ["p8-number", "p8-number__input"], rules: "ca809316", html: "a619b87e" }, "otp-input": { name: "OTP Input", props: [["length", "'4' | '6' | '8'", "6", ["4", "6", "8"]], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-otp", "p8-otp__cell"], rules: "b2e1287e", html: "abf392fd" }, stepper: { name: "Stepper", props: [["steps", "string (one per line)", "Account\nPlan\nConfirm", null], ["current", "string", "2", null]], cls: ["p8-stepper", "p8-stepper__step", "p8-stepper__dot", "p8-stepper__dot--done", "p8-stepper__dot--now", "p8-stepper__line", "p8-icon"], rules: "55d6d21c", html: "85b08bf0" }, rating: { name: "Rating", props: [["max", "'3' | '5' | '7'", "5", ["3", "5", "7"]], ["value", "string", "3", null], ["disabled", "boolean", false, null]], cls: ["p8-rating", "p8-rating__star", "p8-rating__star--on", "p8-icon"], rules: "2ccb8ffc", html: "224381d9" }, accordion: { name: "Accordion", props: [["items", "string (one per line)", "First | Content one.\nSecond | Content two.\nThird | Content three.", null], ["open", "string", "First", null]], cls: ["p8-accordion"], rules: "c7746714", html: "99cd4ad0" }, "stat-card": { name: "Stat Card", props: [["label", "string", "Label", null], ["value", "string", "0", null], ["change", "string", "0%", null], ["trend", "'up' | 'down' | 'flat'", "up", ["up", "down", "flat"]]], cls: ["p8-stat", "p8-stat__label", "p8-stat__value", "p8-stat__change", "p8-icon"], rules: "79343d6f", html: "b7bc84c8" }, "avatar-group": { name: "Avatar Group", props: [["names", "string (one per line)", "Ada Lovelace\nAlan Turing\nGrace Hopper\nLinus Torvalds\nMargaret Hamilton", null], ["max", "'2' | '3' | '4' | '5'", "3", ["2", "3", "4", "5"]], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatars", "p8-avatars__item"], rules: "e77ffe37", html: "a0c93b1b" }, "progress-ring": { name: "Progress Ring", props: [["value", "string", "65", null], ["size", "'24' | '32' | '40' | '48'", "40", ["24", "32", "40", "48"]], ["label", "boolean", true, null]], cls: ["p8-progress-ring", "p8-progress-ring__track", "p8-progress-ring__bar", "p8-progress-ring__label"], rules: "f4e9b725", html: "1eb4fa63" }, banner: { name: "Banner", props: [["message", "string", "A short announcement.", null], ["action", "string", "", null], ["tone", "'inverted' | 'default'", "inverted", ["inverted", "default"]], ["dismissible", "boolean", true, null]], cls: ["p8-banner", "p8-banner--inverted", "p8-banner__action", "p8-banner__close", "p8-icon"], rules: "dd2748a6", html: "1c8c9581" }, "tree-view": { name: "Tree View", props: [["items", "string (one per line)", "src\n  components\n    Button.tsx\n    Card.tsx\n  tokens\n    theme.ts\nREADME.md", null], ["selected", "string", "Button.tsx", null], ["expand", "'all' | 'none'", "all", ["all", "none"]]], cls: ["p8-tree", "p8-tree__group", "p8-tree__item", "p8-tree__item--on", "p8-tree__item--active", "p8-tree__chev", "p8-tree__icon", "p8-tree__label", "p8-icon"], rules: "c7ce5cbd", html: "9ca33c0e" }, "scroll-area": { name: "Scroll Area", props: [["height", "'160' | '240' | '320'", "160", ["160", "240", "320"]], ["direction", "'vertical' | 'horizontal'", "vertical", ["vertical", "horizontal"]], ["rows", "'12' | '24' | '48'", "24", ["12", "24", "48"]]], cls: ["p8-scroll", "p8-scroll--h160", "p8-scroll--h240", "p8-scroll--h320", "p8-scroll--x", "p8-scroll__row"], rules: "300c3d60", html: "bc136e5e" }, timer: { name: "Timer", props: [["mode", "'countdown' | 'stopwatch'", "countdown", ["countdown", "stopwatch"]], ["seconds", "string", "90", null], ["autostart", "boolean", false, null], ["controls", "boolean", true, null]], cls: ["p8-timer", "p8-timer__time", "p8-timer--done", "p8-timer__actions", "p8-timer__btn"], rules: "cd4bff35", html: "2321177b" }, "inline-edit": { name: "Inline Edit", props: [["value", "string", "Click to edit", null], ["placeholder", "string", "Add a title", null], ["label", "string", "Title", null]], cls: ["p8-inline", "p8-inline__input", "p8-inline__view", "p8-inline__view--empty", "p8-inline__pen", "p8-icon"], rules: "276b1a97", html: "9350032c" }, "code-block": { name: "Code Block", props: [["code", "string", '<p8-button variant="primary">Save</p8-button>', null], ["language", "string", "html", null], ["copy", "boolean", true, null]], cls: ["p8-code", "p8-code__head", "p8-code__lang", "p8-code__pre", "p8-code__tok-t", "p8-code__tok-k", "p8-code__tok-a", "p8-code__tok-s", "p8-code__tok-v", "p8-code__tok-p", "p8-code__tok-c"], rules: "0510f1be", html: "fa223e55" }, "date-picker": { name: "Date Picker", props: [["value", "string", "", null], ["month", "string", "2026-11", null], ["weekStart", "'sun' | 'mon'", "sun", ["sun", "mon"]], ["placeholder", "string", "YYYY-MM-DD", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-datepicker", "p8-datepicker__field", "p8-datepicker__trigger", "p8-cal__head", "p8-cal__label", "p8-cal__grid", "p8-cal__dow", "p8-cal__day", "p8-cal__day--out", "p8-cal__day--on", "p8-icon"], rules: "10af5730", html: "fe582d48" }, "time-picker": { name: "Time Picker", props: [["value", "string", "09:30", null], ["format", "'24h' | '12h'", "24h", ["24h", "12h"]], ["minuteStep", "'1' | '5' | '15' | '30'", "5", ["1", "5", "15", "30"]], ["disabled", "boolean", false, null]], cls: ["p8-timepicker", "p8-timepicker__part", "p8-timepicker__sep"], rules: "e43e9e0d", html: "01cbfaa6" }, "multi-select": { name: "Multi-select", props: [["options", "string (one per line)", "Design\nEngineering\nResearch\nSupport", null], ["value", "string (one per line)", "Design", null], ["placeholder", "string", "Add\u2026", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-multi", "p8-multi__box", "p8-multi__chips", "p8-multi__input", "p8-multi__list", "p8-multi__option", "p8-multi__option--active", "p8-multi__check", "p8-icon"], rules: "87894951", html: "c5ec70be" }, "file-upload": { name: "File Upload", props: [["label", "string", "Drop files here or click to browse", null], ["accept", "string", "", null], ["multiple", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-upload", "p8-upload__zone", "p8-upload__zone--over", "p8-upload__input", "p8-upload__hint", "p8-upload__list", "p8-upload__item", "p8-upload__name", "p8-upload__size", "p8-icon"], rules: "4b9156a6", html: "ba78474d" }, "swatch-picker": { name: "Swatch Picker", props: [["colors", "string (one per line)", "ink\nink-muted\ncontrol-strong\ncontrol\ncanvas", null], ["value", "string", "ink", null]], cls: ["p8-swatches", "p8-swatch", "p8-swatch--on", "p8-swatch--canvas", "p8-swatch--surface", "p8-swatch--control", "p8-swatch--control-strong", "p8-swatch--ink", "p8-swatch--ink-inverse", "p8-swatch--ink-muted", "p8-swatch--placeholder"], rules: "b1ac6625", html: "7316fc4e" }, carousel: { name: "Carousel", props: [["slides", "'3' | '5' | '8'", "5", ["3", "5", "8"]], ["perView", "'1' | '2'", "1", ["1", "2"]]], cls: ["p8-carousel", "p8-carousel__track", "p8-carousel__slide", "p8-carousel__slide--half", "p8-carousel__nav"], rules: "ce67004f", html: "05387861" }, timeline: { name: "Timeline", props: [["items", "string (one per line)", "Created | 09:00\nReviewed | 10:30 | Two comments\nPublished | 12:00", null]], cls: ["p8-timeline", "p8-timeline__item", "p8-timeline__dot", "p8-timeline__body", "p8-timeline__title", "p8-timeline__time", "p8-timeline__detail", "p8-timeline__item--last"], rules: "c1be2f50", html: "30d6de97" }, "context-menu": { name: "Context Menu", props: [["label", "string", "Right-click here", null], ["items", "string (one per line)", "Copy | \u2318C\nPaste | \u2318V\n---\nDelete | \u232B", null], ["open", "boolean", true, null]], cls: ["p8-context", "p8-context__area", "p8-context__panel"], rules: "17205992", html: "7cba9300" }, "hover-card": { name: "Hover Card", props: [["trigger", "string", "@primitive", null], ["title", "string", "Primitive 8", null], ["body", "string", "A short preview of what this link points to.", null], ["open", "boolean", false, null]], cls: ["p8-hovercard", "p8-hovercard__trigger", "p8-hovercard__wrap", "p8-hovercard__wrap--open", "p8-hovercard__card", "p8-hovercard__text", "p8-hovercard__title", "p8-hovercard__body", "p8-icon"], rules: "f4d2fd5b", html: "70b17b2a" }, "password-input": { name: "Password Input", props: [["label", "string", "Password", null], ["value", "string", "", null], ["autocomplete", "'new-password' | 'current-password'", "new-password", ["new-password", "current-password"]], ["requirements", "string (one per line)", "length:8\nnumber\nupper\nsymbol", null], ["disabled", "boolean", false, null]], cls: ["p8-password", "p8-password__wrap", "p8-password__input", "p8-password__field", "p8-password__toggle", "p8-password__toggle--on", "p8-password__rules", "p8-password__rule", "p8-password__rule--on", "p8-password__yes", "p8-password__no", "p8-icon"], rules: "4579f9c9", html: "ce823d62" }, "data-table": { name: "Data Table", props: [["rows", "string (one per line)", "Name | Role | Joined\nAda Lovelace | Engineer | 2024-03-12\nGrace Hopper | Admiral | 2023-11-02\nAlan Turing | Researcher | 2025-01-20\nKatherine Johnson | Analyst | 2024-07-08", null], ["selectable", "boolean", true, null], ["actions", "string (one per line)", "Export\nDelete", null], ["columnToggle", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-dtable", "p8-dtable__bar", "p8-dtable__count", "p8-dtable__actions", "p8-dtable__cols", "p8-dtable__table", "p8-dtable__head", "p8-dtable__cell", "p8-dtable__select", "p8-dtable__row", "p8-dtable__row--on", "p8-dtable__sort", "p8-dtable__arrow", "p8-dtable__all", "p8-dtable__minus", "p8-dtable__minus--on", "p8-icon"], rules: "21dce177", html: "f204309c" }, "date-range-picker": { name: "Date Range Picker", props: [["start", "string", "2026-11-10", null], ["end", "string", "2026-11-14", null], ["month", "string", "2026-11", null], ["weekStart", "'sun' | 'mon'", "sun", ["sun", "mon"]], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-daterange", "p8-daterange__fields", "p8-daterange__input", "p8-daterange__sep", "p8-daterange__hint", "p8-cal__head", "p8-cal__label", "p8-cal__grid", "p8-cal__dow", "p8-cal__day", "p8-cal__day--out", "p8-cal__day--active", "p8-cal__day--on", "p8-icon"], rules: "b831312e", html: "e8535e20" }, "resizable-panels": { name: "Resizable Panels", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["size", "'30' | '40' | '50' | '60' | '70'", "40", ["30", "40", "50", "60", "70"]], ["panes", "string (one per line)", "Navigation\nContent", null]], cls: ["p8-resize", "p8-resize--vertical", "p8-resize__pane", "p8-resize__pane--first", "p8-resize__title", "p8-resize__handle"], rules: "65a174a1", html: "8b6da626" }, "sortable-list": { name: "Sortable List", props: [["items", "string (one per line)", "Write brief\nDesign review\nBuild prototype\nUser testing\nShip", null]], cls: ["p8-sortable-wrap", "p8-sortable", "p8-sortable__item", "p8-sortable__item--active", "p8-sortable__handle", "p8-sortable__label", "p8-sortable__status", "p8-icon"], rules: "43fdff18", html: "cd6e6c4c" }, "filter-bar": { name: "Filter Bar", props: [["fields", "string (one per line)", "Status: Open, In progress, Closed\nOwner: Ada, Grace, Alan\nPriority: High, Medium, Low", null], ["value", "string (one per line)", "Status: Open\nPriority: High", null], ["disabled", "boolean", false, null]], cls: ["p8-filters", "p8-filters__row", "p8-filters__pick", "p8-filters__chips", "p8-filters__list", "p8-filters__empty", "p8-icon"], rules: "b6111fec", html: "f0e1b08b" }, "notification-list": { name: "Notification List", props: [["title", "string", "Notifications", null], ["items", "string (one per line)", "* New comment | 2m | Ada replied to your design review\n* Build passed | 1h | main was deployed to production\nInvite accepted | Yesterday | Grace joined the workspace", null]], cls: ["p8-notify", "p8-notify__head", "p8-notify__heading", "p8-notify__title", "p8-notify__count", "p8-notify__list", "p8-notify__item", "p8-notify__dot", "p8-notify__body", "p8-notify__name", "p8-notify__detail", "p8-notify__time", "p8-notify__read", "p8-icon"], rules: "fb2e79e6", html: "62318e02" }, "image-viewer": { name: "Image Viewer", props: [["images", "string (one per line)", "Dunes at dawn\nHarbour lights\nForest path\nCity at night\nMountain lake\nStill life", null], ["columns", "'2' | '3' | '4'", "3", ["2", "3", "4"]], ["open", "boolean", false, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-gallery", "p8-gallery__grid", "p8-gallery__grid--2", "p8-gallery__grid--4", "p8-gallery__thumb", "p8-gallery__img", "p8-lightbox", "p8-lightbox__figure", "p8-lightbox__img", "p8-lightbox__caption", "p8-lightbox__counter", "p8-lightbox__bar", "p8-lightbox__nav", "p8-icon"], rules: "49b40fa3", html: "38bcb7ec" } } }, { version: "0.11.0", commit: "release", components: { button: { name: "Button", props: [["label", "string", "Button", null], ["variant", "'default' | 'primary' | 'ghost'", "default", ["default", "primary", "ghost"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["icon", 'IconName | "none"', "none", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["iconSize", "'14' | '16'", "14", ["14", "16"]], ["iconPosition", "'start' | 'end'", "start", ["start", "end"]], ["fullWidth", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-button", "p8-button--primary", "p8-button--ghost", "p8-button--lg", "p8-button--block", "p8-icon"], rules: "c7630fc0", html: "151e6e2a" }, card: { name: "Card", props: [["title", "string", "Card title", null], ["body", "string", "Supporting text for the card.", null], ["padding", "'default' | 'even'", "default", ["default", "even"]], ["bordered", "boolean", true, null], ["withAction", "boolean", false, null], ["actionLabel", "string", "Continue", null]], cls: ["p8-card", "p8-card--even", "p8-card--flat", "p8-card__text", "p8-card__title", "p8-card__body", "p8-card__actions"], rules: "8a8a97a8", html: "b9c3d47b" }, "text-input": { name: "Text Input", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["type", "'text' | 'email' | 'password' | 'search'", "text", ["text", "email", "password", "search"]], ["size", "'md' | 'lg'", "md", ["md", "lg"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-input", "p8-input--lg"], rules: "a1d1f009", html: "6c2bd713" }, textarea: { name: "Textarea", props: [["label", "string", "", null], ["placeholder", "string", "Placeholder", null], ["value", "string", "", null], ["rows", "'3' | '4' | '6'", "4", ["3", "4", "6"]], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-textarea"], rules: "96ae74da", html: "901de282" }, divider: { name: "Divider", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["label", "string", "or", null], ["spacing", "'none' | '12' | '16'", "none", ["none", "12", "16"]]], cls: ["p8-divider", "p8-divider--vertical", "p8-divider--m12", "p8-divider--m16", "p8-divider-row", "p8-divider__line"], rules: "746e6876", html: "12275b31" }, menu: { name: "Menu", props: [["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["active", "string", "", null]], cls: ["p8-menu", "p8-menu__item", "p8-menu__item--active", "p8-menu__shortcut"], rules: "c85b6bc0", html: "95aa8c46" }, tabs: { name: "Tabs", props: [["tabs", "string (one per line)", "Overview\nActivity\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-tabs-root", "p8-tabs", "p8-tabs__tab", "p8-tabs__tab--active"], rules: "833ef224", html: "28c57db3" }, disclosure: { name: "Disclosure", props: [["summary", "string", "Summary", null], ["content", "string", "Hidden content revealed when open.", null], ["open", "boolean", true, null]], cls: ["p8-disclosure", "p8-disclosure__summary", "p8-disclosure__body", "p8-disclosure__icon", "p8-icon"], rules: "6d370ac6", html: "533fe3a3" }, "data-list": { name: "Data List", props: [["items", "string (Label: Value per line)", "Status: Active\nOwner: Primitive 8\nUpdated: Today", null], ["gap", "'4' | '8'", "4", ["4", "8"]]], cls: ["p8-datalist", "p8-datalist--gap8", "p8-datalist__row", "p8-datalist__term", "p8-datalist__def"], rules: "28da2541", html: "21fb1c45" }, select: { name: "Select", props: [["label", "string", "", null], ["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["disabled", "boolean", false, null]], cls: ["p8-field", "p8-field__label", "p8-select", "p8-select__control", "p8-select__icon", "p8-select__icon--disabled", "p8-icon"], rules: "c79bbc2a", html: "e9c15a75" }, checkbox: { name: "Checkbox", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-check", "p8-check__box", "p8-check__box--on", "p8-check__icon", "p8-check__icon--on", "p8-icon"], rules: "42fdd2a0", html: "4d98fc39" }, switch: { name: "Switch", props: [["label", "string", "Label", null], ["checked", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-switch-row", "p8-switch", "p8-switch--on", "p8-switch__thumb", "p8-switch__thumb--on"], rules: "414c44f9", html: "c31fb194" }, badge: { name: "Badge", props: [["label", "string", "Badge", null], ["variant", "'default' | 'outline' | 'solid'", "default", ["default", "outline", "solid"]], ["font", "'mono' | 'normal'", "mono", ["mono", "normal"]]], cls: ["p8-badge", "p8-badge--outline", "p8-badge--solid", "p8-badge--normal-font"], rules: "0f225fa1", html: "ed39e1b5" }, tooltip: { name: "Tooltip", props: [["text", "string", "Helpful hint", null], ["trigger", "string", "Hover me", null], ["placement", "'top' | 'bottom'", "top", ["top", "bottom"]], ["open", "boolean", false, null]], cls: ["p8-tooltip", "p8-tooltip__bubble", "p8-tooltip__bubble--top", "p8-tooltip__bubble--bottom", "p8-tooltip__bubble--open"], rules: "43f39b90", html: "f459386c" }, dialog: { name: "Dialog", props: [["title", "string", "Dialog title", null], ["body", "string", "Explain what happens when the user confirms.", null], ["confirmLabel", "string", "Confirm", null], ["cancelLabel", "string", "Cancel", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-dialog", "p8-dialog__title", "p8-dialog__body", "p8-dialog__footer"], rules: "a2b37f54", html: "b157bbbe" }, toast: { name: "Toast", props: [["message", "string", "Changes saved.", null], ["variant", "'default' | 'inverted'", "default", ["default", "inverted"]], ["action", "string", "", null], ["dismissible", "boolean", true, null], ["duration", "'4000' | '8000' | '0'", "4000", ["4000", "8000", "0"]], ["count", "'1' | '2' | '3'", "1", ["1", "2", "3"]], ["position", "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", "bottom-right", ["bottom-right", "bottom-left", "top-right", "top-left"]]], cls: ["p8-toast-stack", "p8-toast-stack--tl", "p8-toast-stack--tr", "p8-toast-stack--bl", "p8-toast", "p8-toast--inverted", "p8-toast__message", "p8-toast__action", "p8-toast__close", "p8-icon"], rules: "db44957f", html: "48d780d4" }, avatar: { name: "Avatar", props: [["name", "string", "Primitive 8", null], ["src", "string", "", null], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatar", "p8-avatar--24", "p8-avatar--40", "p8-avatar__img"], rules: "b7489d94", html: "49b56112" }, "radio-group": { name: "Radio Group", props: [["options", "string (one per line)", "One\nTwo\nThree", null], ["value", "string", "One", null], ["direction", "'column' | 'row'", "column", ["column", "row"]], ["disabled", "boolean", false, null]], cls: ["p8-radiogroup", "p8-radiogroup--row", "p8-radio", "p8-radio__dot", "p8-radio__dot--on"], rules: "7fb4843e", html: "0c0f4f83" }, field: { name: "Field", props: [["label", "string", "Label", null], ["placeholder", "string", "Placeholder", null], ["hint", "string", "Helper text.", null], ["error", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-field__hint", "p8-field__error", "p8-input--invalid"], rules: "eb849bff", html: "15a545d9" }, "search-input": { name: "Search Input", props: [["placeholder", "string", "Search", null], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-search", "p8-search__input", "p8-search__icon", "p8-icon"], rules: "fcf3a271", html: "e0a22e87" }, "segmented-control": { name: "Segmented Control", props: [["options", "string (one per line)", "Day\nWeek\nMonth", null], ["value", "string", "Day", null]], cls: ["p8-segmented", "p8-segmented__item", "p8-segmented__item--active"], rules: "44f9b1c3", html: "dddcbe76" }, slider: { name: "Slider", props: [["label", "string", "Value", null], ["value", "string", "40", null], ["min", "string", "0", null], ["max", "string", "100", null], ["step", "string", "1", null], ["disabled", "boolean", false, null]], cls: ["p8-slider"], rules: "c4048d1e", html: "382c6ebf" }, spinner: { name: "Spinner", props: [["size", "'16' | '20' | '24'", "20", ["16", "20", "24"]]], cls: ["p8-spinner"], rules: "dc6d42a5", html: "7419a46f" }, skeleton: { name: "Skeleton", props: [["lines", "'1' | '2' | '3' | '4' | '5'", "3", ["1", "2", "3", "4", "5"]]], cls: ["p8-skeleton", "p8-skeleton__bar"], rules: "e78c6285", html: "ee7f64ef" }, progress: { name: "Progress", props: [["value", "string", "40", null], ["max", "string", "100", null], ["label", "string", "Progress", null]], cls: ["p8-progress"], rules: "2d391d70", html: "2b3add26" }, alert: { name: "Alert", props: [["title", "string", "Heads up", null], ["body", "string", "Something you should know about.", null], ["tone", "'info' | 'warning' | 'success'", "info", ["info", "warning", "success"]], ["dismissible", "boolean", false, null]], cls: ["p8-alert", "p8-alert__text", "p8-alert__title", "p8-alert__body", "p8-alert__close", "p8-icon"], rules: "92b6e296", html: "74843866" }, "sidebar-nav": { name: "Sidebar Nav", props: [["items", "string (one per line)", "# Workspace\nOverview\nProjects\nSettings", null], ["active", "string", "Overview", null]], cls: ["p8-sidenav", "p8-sidenav__heading", "p8-sidenav__item", "p8-sidenav__item--active"], rules: "9ea3e3ef", html: "968dd43f" }, breadcrumbs: { name: "Breadcrumbs", props: [["items", "string (one per line)", "Home\nProjects\nPrimitive", null]], cls: ["p8-breadcrumbs", "p8-breadcrumbs__link", "p8-breadcrumbs__sep", "p8-breadcrumbs__current", "p8-icon"], rules: "b4affa6c", html: "14d16c6c" }, pagination: { name: "Pagination", props: [["pages", "'3' | '5' | '7' | '10'", "5", ["3", "5", "7", "10"]], ["current", "string", "1", null]], cls: ["p8-pager", "p8-pager__btn", "p8-pager__page", "p8-pager__page--active", "p8-icon"], rules: "6bb31d28", html: "57ec3d0d" }, "command-palette": { name: "Command Palette", props: [["placeholder", "string", "Type a command", null], ["items", "string (one per line)", "Go to Overview\nCreate project\nOpen settings", null], ["backdrop", "boolean", true, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-palette", "p8-palette__input", "p8-palette__list", "p8-palette__item", "p8-palette__item--active"], rules: "6e50149f", html: "7e47e0aa" }, "list-row": { name: "List Row", props: [["title", "string", "Title", null], ["meta", "string", "Meta", null], ["icon", "'none' | 'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "folder", ["none", "arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["trailing", "'none' | 'chevron' | 'text'", "chevron", ["none", "chevron", "text"]], ["trailingText", "string", "Edit", null], ["interactive", "boolean", true, null]], cls: ["p8-row", "p8-row--interactive", "p8-row__lead", "p8-row__text", "p8-row__title", "p8-row__meta", "p8-row__end", "p8-icon"], rules: "c0fda6b9", html: "5f1b6973" }, table: { name: "Table", props: [["rows", "string (one per line)", "Column A | Column B | Column C\nValue | Value | Value\nValue | Value | Value", null], ["header", "boolean", true, null]], cls: ["p8-table", "p8-table__head", "p8-table__cell"], rules: "0152a20d", html: "6237ff6a" }, "key-value": { name: "Key-Value Row", props: [["label", "string", "Label", null], ["value", "string", "Value", null], ["layout", "'split' | 'stacked'", "split", ["split", "stacked"]]], cls: ["p8-kv", "p8-kv--stacked", "p8-kv__key", "p8-kv__value"], rules: "4b711b2d", html: "81d33e2e" }, stack: { name: "Stack", props: [["direction", "'column' | 'row'", "column", ["column", "row"]], ["gap", "'4' | '8' | '12'", "12", ["4", "8", "12"]], ["align", "'start' | 'center' | 'end' | 'stretch'", "stretch", ["start", "center", "end", "stretch"]], ["count", "'1' | '2' | '3' | '4' | '5' | '6'", "3", ["1", "2", "3", "4", "5", "6"]]], cls: ["p8-stack", "p8-stack--row", "p8-stack--gap4", "p8-stack--gap8", "p8-stack--gap12", "p8-stack--align-start", "p8-stack--align-center", "p8-stack--align-end", "p8-stack--align-stretch", "p8-stack__item"], rules: "0b209dbb", html: "8ec34167" }, toolbar: { name: "Toolbar", props: [["items", "string (one per line)", "edit\ncopy\ndownload\n---\nstar\ntrash", null]], cls: ["p8-toolbar"], rules: "136dbd75", html: "2c9e7448" }, popover: { name: "Popover", props: [["trigger", "string", "Open", null], ["body", "string", "Popover content.", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "20fc4284" }, "dropdown-menu": { name: "Dropdown Menu", props: [["trigger", "string", "Actions", null], ["items", "string (one per line)", "Rename | \u2318R\nDuplicate | \u2318D\n---\nDelete | \u232B", null], ["align", "'start' | 'end'", "start", ["start", "end"]], ["open", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare"], rules: "cdab71fc", html: "0777e97c" }, sheet: { name: "Sheet", props: [["title", "string", "Sheet title", null], ["body", "string", "Sheet content goes here.", null], ["side", "'right' | 'left' | 'bottom'", "right", ["right", "left", "bottom"]]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-sheet", "p8-sheet--bottom", "p8-sheet__head", "p8-sheet__title", "p8-sheet__body", "p8-icon"], rules: "a7da2535", html: "7c3cc401" }, "icon-button": { name: "Icon Button", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "plus", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["label", "string", "Add", null], ["size", "'14' | '16'", "16", ["14", "16"]], ["variant", "'default' | 'ghost' | 'ghost-flat'", "default", ["default", "ghost", "ghost-flat"]], ["disabled", "boolean", false, null]], cls: ["p8-iconbtn", "p8-iconbtn--ghost", "p8-iconbtn--flat", "p8-icon"], rules: "a736c0bc", html: "a04df96e" }, kbd: { name: "Kbd", props: [["keys", "string", "\u2318 K", null]], cls: ["p8-kbds", "p8-kbd"], rules: "17f5e39e", html: "4f5cd7c5" }, tag: { name: "Tag", props: [["label", "string", "Tag", null], ["removable", "boolean", true, null], ["variant", "'default' | 'outline'", "default", ["default", "outline"]]], cls: ["p8-tag", "p8-tag--outline", "p8-tag__close", "p8-icon"], rules: "830cd338", html: "ad3fe8c5" }, "copy-button": { name: "Copy Button", props: [["text", "string", "Text to copy", null], ["label", "string", "Copy", null], ["variant", "'default' | 'ghost'", "default", ["default", "ghost"]]], cls: ["p8-copybtn", "p8-copybtn--ghost", "p8-copybtn__icon", "p8-copybtn__icon--on", "p8-icon"], rules: "af3d1419", html: "0b3bf380" }, combobox: { name: "Combobox", props: [["placeholder", "string", "Search\u2026", null], ["options", "string (one per line)", "Apple\nBanana\nCherry\nDate", null], ["value", "string", "", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-combobox", "p8-combobox__input", "p8-combobox__icon", "p8-combobox__list", "p8-combobox__option", "p8-combobox__option--active", "p8-combobox__option-none", "p8-icon"], rules: "c643b5fc", html: "8f53a60f" }, "number-input": { name: "Number Input", props: [["value", "string", "1", null], ["min", "string", "0", null], ["max", "string", "10", null], ["step", "string", "1", null], ["label", "string", "Quantity", null], ["disabled", "boolean", false, null]], cls: ["p8-number", "p8-number__input"], rules: "ca809316", html: "a619b87e" }, "otp-input": { name: "OTP Input", props: [["length", "'4' | '6' | '8'", "6", ["4", "6", "8"]], ["value", "string", "", null], ["disabled", "boolean", false, null]], cls: ["p8-otp", "p8-otp__cell"], rules: "b2e1287e", html: "abf392fd" }, stepper: { name: "Stepper", props: [["steps", "string (one per line)", "Account\nPlan\nConfirm", null], ["current", "string", "2", null]], cls: ["p8-stepper", "p8-stepper__step", "p8-stepper__dot", "p8-stepper__dot--done", "p8-stepper__dot--now", "p8-stepper__line", "p8-icon"], rules: "55d6d21c", html: "85b08bf0" }, rating: { name: "Rating", props: [["max", "'3' | '5' | '7'", "5", ["3", "5", "7"]], ["value", "string", "3", null], ["disabled", "boolean", false, null]], cls: ["p8-rating", "p8-rating__star", "p8-rating__star--on", "p8-icon"], rules: "2ccb8ffc", html: "224381d9" }, accordion: { name: "Accordion", props: [["items", "string (one per line)", "First | Content one.\nSecond | Content two.\nThird | Content three.", null], ["open", "string", "First", null]], cls: ["p8-accordion"], rules: "c7746714", html: "99cd4ad0" }, "stat-card": { name: "Stat Card", props: [["label", "string", "Label", null], ["value", "string", "0", null], ["change", "string", "0%", null], ["trend", "'up' | 'down' | 'flat'", "up", ["up", "down", "flat"]]], cls: ["p8-stat", "p8-stat__label", "p8-stat__value", "p8-stat__change", "p8-icon"], rules: "79343d6f", html: "b7bc84c8" }, "avatar-group": { name: "Avatar Group", props: [["names", "string (one per line)", "Ada Lovelace\nAlan Turing\nGrace Hopper\nLinus Torvalds\nMargaret Hamilton", null], ["max", "'2' | '3' | '4' | '5'", "3", ["2", "3", "4", "5"]], ["size", "'24' | '32' | '40'", "32", ["24", "32", "40"]]], cls: ["p8-avatars", "p8-avatars__item"], rules: "e77ffe37", html: "a0c93b1b" }, "progress-ring": { name: "Progress Ring", props: [["value", "string", "65", null], ["size", "'24' | '32' | '40' | '48'", "40", ["24", "32", "40", "48"]], ["label", "boolean", true, null]], cls: ["p8-progress-ring", "p8-progress-ring__track", "p8-progress-ring__bar", "p8-progress-ring__label"], rules: "f4e9b725", html: "1eb4fa63" }, banner: { name: "Banner", props: [["message", "string", "A short announcement.", null], ["action", "string", "", null], ["tone", "'inverted' | 'default'", "inverted", ["inverted", "default"]], ["dismissible", "boolean", true, null]], cls: ["p8-banner", "p8-banner--inverted", "p8-banner__action", "p8-banner__close", "p8-icon"], rules: "dd2748a6", html: "1c8c9581" }, "tree-view": { name: "Tree View", props: [["items", "string (one per line)", "src\n  components\n    Button.tsx\n    Card.tsx\n  tokens\n    theme.ts\nREADME.md", null], ["selected", "string", "Button.tsx", null], ["expand", "'all' | 'none'", "all", ["all", "none"]]], cls: ["p8-tree", "p8-tree__group", "p8-tree__item", "p8-tree__item--on", "p8-tree__item--active", "p8-tree__chev", "p8-tree__icon", "p8-tree__label", "p8-icon"], rules: "c7ce5cbd", html: "9ca33c0e" }, "scroll-area": { name: "Scroll Area", props: [["height", "'160' | '240' | '320'", "160", ["160", "240", "320"]], ["direction", "'vertical' | 'horizontal'", "vertical", ["vertical", "horizontal"]], ["rows", "'12' | '24' | '48'", "24", ["12", "24", "48"]]], cls: ["p8-scroll", "p8-scroll--h160", "p8-scroll--h240", "p8-scroll--h320", "p8-scroll--x", "p8-scroll__row"], rules: "300c3d60", html: "bc136e5e" }, timer: { name: "Timer", props: [["mode", "'countdown' | 'stopwatch'", "countdown", ["countdown", "stopwatch"]], ["seconds", "string", "90", null], ["autostart", "boolean", false, null], ["controls", "boolean", true, null]], cls: ["p8-timer", "p8-timer__time", "p8-timer--done", "p8-timer__actions", "p8-timer__btn"], rules: "cd4bff35", html: "2321177b" }, "inline-edit": { name: "Inline Edit", props: [["value", "string", "Click to edit", null], ["placeholder", "string", "Add a title", null], ["label", "string", "Title", null]], cls: ["p8-inline", "p8-inline__input", "p8-inline__view", "p8-inline__view--empty", "p8-inline__pen", "p8-icon"], rules: "276b1a97", html: "9350032c" }, "code-block": { name: "Code Block", props: [["code", "string", '<p8-button variant="primary">Save</p8-button>', null], ["language", "string", "html", null], ["copy", "boolean", true, null]], cls: ["p8-code", "p8-code__head", "p8-code__lang", "p8-code__pre", "p8-code__tok-t", "p8-code__tok-k", "p8-code__tok-a", "p8-code__tok-s", "p8-code__tok-v", "p8-code__tok-p", "p8-code__tok-c"], rules: "0510f1be", html: "fa223e55" }, "date-picker": { name: "Date Picker", props: [["value", "string", "", null], ["month", "string", "2026-11", null], ["weekStart", "'sun' | 'mon'", "sun", ["sun", "mon"]], ["placeholder", "string", "YYYY-MM-DD", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-datepicker", "p8-datepicker__field", "p8-datepicker__trigger", "p8-cal__head", "p8-cal__label", "p8-cal__grid", "p8-cal__dow", "p8-cal__day", "p8-cal__day--out", "p8-cal__day--on", "p8-icon"], rules: "10af5730", html: "fe582d48" }, "time-picker": { name: "Time Picker", props: [["value", "string", "09:30", null], ["format", "'24h' | '12h'", "24h", ["24h", "12h"]], ["minuteStep", "'1' | '5' | '15' | '30'", "5", ["1", "5", "15", "30"]], ["disabled", "boolean", false, null]], cls: ["p8-timepicker", "p8-timepicker__part", "p8-timepicker__sep"], rules: "e43e9e0d", html: "01cbfaa6" }, "multi-select": { name: "Multi-select", props: [["options", "string (one per line)", "Design\nEngineering\nResearch\nSupport", null], ["value", "string (one per line)", "Design", null], ["placeholder", "string", "Add\u2026", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-multi", "p8-multi__box", "p8-multi__chips", "p8-multi__input", "p8-multi__list", "p8-multi__option", "p8-multi__option--active", "p8-multi__check", "p8-icon"], rules: "87894951", html: "c5ec70be" }, "file-upload": { name: "File Upload", props: [["label", "string", "Drop files here or click to browse", null], ["accept", "string", "", null], ["multiple", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-upload", "p8-upload__zone", "p8-upload__zone--over", "p8-upload__input", "p8-upload__hint", "p8-upload__list", "p8-upload__item", "p8-upload__name", "p8-upload__size", "p8-icon"], rules: "4b9156a6", html: "ba78474d" }, "swatch-picker": { name: "Swatch Picker", props: [["colors", "string (one per line)", "ink\nink-muted\ncontrol-strong\ncontrol\ncanvas", null], ["value", "string", "ink", null]], cls: ["p8-swatches", "p8-swatch", "p8-swatch--on", "p8-swatch--canvas", "p8-swatch--surface", "p8-swatch--control", "p8-swatch--control-strong", "p8-swatch--ink", "p8-swatch--ink-inverse", "p8-swatch--ink-muted", "p8-swatch--placeholder"], rules: "b1ac6625", html: "7316fc4e" }, carousel: { name: "Carousel", props: [["slides", "'3' | '5' | '8'", "5", ["3", "5", "8"]], ["perView", "'1' | '2'", "1", ["1", "2"]]], cls: ["p8-carousel", "p8-carousel__track", "p8-carousel__slide", "p8-carousel__slide--half", "p8-carousel__nav"], rules: "ce67004f", html: "05387861" }, timeline: { name: "Timeline", props: [["items", "string (one per line)", "Created | 09:00\nReviewed | 10:30 | Two comments\nPublished | 12:00", null]], cls: ["p8-timeline", "p8-timeline__item", "p8-timeline__dot", "p8-timeline__body", "p8-timeline__title", "p8-timeline__time", "p8-timeline__detail", "p8-timeline__item--last"], rules: "c1be2f50", html: "30d6de97" }, "context-menu": { name: "Context Menu", props: [["label", "string", "Right-click here", null], ["items", "string (one per line)", "Copy | \u2318C\nPaste | \u2318V\n---\nDelete | \u232B", null], ["open", "boolean", true, null]], cls: ["p8-context", "p8-context__area", "p8-context__panel"], rules: "17205992", html: "7cba9300" }, "hover-card": { name: "Hover Card", props: [["trigger", "string", "@primitive", null], ["title", "string", "Primitive 8", null], ["body", "string", "A short preview of what this link points to.", null], ["open", "boolean", false, null]], cls: ["p8-hovercard", "p8-hovercard__trigger", "p8-hovercard__wrap", "p8-hovercard__wrap--open", "p8-hovercard__card", "p8-hovercard__text", "p8-hovercard__title", "p8-hovercard__body", "p8-icon"], rules: "f4d2fd5b", html: "70b17b2a" }, "password-input": { name: "Password Input", props: [["label", "string", "Password", null], ["value", "string", "", null], ["autocomplete", "'new-password' | 'current-password'", "new-password", ["new-password", "current-password"]], ["requirements", "string (one per line)", "length:8\nnumber\nupper\nsymbol", null], ["disabled", "boolean", false, null]], cls: ["p8-password", "p8-password__wrap", "p8-password__input", "p8-password__field", "p8-password__toggle", "p8-password__toggle--on", "p8-password__rules", "p8-password__rule", "p8-password__rule--on", "p8-password__yes", "p8-password__no", "p8-icon"], rules: "4579f9c9", html: "ce823d62" }, "data-table": { name: "Data Table", props: [["rows", "string (one per line)", "Name | Role | Joined\nAda Lovelace | Engineer | 2024-03-12\nGrace Hopper | Admiral | 2023-11-02\nAlan Turing | Researcher | 2025-01-20\nKatherine Johnson | Analyst | 2024-07-08", null], ["selectable", "boolean", true, null], ["actions", "string (one per line)", "Export\nDelete", null], ["columnToggle", "boolean", true, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-dtable", "p8-dtable__bar", "p8-dtable__count", "p8-dtable__actions", "p8-dtable__cols", "p8-dtable__table", "p8-dtable__head", "p8-dtable__cell", "p8-dtable__select", "p8-dtable__row", "p8-dtable__row--on", "p8-dtable__sort", "p8-dtable__arrow", "p8-dtable__all", "p8-dtable__minus", "p8-dtable__minus--on", "p8-icon"], rules: "21dce177", html: "f204309c" }, "date-range-picker": { name: "Date Range Picker", props: [["start", "string", "2026-11-10", null], ["end", "string", "2026-11-14", null], ["month", "string", "2026-11", null], ["weekStart", "'sun' | 'mon'", "sun", ["sun", "mon"]], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-daterange", "p8-daterange__fields", "p8-daterange__input", "p8-daterange__sep", "p8-daterange__hint", "p8-cal__head", "p8-cal__label", "p8-cal__grid", "p8-cal__dow", "p8-cal__day", "p8-cal__day--out", "p8-cal__day--active", "p8-cal__day--on", "p8-icon"], rules: "b831312e", html: "e8535e20" }, "resizable-panels": { name: "Resizable Panels", props: [["orientation", "'horizontal' | 'vertical'", "horizontal", ["horizontal", "vertical"]], ["size", "'30' | '40' | '50' | '60' | '70'", "40", ["30", "40", "50", "60", "70"]], ["panes", "string (one per line)", "Navigation\nContent", null]], cls: ["p8-resize", "p8-resize--vertical", "p8-resize__pane", "p8-resize__pane--first", "p8-resize__title", "p8-resize__handle"], rules: "65a174a1", html: "8b6da626" }, "sortable-list": { name: "Sortable List", props: [["items", "string (one per line)", "Write brief\nDesign review\nBuild prototype\nUser testing\nShip", null]], cls: ["p8-sortable-wrap", "p8-sortable", "p8-sortable__item", "p8-sortable__item--active", "p8-sortable__handle", "p8-sortable__label", "p8-sortable__status", "p8-icon"], rules: "43fdff18", html: "cd6e6c4c" }, "filter-bar": { name: "Filter Bar", props: [["fields", "string (one per line)", "Status: Open, In progress, Closed\nOwner: Ada, Grace, Alan\nPriority: High, Medium, Low", null], ["value", "string (one per line)", "Status: Open\nPriority: High", null], ["disabled", "boolean", false, null]], cls: ["p8-filters", "p8-filters__row", "p8-filters__pick", "p8-filters__chips", "p8-filters__list", "p8-filters__empty", "p8-icon"], rules: "b6111fec", html: "f0e1b08b" }, "notification-list": { name: "Notification List", props: [["title", "string", "Notifications", null], ["items", "string (one per line)", "* New comment | 2m | Ada replied to your design review\n* Build passed | 1h | main was deployed to production\nInvite accepted | Yesterday | Grace joined the workspace", null]], cls: ["p8-notify", "p8-notify__head", "p8-notify__heading", "p8-notify__title", "p8-notify__count", "p8-notify__list", "p8-notify__item", "p8-notify__dot", "p8-notify__body", "p8-notify__name", "p8-notify__detail", "p8-notify__time", "p8-notify__read", "p8-icon"], rules: "fb2e79e6", html: "62318e02" }, "image-viewer": { name: "Image Viewer", props: [["images", "string (one per line)", "Dunes at dawn\nHarbour lights\nForest path\nCity at night\nMountain lake\nStill life", null], ["columns", "'2' | '3' | '4'", "3", ["2", "3", "4"]], ["open", "boolean", false, null]], cls: ["p8-overlay", "p8-overlay--end", "p8-overlay--start", "p8-overlay--bottom", "p8-gallery", "p8-gallery__grid", "p8-gallery__grid--2", "p8-gallery__grid--4", "p8-gallery__thumb", "p8-gallery__img", "p8-lightbox", "p8-lightbox__figure", "p8-lightbox__img", "p8-lightbox__caption", "p8-lightbox__counter", "p8-lightbox__bar", "p8-lightbox__nav", "p8-icon"], rules: "49b40fa3", html: "38bcb7ec" }, "toggle-group": { name: "Toggle Group", props: [["items", "string (one per line)", "Bold\nItalic\nUnderline", null], ["value", "string (one per line)", "Bold", null], ["type", "'multiple' | 'single'", "multiple", ["multiple", "single"]], ["label", "string", "Text style", null], ["disabled", "boolean", false, null]], cls: ["p8-togglegroup", "p8-togglegroup__item", "p8-togglegroup__item--on"], rules: "6b9764ab", html: "a6162907" }, link: { name: "Link", props: [["label", "string", "Read the docs", null], ["href", "string", "/docs", null], ["variant", "'default' | 'muted'", "default", ["default", "muted"]], ["external", "boolean", false, null]], cls: ["p8-link", "p8-link--muted", "p8-link__icon", "p8-link__sr", "p8-icon"], rules: "98aa1fb5", html: "632fd3cb" }, heading: { name: "Heading", props: [["text", "string", "Account settings", null], ["level", "'1' | '2' | '3' | '4' | '5' | '6'", "2", ["1", "2", "3", "4", "5", "6"]], ["size", "'md' | 'sm'", "md", ["md", "sm"]], ["description", "string", "", null]], cls: ["p8-heading", "p8-heading--sm", "p8-heading-group", "p8-heading__desc"], rules: "5ca5814c", html: "6380febf" }, text: { name: "Text", props: [["text", "string", "Changes are saved automatically. You can undo them for 30 days.", null], ["size", "'sm' | 'md'", "sm", ["sm", "md"]], ["tone", "'default' | 'muted'", "default", ["default", "muted"]], ["weight", "'regular' | 'strong'", "regular", ["regular", "strong"]], ["as", "'p' | 'span' | 'div'", "p", ["p", "span", "div"]], ["truncate", "boolean", false, null]], cls: ["p8-text", "p8-text--md", "p8-text--muted", "p8-text--strong", "p8-text--truncate"], rules: "4206e6b7", html: "dd9016ca" }, "color-picker": { name: "Color Picker", props: [["value", "string", "#347AEB", null], ["label", "string", "Brand colour", null], ["open", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-colorpicker", "p8-colorpicker__field", "p8-colorpicker__swatch", "p8-colorpicker__hex", "p8-colorpicker__panel", "p8-colorpicker__area", "p8-colorpicker__hue", "p8-colorpicker__thumb", "p8-colorpicker__row", "p8-colorpicker__preview"], rules: "463bbf91", html: "c986310c" }, "tag-input": { name: "Tag Input", props: [["label", "string", "Tags", null], ["value", "string (one per line)", "design\nresearch", null], ["placeholder", "string", "Add a tag\u2026", null], ["max", "'5' | '10' | '20'", "10", ["5", "10", "20"]], ["name", "string", "tags", null], ["disabled", "boolean", false, null]], cls: ["p8-taginput", "p8-taginput__field", "p8-taginput__list", "p8-taginput__entry", "p8-taginput__foot", "p8-icon"], rules: "4bf3bd9d", html: "c739639c" }, "infinite-list": { name: "Infinite List", props: [["items", "string (one per line)", "Order 1024 | Paid\nOrder 1023 | Paid\nOrder 1022 | Refunded\nOrder 1021 | Paid\nOrder 1020 | Pending\nOrder 1019 | Paid\nOrder 1018 | Paid\nOrder 1017 | Paid", null], ["pageSize", "'5' | '10' | '20'", "10", ["5", "10", "20"]], ["total", "'20' | '40' | '100'", "40", ["20", "40", "100"]], ["demo", "boolean", true, null]], cls: ["p8-infinite", "p8-infinite__scroller", "p8-infinite__list", "p8-infinite__item", "p8-infinite__title", "p8-infinite__meta", "p8-infinite__foot", "p8-infinite__end", "p8-infinite__status"], rules: "88bd88b1", html: "4dbbcb63" }, "split-button": { name: "Split Button", props: [["label", "string", "Save", null], ["items", "string (one per line)", "Save as draft\nSave and publish\n---\nSchedule\u2026", null], ["variant", "'default' | 'primary'", "primary", ["default", "primary"]], ["open", "boolean", false, null], ["disabled", "boolean", false, null]], cls: ["p8-popover", "p8-popover__panel", "p8-popover__panel--end", "p8-popover__panel--bare", "p8-split", "p8-split__main", "p8-split__toggle", "p8-icon"], rules: "c04607a2", html: "403b7be7" }, "empty-state": { name: "Empty State", props: [["icon", "'arrow-right' | 'check' | 'plus' | 'search' | 'chevron-down' | 'moon' | 'close' | 'copy' | 'sun' | 'chevron-right' | 'info' | 'bell' | 'inbox' | 'settings' | 'mail' | 'download' | 'lock' | 'link' | 'warning' | 'user' | 'home' | 'list' | 'file' | 'chevron-up' | 'more-horizontal' | 'tag' | 'calendar' | 'filter' | 'clock' | 'command' | 'eye' | 'external-link' | 'minus' | 'folder' | 'chevron-left' | 'menu' | 'check-circle' | 'edit' | 'trash' | 'star' | 'upload'", "folder", ["arrow-right", "check", "plus", "search", "chevron-down", "moon", "close", "copy", "sun", "chevron-right", "info", "bell", "inbox", "settings", "mail", "download", "lock", "link", "warning", "user", "home", "list", "file", "chevron-up", "more-horizontal", "tag", "calendar", "filter", "clock", "command", "eye", "external-link", "minus", "folder", "chevron-left", "menu", "check-circle", "edit", "trash", "star", "upload"]], ["title", "string", "No projects yet", null], ["description", "string", "Projects keep tasks, files and people together. Create one to get started.", null], ["action", "string", "New project", null], ["secondary", "string", "Import projects", null], ["variant", "'plain' | 'bordered'", "plain", ["plain", "bordered"]]], cls: ["p8-empty", "p8-empty--bordered", "p8-empty__icon", "p8-empty__title", "p8-empty__desc", "p8-empty__actions", "p8-icon"], rules: "84159fd6", html: "ad5e0707" }, form: { name: "Form", props: [["title", "string", "", null], ["fields", "string (one per line)", "Full name | text | required\nWork email | email | required\nPassword | password | required min:8\nRole | select: Designer, Engineer, Manager\nAbout you | textarea\nI agree to the terms | checkbox | required", null], ["submit", "string", "Create account", null], ["cancel", "string", "", null], ["success", "string", "Account created.", null], ["disabled", "boolean", false, null]], cls: ["p8-form", "p8-form__title", "p8-form__field", "p8-form__optional", "p8-form__control", "p8-form__error", "p8-form__actions", "p8-form__status", "p8-icon"], rules: "e8156426", html: "1b6cbe1e" }, calendar: { name: "Calendar", props: [["month", "string", "2026-11", null], ["selected", "string", "2026-11-12", null], ["events", "string (one per line)", "2026-11-03 | Design review\n2026-11-03 | 1:1 with Ada\n2026-11-12 | Launch\n2026-11-12 | Retro\n2026-11-12 | Team dinner\n2026-11-20 | Quarterly planning\n2026-11-26 | Office closed", null], ["weekStart", "'mon' | 'sun'", "mon", ["mon", "sun"]]], cls: ["p8-mcal", "p8-mcal__head", "p8-mcal__title", "p8-mcal__nav", "p8-mcal__grid", "p8-mcal__dow", "p8-mcal__cell", "p8-mcal__cell--out", "p8-mcal__cell--on", "p8-mcal__num", "p8-mcal__event", "p8-mcal__more", "p8-mcal__agenda", "p8-mcal__agenda-head", "p8-mcal__agenda-list", "p8-icon"], rules: "312e8f51", html: "14706e49" }, chart: { name: "Chart", props: [["title", "string", "Revenue vs costs", null], ["type", "'bar' | 'line' | 'area'", "bar", ["bar", "line", "area"]], ["data", "string (one per line)", "Month | Revenue | Costs\nJan | 120 | 80\nFeb | 150 | 95\nMar | 170 | 110\nApr | 140 | 100\nMay | 190 | 120\nJun | 230 | 130", null], ["legend", "boolean", true, null]], cls: ["p8-chart", "p8-chart__head", "p8-chart__title", "p8-chart__legend", "p8-chart__key", "p8-chart__swatch", "p8-chart__plot", "p8-chart__y", "p8-chart__area", "p8-chart__svg", "p8-chart__gridline", "p8-chart__series", "p8-chart__band", "p8-chart__s1", "p8-chart__s2", "p8-chart__s3", "p8-chart__x", "p8-chart__tip", "p8-chart__tip-row", "p8-chart__sr"], rules: "d0af9165", html: "96b69780" }, sparkline: { name: "Sparkline", props: [["values", "string", "12, 14, 13, 18, 17, 21, 24", null], ["type", "'line' | 'area' | 'bar'", "line", ["line", "area", "bar"]], ["label", "string", "Signups", null], ["size", "'sm' | 'md'", "md", ["sm", "md"]], ["showValue", "boolean", true, null]], cls: ["p8-sparkline", "p8-sparkline__svg", "p8-sparkline__line", "p8-sparkline__fill", "p8-sparkline__bar", "p8-sparkline__dot", "p8-sparkline__value", "p8-sparkline__delta"], rules: "c5c3b3be", html: "ec45d96a" }, "chat-message": { name: "Chat Message", props: [["role", "'assistant' | 'user'", "assistant", ["assistant", "user"]], ["name", "string", "Assistant", null], ["time", "string", "10:24", null], ["body", "string", "Here is a summary of the review:\n\nThe layout passes, but `gap: 10px` is off the grid. Use 12:\n\n```css\n.list { gap: var(--p8-space-12); }\n```", null], ["status", "'sent' | 'sending' | 'error'", "sent", ["sent", "sending", "error"]], ["streaming", "boolean", false, null], ["actions", "boolean", true, null]], cls: ["p8-chatmsg", "p8-chatmsg--user", "p8-chatmsg__body", "p8-chatmsg__meta", "p8-chatmsg__name", "p8-chatmsg__bubble", "p8-chatmsg__bubble--user", "p8-chatmsg__p", "p8-chatmsg__code", "p8-chatmsg__pre", "p8-chatmsg__actions", "p8-chatmsg__status", "p8-chatmsg__typing", "p8-icon"], rules: "b7a2f824", html: "2c52bd03" }, "chat-composer": { name: "Chat Composer", props: [["placeholder", "string", "Message the assistant\u2026", null], ["value", "string", "", null], ["busy", "boolean", false, null], ["attach", "boolean", true, null], ["hint", "boolean", true, null], ["disabled", "boolean", false, null]], cls: ["p8-composer", "p8-composer__box", "p8-composer__input", "p8-composer__bar", "p8-composer__tools", "p8-composer__send", "p8-composer__files", "p8-composer__file", "p8-composer__hint", "p8-icon"], rules: "3248ec71", html: "9b9d25b6" }, navbar: { name: "Navbar", props: [["brand", "string", "Acme", null], ["links", "string (one per line)", "Overview\nProjects\nTeam\nSettings", null], ["active", "string", "Projects", null], ["action", "string", "New project", null], ["search", "boolean", true, null], ["user", "string", "Ada Lovelace", null]], cls: ["p8-navbar", "p8-navbar__brand", "p8-navbar__logo", "p8-navbar__links", "p8-navbar__link", "p8-navbar__link--active", "p8-navbar__right", "p8-icon"], rules: "96b7f639", html: "92398a8a" }, "app-shell": { name: "App Shell", props: [["brand", "string", "Acme", null], ["items", "string (one per line)", "home: Home\nfolder: Projects\nuser: Team\nsettings: Settings", null], ["active", "string", "Projects", null], ["title", "string", "Projects", null], ["action", "string", "New project", null], ["collapsed", "boolean", false, null], ["fill", "boolean", false, null]], cls: ["p8-shell", "p8-shell--framed", "p8-shell__side", "p8-shell__side--on", "p8-shell__side-head", "p8-shell__brand", "p8-shell__logo", "p8-shell__nav", "p8-shell__item", "p8-shell__item--active", "p8-shell__label", "p8-shell__toggle", "p8-shell__main", "p8-shell__header", "p8-shell__title", "p8-shell__content", "p8-shell__placeholder", "p8-icon"], rules: "0f82ec77", html: "249934a5" }, "sign-in": { name: "Sign-in", props: [["title", "string", "Sign in", null], ["subtitle", "string", "Welcome back. Enter your details to continue.", null], ["remember", "boolean", true, null], ["sso", "boolean", true, null], ["signup", "boolean", true, null]], cls: ["p8-tpl-page", "p8-tpl-bar", "p8-tpl-grid", "p8-tpl-center", "p8-tpl-panel", "p8-tpl-row", "p8-tpl-split", "p8-tpl-main", "p8-tpl-section", "p8-tpl-danger", "p8-tpl-prefs", "p8-tpl-foot", "p8-tpl-wide"], rules: "245c5e76", html: "b9fe5c65" }, settings: { name: "Settings page", props: [["sections", "string (one per line)", "Profile\nAccount\nNotifications\nBilling", null], ["active", "string", "Profile", null], ["preferences", "string (one per line)", "Email me about product updates\nEmail me when someone mentions me\nSend a weekly summary", null], ["danger", "boolean", true, null]], cls: ["p8-tpl-page", "p8-tpl-bar", "p8-tpl-grid", "p8-tpl-center", "p8-tpl-panel", "p8-tpl-row", "p8-tpl-split", "p8-tpl-main", "p8-tpl-section", "p8-tpl-danger", "p8-tpl-prefs", "p8-tpl-foot", "p8-tpl-wide"], rules: "245c5e76", html: "b7e491e8" }, dashboard: { name: "Dashboard", props: [["title", "string", "Overview", null], ["action", "string", "New report", null], ["stats", "string (one per line)", "Revenue | 12,400 | 12% | up\nSignups | 1,820 | 4% | up\nChurn | 2.1% | 0.3% | down", null], ["chart", "string (one per line)", "Month | Revenue | Costs\nJan | 120 | 80\nFeb | 150 | 95\nMar | 170 | 110\nApr | 140 | 100\nMay | 190 | 120\nJun | 230 | 130", null], ["activity", "string (one per line)", "Event | Owner | When\nInvoice 1042 paid | Ada | 2 min ago\nNew signup | Alan | 1 hour ago\nPlan upgraded | Grace | Yesterday", null]], cls: ["p8-tpl-page", "p8-tpl-bar", "p8-tpl-grid", "p8-tpl-center", "p8-tpl-panel", "p8-tpl-row", "p8-tpl-split", "p8-tpl-main", "p8-tpl-section", "p8-tpl-danger", "p8-tpl-prefs", "p8-tpl-foot", "p8-tpl-wide"], rules: "245c5e76", html: "ff53e6ca" }, "list-detail": { name: "List to detail", props: [["items", "string (one per line)", "Order 1042 | Paid | Placed on 12 Nov by Ada Lovelace. Two items, shipped to London.\nOrder 1041 | Pending | Waiting for payment confirmation from the bank.\nOrder 1040 | Refunded | Refunded on 9 Nov at the customer's request.", null], ["selected", "string", "Order 1042", null], ["action", "string", "Open order", null]], cls: ["p8-tpl-page", "p8-tpl-bar", "p8-tpl-grid", "p8-tpl-center", "p8-tpl-panel", "p8-tpl-row", "p8-tpl-split", "p8-tpl-main", "p8-tpl-section", "p8-tpl-danger", "p8-tpl-prefs", "p8-tpl-foot", "p8-tpl-wide", "p8-tpl-master", "p8-tpl-master-list", "p8-tpl-master-row", "p8-tpl-master-row--active", "p8-tpl-master-meta", "p8-tpl-master-detail"], rules: "7b1d1f55", html: "9ac22aea" }, "empty-page": { name: "Empty page", props: [["brand", "string", "Acme", null], ["active", "string", "Projects", null], ["title", "string", "No projects yet", null], ["description", "string", "Projects keep tasks, files and people together. Create one to get started.", null], ["action", "string", "New project", null], ["secondary", "string", "Import projects", null]], cls: ["p8-tpl-page", "p8-tpl-bar", "p8-tpl-grid", "p8-tpl-center", "p8-tpl-panel", "p8-tpl-row", "p8-tpl-split", "p8-tpl-main", "p8-tpl-section", "p8-tpl-danger", "p8-tpl-prefs", "p8-tpl-foot", "p8-tpl-wide"], rules: "245c5e76", html: "ba2c7929" } } }] };
 
 // src/codegen/react-node.ts
 function reactify(node2) {
@@ -23957,6 +25748,35 @@ function styleToObject(css2) {
   }
   return out;
 }
+var REACT_ATTRS = {
+  class: "className",
+  for: "htmlFor",
+  tabindex: "tabIndex",
+  novalidate: "noValidate",
+  autocomplete: "autoComplete",
+  maxlength: "maxLength",
+  minlength: "minLength",
+  inputmode: "inputMode",
+  enterkeyhint: "enterKeyHint",
+  spellcheck: "spellCheck",
+  readonly: "readOnly",
+  colspan: "colSpan",
+  rowspan: "rowSpan",
+  autofocus: "autoFocus",
+  contenteditable: "contentEditable",
+  crossorigin: "crossOrigin",
+  srcset: "srcSet",
+  datetime: "dateTime",
+  accesskey: "accessKey",
+  enctype: "encType",
+  formaction: "formAction",
+  usemap: "useMap"
+};
+function reactAttrName(k2) {
+  if (REACT_ATTRS[k2]) return REACT_ATTRS[k2];
+  if (/^(aria|data)-/.test(k2)) return k2;
+  return k2.replace(/-(\w)/g, (_, c3) => c3.toUpperCase());
+}
 
 // src/codegen/index.ts
 var FRAMEWORKS = ["p8", "astro", "react", "svelte", "tailwind", "html", "scss"];
@@ -23971,29 +25791,29 @@ var PSTATES = ["hover", "active"];
 var ctxParents = /* @__PURE__ */ new Set();
 var isMod = (k2) => /--(on|active)$/.test(k2);
 var isPair = (k2) => isMod(k2) || ruleMap.has(`${k2}--on`) || ruleMap.has(`${k2}--active`);
-var modRules = (rules) => rules.filter((r2) => isMod(r2.cls));
+var modRules = (rules) => rules.filter((r3) => isMod(r3.cls));
 var pascal = (s2) => s2.replace(/(^|[-_ ])(\w)/g, (_, __, ch) => ch.toUpperCase());
 var rulesFor = (node2) => usedClasses(node2).map((k2) => ruleMap.get(k2)).filter(Boolean);
 var declLines = (d2, important = false) => Object.entries(d2).map(([k2, val]) => `${k2}: ${val}${important ? " !important" : ""};`);
 function css(rules, opts = {}) {
   const out = [];
-  for (const r2 of rules) {
-    if (!opts.onlyStates && Object.keys(r2.base).length)
-      out.push(`.${r2.cls} {
-${declLines(r2.base).map((l2) => `  ${l2}`).join("\n")}
+  for (const r3 of rules) {
+    if (!opts.onlyStates && Object.keys(r3.base).length)
+      out.push(`.${r3.cls} {
+${declLines(r3.base).map((l2) => `  ${l2}`).join("\n")}
 }`);
     for (const s2 of STATES) {
-      const d2 = r2[s2];
-      if (d2) out.push(`.${r2.cls}${stateSel[s2]} {
+      const d2 = r3[s2];
+      if (d2) out.push(`.${r3.cls}${stateSel[s2]} {
 ${declLines(d2, opts.important).map((l2) => `  ${l2}`).join("\n")}
 }`);
     }
-    for (const nx of r2.nested ?? []) out.push(`.${r2.cls}${nx.sel} {
+    for (const nx of r3.nested ?? []) out.push(`.${r3.cls}${nx.sel} {
 ${declLines(nx.decls, opts.important).map((l2) => `  ${l2}`).join("\n")}
 }`);
     for (const ps of PSTATES) {
-      const d2 = r2.parent?.[ps];
-      if (d2) out.push(`${PARENT[ps].css(r2.parent.cls, r2.cls)} {
+      const d2 = r3.parent?.[ps];
+      if (d2) out.push(`${PARENT[ps].css(r3.parent.cls, r3.cls)} {
 ${declLines(d2, opts.important).map((l2) => `  ${l2}`).join("\n")}
 }`);
     }
@@ -24001,24 +25821,24 @@ ${declLines(d2, opts.important).map((l2) => `  ${l2}`).join("\n")}
   return out.join("\n\n");
 }
 function scss(rules) {
-  return rules.map((r2) => {
-    const lines2 = declLines(r2.base).map((l2) => `  ${l2}`);
+  return rules.map((r3) => {
+    const lines2 = declLines(r3.base).map((l2) => `  ${l2}`);
     for (const s2 of STATES) {
-      const d2 = r2[s2];
+      const d2 = r3[s2];
       if (d2) lines2.push(`  &${stateSel[s2]} {
 ${declLines(d2).map((l2) => `    ${l2}`).join("\n")}
   }`);
     }
-    for (const nx of r2.nested ?? []) lines2.push(`  &${nx.sel} {
+    for (const nx of r3.nested ?? []) lines2.push(`  &${nx.sel} {
 ${declLines(nx.decls).map((l2) => `    ${l2}`).join("\n")}
   }`);
     for (const ps of PSTATES) {
-      const d2 = r2.parent?.[ps];
-      if (d2) lines2.push(`  ${PARENT[ps].scss(r2.parent.cls)} {
+      const d2 = r3.parent?.[ps];
+      if (d2) lines2.push(`  ${PARENT[ps].scss(r3.parent.cls)} {
 ${declLines(d2).map((l2) => `    ${l2}`).join("\n")}
   }`);
     }
-    return `.${r2.cls} {
+    return `.${r3.cls} {
 ${lines2.join("\n")}
 }`;
   }).join("\n\n");
@@ -24037,10 +25857,10 @@ function tailwindClasses(cls) {
     const merged2 = {};
     let parent = "";
     for (const k2 of cls) {
-      const r2 = ruleMap.get(k2);
-      if (r2?.parent?.[ps]) {
-        Object.assign(merged2, r2.parent[ps]);
-        parent = r2.parent.cls;
+      const r3 = ruleMap.get(k2);
+      if (r3?.parent?.[ps]) {
+        Object.assign(merged2, r3.parent[ps]);
+        parent = r3.parent.cls;
       }
     }
     const variants = PARENT[ps].tw(parent).split(":").filter(Boolean);
@@ -24052,14 +25872,13 @@ function tailwindClasses(cls) {
   const groups = cls.filter((k2) => ctxParents.has(k2)).map((k2) => `group/${k2}`);
   return [...groups, ...out].join(" ");
 }
-var esc2 = (t3, braces) => {
-  let s2 = t3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+var esc2 = (t4, braces) => {
+  let s2 = t4.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   if (braces) s2 = s2.replace(/[{}]/g, (ch) => `{'${ch}'}`);
   return s2;
 };
 var VOID = /* @__PURE__ */ new Set(["input", "img", "hr", "br", "path", "line", "circle", "rect", "polygon", "animate", "animateTransform"]);
-var escAttr = (t3) => t3.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-var camel = (k2) => /^(aria|data)-/.test(k2) ? k2 : k2.replace(/-(\w)/g, (_, ch) => ch.toUpperCase());
+var escAttr = (t4) => t4.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 function attrString(node2, mode) {
   const parts = [];
   const cls = node2.cls ?? [];
@@ -24068,8 +25887,8 @@ function attrString(node2, mode) {
   } else if (mode === "class") {
     if (cls.length) parts.push(`class="${cls.join(" ")}"`);
   } else if (mode === "tailwind") {
-    const t3 = [...cls.filter(isPair), tailwindClasses(cls.filter((k2) => !isMod(k2)))].filter(Boolean).join(" ");
-    if (t3) parts.push(`class="${t3}"`);
+    const t4 = [...cls.filter(isPair), tailwindClasses(cls.filter((k2) => !isMod(k2)))].filter(Boolean).join(" ");
+    if (t4) parts.push(`class="${t4}"`);
   } else {
     const base2 = [declLines(mergedDecls(cls.filter((k2) => !isMod(k2)), "base")).join(" ").replace(/;$/, ""), typeof node2.attrs?.style === "string" ? node2.attrs.style : ""].filter(Boolean).join("; ");
     const stateful = cls.filter((k2) => isPair(k2) || STATES.some((s2) => ruleMap.get(k2)?.[s2]) || ruleMap.get(k2)?.parent || ruleMap.get(k2)?.nested);
@@ -24082,7 +25901,7 @@ function attrString(node2, mode) {
       parts.push(`style={${JSON.stringify(styleToObject(val)).replace(/"([A-Za-z_$][\w$]*)":/g, "$1: ").replace(/^\{/, "{ ").replace(/\}$/, " }")}}`);
       continue;
     }
-    const name = mode === "react" ? k2 === "for" ? "htmlFor" : k2 === "tabindex" ? "tabIndex" : camel(k2) : k2;
+    const name = mode === "react" ? reactAttrName(k2) : k2;
     parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }
   return parts.length ? " " + parts.join(" ") : "";
@@ -24112,10 +25931,10 @@ function generate(def, input3, framework) {
   const props2 = parseProps(def, input3);
   const node2 = def.render(props2);
   const rules = rulesFor(node2);
-  ctxParents = new Set(rules.flatMap((r2) => r2.parent ? [r2.parent.cls] : []));
+  ctxParents = new Set(rules.flatMap((r3) => r3.parent ? [r3.parent.cls] : []));
   const name = pascal(def.id);
   const js = hasBehavior(node2) ? runtime(node2) : "";
-  const withRef = (m2, attr) => m2.replace(/^(\s*<[A-Za-z0-9-]+)/, `$1 ${attr}`);
+  const withRef = (m2, attr2) => m2.replace(/^(\s*<[A-Za-z0-9-]+)/, `$1 ${attr2}`);
   let code, language, filename;
   switch (framework) {
     case "p8": {
@@ -24223,7 +26042,7 @@ initP8(document);
       language = "html";
       filename = `${def.id}.html`;
       const mods = modRules(rules);
-      const states = [css(rules.filter((r2) => !isMod(r2.cls)), { onlyStates: true, important: true }), css(mods, { important: true })].filter(Boolean).join("\n\n");
+      const states = [css(rules.filter((r3) => !isMod(r3.cls)), { onlyStates: true, important: true }), css(mods, { important: true })].filter(Boolean).join("\n\n");
       code = `<!-- ${note} -->
 ${states ? `<style>
 ${indent(states, 1)}
@@ -24255,6 +26074,117 @@ ${js.split("\n").map((l2) => `// ${l2}`).join("\n")}
   return { component: def.id, framework, language, filename, props: props2, code };
 }
 
+// src/versions/snapshot.ts
+function fnv(s2) {
+  let h2 = 2166136261;
+  for (let i2 = 0; i2 < s2.length; i2++) {
+    h2 ^= s2.charCodeAt(i2);
+    h2 = Math.imul(h2, 16777619);
+  }
+  return (h2 >>> 0).toString(16).padStart(8, "0");
+}
+var normalize = (code) => code.replace(/<script>[\s\S]*?<\/script>/g, "").replace(/\/\/ ---behavior---[\s\S]*$/, "").replace(/<!--[\s\S]*?-->/g, "").replace(/\s+/g, " ").trim();
+function snapshotOf(def, generate2) {
+  const props2 = (def.props ?? []).map((p4) => [p4.name, p4.type, p4.default, p4.control?.options ?? null]);
+  const defaults = Object.fromEntries((def.props ?? []).map((p4) => [p4.name, p4.default]));
+  let html = "";
+  try {
+    html = fnv(normalize(generate2(def, defaults, "html").code));
+  } catch {
+    html = "error";
+  }
+  return { name: def.name, props: props2, cls: (def.rules ?? []).map((r3) => r3.cls), rules: fnv(JSON.stringify(def.rules ?? [])), html };
+}
+
+// src/versions/diff.ts
+var stored = snapshots_default.versions;
+var cmp = (a2, b2) => {
+  const x = a2.split(".").map(Number), y = b2.split(".").map(Number);
+  for (let i2 = 0; i2 < 3; i2++) if ((x[i2] ?? 0) !== (y[i2] ?? 0)) return (x[i2] ?? 0) - (y[i2] ?? 0);
+  return 0;
+};
+var LATEST = "latest";
+var live = null;
+function liveSnapshots() {
+  live ??= Object.fromEntries([...components, ...templates].map((d2) => [d2.id, snapshotOf(d2, generate)]));
+  return live;
+}
+var VersionError = class extends Error {
+};
+function snapshotsAt(version2) {
+  if (version2 === LATEST || version2 === RELEASES[0].version) return { version: RELEASES[0].version, snaps: liveSnapshots() };
+  const hit = stored.find((s2) => s2.version === version2);
+  if (!hit) throw new VersionError(`No snapshot for version ${version2}. Available: ${stored.map((s2) => s2.version).join(", ")}, ${LATEST}`);
+  return { version: hit.version, snaps: hit.components };
+}
+var show = (v2) => typeof v2 === "string" ? `"${v2}"` : String(v2);
+function diffSnaps(id, a2, b2, from, to) {
+  const base2 = { id, from, to, props: [], classesAdded: [], classesRemoved: [], style: "unchanged", markup: "unchanged", breaking: false, migration: [], notes: [] };
+  if (!a2 && !b2) return { ...base2, status: "unchanged", notes: [`${id} does not exist in either version`] };
+  if (!a2) return { ...base2, status: "added", notes: [`${id} was added after ${from}; it is available in ${to}.`] };
+  if (!b2) return { ...base2, status: "removed", breaking: true, migration: [`${id} no longer exists in ${to}. Replace it with the closest component (search_components) or stay on ${from}.`] };
+  const props2 = [];
+  const A = new Map(a2.props.map((p4) => [p4[0], p4])), B = new Map(b2.props.map((p4) => [p4[0], p4]));
+  for (const [name, p4] of B) if (!A.has(name)) props2.push({ kind: "added", what: "prop", name, to: p4[2], breaking: false, hint: `New optional prop "${name}" (default ${show(p4[2])}). Existing usage keeps working.` });
+  for (const [name, p4] of A) {
+    const q2 = B.get(name);
+    if (!q2) {
+      props2.push({ kind: "removed", what: "prop", name, from: p4[2], breaking: true, hint: `Prop "${name}" was removed and the schema rejects unknown props: delete it from your usage.` });
+      continue;
+    }
+    if (p4[1] !== q2[1] && JSON.stringify(p4[3]) === JSON.stringify(q2[3])) props2.push({ kind: "changed", what: "type", name, from: p4[1], to: q2[1], breaking: false, hint: `Type of "${name}" is now ${q2[1]}.` });
+    const gone = (p4[3] ?? []).filter((o2) => !(q2[3] ?? []).includes(o2)), fresh = (q2[3] ?? []).filter((o2) => !(p4[3] ?? []).includes(o2));
+    for (const o2 of gone) props2.push({ kind: "removed", what: "option", name, from: o2, breaking: true, hint: `Option "${o2}" of "${name}" was removed. Use one of: ${(q2[3] ?? []).join(", ")}.` });
+    for (const o2 of fresh) props2.push({ kind: "added", what: "option", name, to: o2, breaking: false, hint: `New option "${o2}" for "${name}".` });
+    if (p4[2] !== q2[2]) props2.push({ kind: "changed", what: "default", name, from: p4[2], to: q2[2], breaking: true, hint: `Default of "${name}" changed from ${show(p4[2])} to ${show(q2[2])}. Pass ${name}=${show(p4[2])} explicitly to keep the old look.` });
+  }
+  const ca2 = new Set(a2.cls), cb3 = new Set(b2.cls);
+  const classesAdded = [...cb3].filter((c3) => !ca2.has(c3)), classesRemoved = [...ca2].filter((c3) => !cb3.has(c3));
+  const style = a2.rules !== b2.rules ? "changed" : "unchanged";
+  const markup2 = a2.html !== b2.html ? "changed" : "unchanged";
+  const migration = props2.filter((p4) => p4.breaking || p4.kind === "added").map((p4) => p4.hint);
+  if (classesRemoved.length) migration.push(`Class names removed: ${classesRemoved.join(", ")}. If your own CSS or JS targets them, update it.`);
+  if (style === "changed" || markup2 === "changed") migration.push("Generated output changed: call get_code again and replace the pasted code (do not hand-edit generated code).");
+  const breaking = props2.some((p4) => p4.breaking) || classesRemoved.length > 0;
+  const status = props2.length || classesAdded.length || classesRemoved.length || style === "changed" || markup2 === "changed" ? "changed" : "unchanged";
+  return { ...base2, status, props: props2, classesAdded, classesRemoved, style, markup: markup2, breaking, migration };
+}
+function notesFor(id, name, from, to) {
+  const out = [];
+  for (const r3 of RELEASES) if (cmp(r3.version, from) > 0 && cmp(r3.version, to) <= 0) {
+    for (const item of r3.items) if (item.toLowerCase().includes(name.toLowerCase()) || item.toLowerCase().includes(id)) out.push(`${r3.version}: ${item}`);
+  }
+  return out;
+}
+function diffComponent(id, fromV, toV = LATEST) {
+  const a2 = snapshotsAt(fromV), b2 = snapshotsAt(toV);
+  if (cmp(a2.version, b2.version) > 0) throw new VersionError(`from (${a2.version}) must not be newer than to (${b2.version})`);
+  const d2 = diffSnaps(id, a2.snaps[id], b2.snaps[id], a2.version, b2.version);
+  d2.notes.push(...notesFor(id, (b2.snaps[id] ?? a2.snaps[id])?.name ?? id, a2.version, b2.version));
+  return d2;
+}
+function pinnedProps(id, version2) {
+  const s2 = snapshotsAt(version2);
+  const snap = s2.snaps[id];
+  if (!snap) throw new VersionError(`${id} did not exist in ${s2.version}`);
+  return { version: s2.version, name: snap.name, props: snap.props.map(([name, type, def, options]) => ({ name, type, default: def, options })) };
+}
+function validatePinned(id, version2, props2) {
+  const { props: schema } = pinnedProps(id, version2);
+  const known = new Map(schema.map((p4) => [p4.name, p4]));
+  const errs = [];
+  for (const [k2, v2] of Object.entries(props2)) {
+    const p4 = known.get(k2);
+    if (!p4) {
+      errs.push(`unknown prop "${k2}" in ${version2}`);
+      continue;
+    }
+    if (p4.options && !p4.options.includes(String(v2))) errs.push(`"${k2}" must be one of ${p4.options.join(", ")} in ${version2}`);
+    else if (typeof p4.default === "boolean" && typeof v2 !== "boolean") errs.push(`"${k2}" must be a boolean in ${version2}`);
+  }
+  return errs;
+}
+
 // src/api/handlers.ts
 var ApiError = class extends Error {
   constructor(status, message) {
@@ -24284,8 +26214,31 @@ var detail = (d2) => ({
   a11y: (({ contrast: contrast2, keyboard, labels }) => ({ contrast: contrast2, keyboard, labels }))(a11yReport(d2, d2.render(defaultsOf(d2.props)))),
   frameworks: [...FRAMEWORKS]
 });
-function getComponent(id) {
+var vErr = (fn) => {
+  try {
+    return fn();
+  } catch (e) {
+    if (e instanceof VersionError) throw new ApiError(400, e.message);
+    throw e;
+  }
+};
+var isCurrent = (v2) => !v2 || v2 === LATEST || v2 === RELEASES[0].version;
+function getComponent(id, version2) {
   const def = getDef(id);
+  if (!isCurrent(version2)) {
+    const pinned = vErr(() => pinnedProps(id, version2));
+    const d2 = vErr(() => diffComponent(id, version2));
+    return {
+      id,
+      name: pinned.name,
+      version: pinned.version,
+      pinned: true,
+      current: RELEASES[0].version,
+      props: pinned.props,
+      note: `Props as they were in ${pinned.version}. Code is always generated by the current engine; use diff_component to see what changed and how to migrate.`,
+      sinceThen: { status: d2.status, breaking: d2.breaking, migration: d2.migration }
+    };
+  }
   if (!def) throw new ApiError(404, `Unknown component: ${id}`);
   return detail(def);
 }
@@ -24293,14 +26246,23 @@ var zodMessage = (e) => e.issues.map((i2) => i2.code === "unrecognized_keys" ? `
 var codeInput = external_exports.object({
   component: external_exports.string(),
   framework: external_exports.enum(FRAMEWORKS),
-  props: external_exports.record(external_exports.string(), external_exports.unknown()).optional()
+  props: external_exports.record(external_exports.string(), external_exports.unknown()).optional(),
+  version: external_exports.string().optional()
 });
 function getCode(input3) {
   const parsed = codeInput.safeParse(input3);
   if (!parsed.success) throw new ApiError(400, parsed.error.issues.map((i2) => `${i2.path.join(".") || "input"}: ${i2.message}`).join("; "));
   const def = getDef(parsed.data.component);
   if (!def) throw new ApiError(404, `Unknown component: ${parsed.data.component}`);
+  const { version: version2 } = parsed.data;
   try {
+    if (!isCurrent(version2)) {
+      const errs = vErr(() => validatePinned(def.id, version2, parsed.data.props ?? {}));
+      if (errs.length) throw new ApiError(400, `Props do not match ${version2}: ${errs.join("; ")}`);
+      const d2 = vErr(() => diffComponent(def.id, version2));
+      const out = generate(def, parsed.data.props ?? {}, parsed.data.framework);
+      return { ...out, pin: { requested: d2.from, current: RELEASES[0].version, status: d2.status, outputChanged: d2.style === "changed" || d2.markup === "changed", breaking: d2.breaking, migration: d2.migration, note: "Old generated code is not archived: this code comes from the current engine. If outputChanged is true, replace anything you pasted earlier with this." } };
+    }
     return generate(def, parsed.data.props ?? {}, parsed.data.framework);
   } catch (e) {
     if (e instanceof external_exports.ZodError) throw new ApiError(400, zodMessage(e));
@@ -24353,8 +26315,27 @@ var SYNONYMS = {
   search: ["search-input", "command-palette", "combobox"],
   list: ["list-row", "data-list"],
   grid: ["stack"],
-  layout: ["stack", "card"],
+  layout: ["stack", "card", "app-shell"],
   button: ["button", "icon-button"],
+  login: ["sign-in"],
+  signin: ["sign-in"],
+  auth: ["sign-in"],
+  "sign-in": ["sign-in"],
+  preferences: ["settings"],
+  account: ["settings"],
+  profile: ["settings"],
+  analytics: ["dashboard", "chart"],
+  overview: ["dashboard"],
+  inbox: ["list-detail"],
+  "master-detail": ["list-detail"],
+  screen: ["sign-in", "settings", "dashboard", "list-detail", "empty-page"],
+  page: ["sign-in", "settings", "dashboard", "list-detail", "empty-page"],
+  chat: ["chat-message", "chat-composer"],
+  graph: ["chart", "sparkline"],
+  trend: ["sparkline", "chart"],
+  topbar: ["navbar"],
+  header: ["navbar", "app-shell"],
+  validation: ["form"],
   danger: ["dialog", "alert"],
   error: ["alert", "field"],
   help: ["tooltip", "popover"],
@@ -24364,7 +26345,7 @@ var SYNONYMS = {
 };
 function searchComponents(query, limit = 8) {
   const words = query.toLowerCase().split(/[^a-z0-9-]+/).filter((w2) => w2.length > 1);
-  const scored = components.map((c3) => {
+  const scored = [...components, ...templates].map((c3) => {
     let score = 0;
     const why = [];
     const bump = (n2, w2, where) => {
@@ -24375,15 +26356,15 @@ function searchComponents(query, limit = 8) {
       const hay = (s2) => s2.toLowerCase().includes(w2);
       if (c3.id === w2 || c3.name.toLowerCase() === w2) bump(8, w2, "name");
       else if (hay(c3.id) || hay(c3.name)) bump(5, w2, "name");
-      if (c3.tags.some((t3) => t3 === w2)) bump(4, w2, "tag");
+      if (c3.tags.some((t4) => t4 === w2)) bump(4, w2, "tag");
       if (hay(c3.description)) bump(2, w2, "description");
       if (hay(c3.usage)) bump(1, w2, "usage");
       if (c3.guidelines && [...c3.guidelines.do, ...c3.guidelines.dont].some(hay)) bump(1, w2, "guidelines");
       if ((SYNONYMS[w2] ?? []).includes(c3.id)) bump(6, w2, "related");
     }
-    return { id: c3.id, name: c3.name, description: c3.description, tags: c3.tags, score, why };
+    return { id: c3.id, name: c3.name, kind: c3.tags.includes("template") ? "template" : "component", description: c3.description, tags: c3.tags, score, why };
   });
-  return { query, results: scored.filter((r2) => r2.score > 0).sort((a2, b2) => b2.score - a2.score || a2.id.localeCompare(b2.id)).slice(0, limit) };
+  return { query, results: scored.filter((r3) => r3.score > 0).sort((a2, b2) => b2.score - a2.score || a2.id.localeCompare(b2.id)).slice(0, limit) };
 }
 var composeInput = external_exports.object({
   framework: external_exports.enum(FRAMEWORKS),
@@ -24419,9 +26400,9 @@ ${p8.map((l2) => `  ${l2}`).join("\n")}
   return generate(synthetic, {}, framework);
 }
 function getThemeBuild(input3) {
-  const r2 = buildTheme(input3 ?? {});
-  if (!r2.ok) throw new ApiError(400, r2.errors.join("; "));
-  return r2;
+  const r3 = buildTheme(input3 ?? {});
+  if (!r3.ok) throw new ApiError(400, r3.errors.join("; "));
+  return r3;
 }
 
 // src/cli/index.ts
@@ -24462,7 +26443,7 @@ function help() {
   ${bin} info <id>                             Props, defaults, guidelines
   ${bin} add <id...> [-f framework] [--prop k=v] [--out dir] [--stdout] [--force]
                                              Write component code into your project
-  ${bin} lint <path...>                        Flag padding/margin/gap/radius off the 4/8 grid
+  ${bin} lint <path...> [--fix]                Flag (and with --fix, correct) off-grid spacing, gaps, raw colours and missing labels
   ${bin} theme [--ink #111111 --canvas #FFFFFF --dark-ink #E1E1E1 --dark-canvas #1D1D1D --radius 8] [--out theme.css]
   ${bin} tokens [--out theme.css]              The default theme as CSS variables
   ${bin} rules                                 The rule book
@@ -24486,14 +26467,14 @@ switch (cmd) {
     break;
   }
   case "search":
-    console.log(JSON.stringify(searchComponents(rest.join(" ")).results.map((r2) => ({ id: r2.id, name: r2.name, score: r2.score })), null, 2));
+    console.log(JSON.stringify(searchComponents(rest.join(" ")).results.map((r3) => ({ id: r3.id, name: r3.name, score: r3.score })), null, 2));
     break;
   case "info":
     console.log(JSON.stringify(guard(() => getComponent(rest[0] ?? "")), null, 2));
     break;
   case "rules": {
-    const r2 = getRules();
-    for (const x of r2.rules) console.log(`\u2022 ${x.title} \u2014 ${x.statement}`);
+    const r3 = getRules();
+    for (const x of r3.rules) console.log(`\u2022 ${x.title} \u2014 ${x.statement}`);
     break;
   }
   case "add": {
@@ -24528,25 +26509,36 @@ Requires the theme variables: ${bin} tokens --out src/theme.css`);
   }
   case "lint": {
     const targets = rest.length ? rest : ["."];
-    let errors = 0, warns = 0, files = 0;
-    for (const t3 of targets) for (const f2 of guard(() => walk(t3))) {
+    let errors = 0, warns = 0, files = 0, fixed = 0;
+    for (const t4 of targets) for (const f2 of guard(() => walk(t4))) {
       files++;
-      for (const i2 of lintSpacing(readFileSync(f2, "utf8"))) {
-        console.log(`${f2}:${i2.line}  ${i2.severity}  ${i2.property}: ${i2.value}  ${i2.message}`);
+      const src = readFileSync(f2, "utf8");
+      let issues = lintAll(src);
+      if (flags.fix && issues.length) {
+        const r3 = fixCode(src);
+        if (r3.fixes.length) {
+          writeFileSync(f2, r3.fixed);
+          for (const x of r3.fixes) console.log(`${f2}:${x.line}  fixed  ${x.rule}  ${x.from}  \u2192  ${x.to}${x.note ? `  (${x.note})` : ""}`);
+          fixed += r3.fixes.length;
+        }
+        issues = r3.remaining;
+      }
+      for (const i2 of issues) {
+        console.log(`${f2}:${i2.line}  ${i2.severity}  ${i2.rule}  ${i2.property}: ${i2.value}  ${i2.message}`);
         i2.severity === "error" ? errors++ : warns++;
       }
     }
     console.log(`
-${files} files, ${errors} error${errors === 1 ? "" : "s"}, ${warns} warning${warns === 1 ? "" : "s"}`);
+${files} files, ${fixed ? `${fixed} fixed, ` : ""}${errors} error${errors === 1 ? "" : "s"}, ${warns} warning${warns === 1 ? "" : "s"}`);
     process.exit(errors ? 1 : 0);
     break;
   }
   case "theme": {
-    const r2 = guard(() => getThemeBuild({ light: { ink: flags.ink, canvas: flags.canvas }, dark: { ink: flags["dark-ink"], canvas: flags["dark-canvas"] }, radius: flags.radius ? String(flags.radius) : void 0 }));
+    const r3 = guard(() => getThemeBuild({ light: { ink: flags.ink, canvas: flags.canvas }, dark: { ink: flags["dark-ink"], canvas: flags["dark-canvas"] }, radius: flags.radius ? String(flags.radius) : void 0 }));
     if (flags.out) {
-      writeFileSync(String(flags.out), r2.css + "\n");
-      console.log(`wrote ${flags.out}${r2.passes ? "" : " (WARNING: contrast below 4.5:1 somewhere)"}`);
-    } else console.log(r2.css);
+      writeFileSync(String(flags.out), r3.css + "\n");
+      console.log(`wrote ${flags.out}${r3.passes ? "" : " (WARNING: contrast below 4.5:1 somewhere)"}`);
+    } else console.log(r3.css);
     break;
   }
   case "tokens": {

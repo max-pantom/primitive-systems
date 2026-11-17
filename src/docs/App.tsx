@@ -2,14 +2,14 @@ import { Fragment, createElement, useEffect, useMemo, useRef, useState, type Rea
 import { Agentation } from 'agentation';
 import { site } from '../config/site';
 import { FRAMEWORKS, FRAMEWORK_LABELS, generate, type Framework } from '../codegen';
-import { reactify, styleToObject } from '../codegen/react-node';
+import { reactAttrName, reactify, styleToObject } from '../codegen/react-node';
 import { hasBehavior, runtime } from '../codegen/behavior';
 import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { iconElements } from '../icons/icons';
 import { highlight } from './highlight';
 import { a11yReport } from '../rules/a11y';
 
-const camel = (k: string) => (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : /^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, c) => c.toUpperCase()));
+const camel = reactAttrName;
 
 /** Render the framework-agnostic node tree as live React. Behavior comes from the same generated runtime the code output ships. */
 function toReact(node: Node | string, key?: number): ReactNode {
@@ -194,9 +194,9 @@ function Workbench({ def }: { def: ComponentDef }) {
   );
 }
 
-export default function App() {
+export default function App({ defs = components, section = 'Components' }: { defs?: ComponentDef[]; section?: string } = {}) {
   const [hash, go] = useHash();
-  const def = components.find((c) => c.id === hash) ?? components[0];
+  const def = defs.find((c) => c.id === hash) ?? defs[0];
   const [theme, setTheme] = useState('light');
   useEffect(() => { document.querySelector('.nav a[aria-current="page"]')?.scrollIntoView({ inline: 'center', block: 'nearest' }); }, [hash]);
   const [left, setLeft] = useState(220);
@@ -234,11 +234,12 @@ export default function App() {
           <div className="brand">{site.name}</div>
           <div className="muted">{site.tagline}</div>
         </div>
-        <nav className="nav" aria-label="Components">
-          {components.map((c) => (
+        <nav className="nav" aria-label={section}>
+          {defs.map((c) => (
             <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}{c.mark === 'new' && <span className="mark">New</span>}</a>
           ))}
         </nav>
+        <a className="link" href={section === 'Templates' ? '/' : '/templates'} data-testid="switch-link">{section === 'Templates' ? 'Components' : 'Templates'}</a>
         <a className="link" href="/usage" data-testid="usage-link">Usage</a>
         <a className="link" href="/changelog" data-testid="changelog-link">Changelog</a>
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">

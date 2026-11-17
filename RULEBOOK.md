@@ -17,6 +17,7 @@ padding, margin and gap use space-4, 8, 12, 16, 20, 24 or 32 (plus space-6 for m
 
 Every clickable control with horizontal padding (button, input, textarea, select, icon button, tab, segment, page button, list row…) uses padding-inline: space-12. Top and bottom are space-8 (md) or space-12 (lg).
 
+- **Exception — `p8-mcal__cell`:** Month-grid cell: a fixed-height cell holding a day number and up to two event labels; the 4px inset keeps labels inside the cell lines.
 - **Exception — `p8-cal__day`:** Fixed 32px calendar cell with no padding; digits are centered in the square.
 - **Exception — `p8-swatch`:** Fixed 24px colour swatch with no padding.
 - **Exception — `p8-rating__star`:** Fixed 24px star target with no padding.

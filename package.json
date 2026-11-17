@@ -12,7 +12,8 @@
     "check": "tsc --noEmit",
     "rules": "tsx scripts/check.ts",
     "rules:md": "tsx scripts/rules-md.ts",
-    "build:runtime": "tsx scripts/build-runtime.ts"
+    "build:runtime": "tsx scripts/build-runtime.ts",
+    "snapshot": "tsx scripts/snapshot-current.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
