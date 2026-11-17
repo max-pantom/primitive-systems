@@ -17,7 +17,7 @@ createServer(async (req, res) => {
       return void res.writeHead(400, headers).end(JSON.stringify({ error: 'Invalid JSON' }));
     }
   }
-  const { pathname } = new URL(req.url ?? '/', 'http://localhost');
-  const out = route(req.method ?? 'GET', pathname, body);
+  const u = new URL(req.url ?? '/', 'http://localhost');
+  const out = route(req.method ?? 'GET', u.pathname, body, Object.fromEntries(u.searchParams));
   res.writeHead(out.status, headers).end(JSON.stringify(out.body));
 }).listen(port, () => console.error(`${site.name} API on http://localhost:${port}`));

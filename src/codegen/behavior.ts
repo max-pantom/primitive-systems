@@ -212,6 +212,100 @@ const KINDS: Record<string, string> = {
     }
   }, ${SIG});`,
 
+  combobox: `
+  function cbOpts(c) { return Array.from(c.querySelectorAll('[role="option"]')); }
+  function cbVis(c) { return cbOpts(c).filter(function (x) { return !x.hidden; }); }
+  function cbOpen(c, open) { c.querySelector('[role="listbox"]').hidden = !open; c.querySelector('[role="combobox"]').setAttribute('aria-expanded', String(open)); }
+  function cbMark(c, it) { cbOpts(c).forEach(function (x) { setOn(x, x === it); }); }
+  function cbPick(c, it) { var i = c.querySelector('input'); i.value = it.textContent; i.dispatchEvent(new Event('change', { bubbles: true })); cbOpen(c, false); cbMark(c, it); }
+  root.addEventListener('focusin', function (e) { var c = cl(e, '[data-p8~="combobox"]'); if (c && e.target.tagName === 'INPUT') cbOpen(c, true); }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var it = cl(e, '[data-p8~="combobox"] [role="option"]');
+    if (it) { cbPick(it.closest('[data-p8~="combobox"]'), it); return; }
+    var c = cl(e, '[data-p8~="combobox"]');
+    if (c && e.target.tagName === 'INPUT') cbOpen(c, true);
+  }, ${SIG});
+  root.addEventListener('input', function (e) {
+    var c = cl(e, '[data-p8~="combobox"]');
+    if (!c) return;
+    var q = e.target.value.toLowerCase();
+    cbOpts(c).forEach(function (x) { x.hidden = x.textContent.toLowerCase().indexOf(q) < 0; });
+    cbOpen(c, true);
+    cbMark(c, cbVis(c)[0]);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var c = cl(e, '[data-p8~="combobox"]');
+    if (!c || e.target.tagName !== 'INPUT') return;
+    var list = cbVis(c), cur = list.findIndex(function (x) { return x.classList.contains('p8-combobox__option--active'); });
+    if (e.key === 'ArrowDown') { cbOpen(c, true); cur = (cur + 1) % list.length; }
+    else if (e.key === 'ArrowUp') { cbOpen(c, true); cur = (cur - 1 + list.length) % list.length; }
+    else if (e.key === 'Enter') { if (list[cur] && !c.querySelector('[role="listbox"]').hidden) { e.preventDefault(); cbPick(c, list[cur]); } return; }
+    else if (e.key === 'Escape') { cbOpen(c, false); return; }
+    else return;
+    e.preventDefault();
+    cbMark(c, list[cur]);
+  }, ${SIG});
+  doc.addEventListener('click', function (e) { all('[data-p8~="combobox"]').forEach(function (c) { if (!c.contains(e.target)) cbOpen(c, false); }); }, ${SIG});`,
+
+  number: `
+  root.addEventListener('click', function (e) {
+    var b = cl(e, '[data-p8~="number"] [data-step]');
+    if (!b || b.disabled) return;
+    var inp = b.closest('[data-p8~="number"]').querySelector('input');
+    if (Number(b.getAttribute('data-step')) > 0) inp.stepUp(); else inp.stepDown();
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  }, ${SIG});`,
+
+  otp: `
+  function oCells(g) { return Array.from(g.querySelectorAll('input')); }
+  root.addEventListener('input', function (e) {
+    var g = cl(e, '[data-p8~="otp"]');
+    if (!g) return;
+    var t = e.target, cells = oCells(g);
+    t.value = t.value.replace(/\D/g, '').slice(-1);
+    var i = cells.indexOf(t);
+    if (t.value && cells[i + 1]) cells[i + 1].focus();
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var g = cl(e, '[data-p8~="otp"]');
+    if (!g) return;
+    var cells = oCells(g), i = cells.indexOf(e.target);
+    if (e.key === 'Backspace' && !e.target.value && cells[i - 1]) { cells[i - 1].value = ''; cells[i - 1].focus(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' && cells[i - 1]) { cells[i - 1].focus(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight' && cells[i + 1]) { cells[i + 1].focus(); e.preventDefault(); }
+  }, ${SIG});
+  root.addEventListener('paste', function (e) {
+    var g = cl(e, '[data-p8~="otp"]');
+    if (!g) return;
+    var digits = ((e.clipboardData && e.clipboardData.getData('text')) || '').replace(/\D/g, '');
+    if (!digits) return;
+    e.preventDefault();
+    var cells = oCells(g), i = Math.max(0, cells.indexOf(e.target));
+    for (var k = 0; k < digits.length && cells[i + k]; k++) cells[i + k].value = digits[k];
+    cells[Math.min(cells.length - 1, i + digits.length)].focus();
+  }, ${SIG});`,
+
+  rating: `
+  function rSet(g, it) {
+    var items = Array.from(g.querySelectorAll('[role="radio"]')), idx = items.indexOf(it);
+    items.forEach(function (x, i) { x.setAttribute('aria-checked', String(i === idx)); x.tabIndex = i === idx ? 0 : -1; setOn(x, i <= idx); });
+  }
+  root.addEventListener('click', function (e) {
+    var it = cl(e, '[data-p8~="rating"] [role="radio"]');
+    if (it && !it.disabled) rSet(it.closest('[data-p8~="rating"]'), it);
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var it = cl(e, '[data-p8~="rating"] [role="radio"]');
+    if (!it) return;
+    var g = it.closest('[data-p8~="rating"]'), items = Array.from(g.querySelectorAll('[role="radio"]')), i = items.indexOf(it);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') i = Math.min(items.length - 1, i + 1);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') i = Math.max(0, i - 1);
+    else return;
+    e.preventDefault();
+    rSet(g, items[i]);
+    items[i].focus();
+  }, ${SIG});`,
+
   dismiss: `
   root.addEventListener('click', function (e) {
     var c = cl(e, '[data-p8~="dismiss"] [data-close]');
@@ -245,7 +339,7 @@ export function hasBehavior(node: Node): boolean {
 export function runtime(node: Node): string {
   const kinds = [...kindsIn(node)].filter((k) => KINDS[k]);
   const used = new Set(kinds);
-  const needsPairs = ['toggle', 'group', 'menu', 'palette', 'pager', 'copy'].some((k) => used.has(k));
+  const needsPairs = ['toggle', 'group', 'menu', 'palette', 'pager', 'copy', 'combobox', 'rating'].some((k) => used.has(k));
   const body = kinds.map((k) => KINDS[k]).join('\n');
   return `function initP8(root, opts) {
   opts = opts || {};

@@ -75,3 +75,11 @@ table.props td { vertical-align: top; padding: var(--p8-space-8) var(--p8-space-
 table.props tr.head td { padding-top: var(--p8-space-12); }
 table.props tr.desc td { padding: var(--p8-space-4) 0 var(--p8-space-12); border-bottom: var(--p8-border-hairline) solid var(--p8-color-ring); }
 .nowrap { white-space: nowrap; }
+
+.nav a { display: flex; align-items: center; justify-content: space-between; }
+.mark { font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono); font-size: var(--p8-type-size-sm); color: var(--p8-color-ink); }
+ul.rules { margin: 0 0 var(--p8-space-8); padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--p8-space-8); }
+ul.rules li { display: flex; gap: var(--p8-space-8); }
+ul.rules .tick { flex: 0 0 var(--p8-size-40); font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono); color: var(--p8-color-ink); }
+ul.rules.dont .tick { color: var(--p8-color-ink-muted); }
+code.block { display: block; padding: var(--p8-space-8) var(--p8-space-12); border-radius: var(--p8-radius-8); background: var(--p8-color-control); color: var(--p8-color-ink); margin-bottom: var(--p8-space-4); overflow-x: auto; white-space: nowrap; }

@@ -63,6 +63,7 @@ export const input: ComponentDef = {
   rules: [...fieldRules, ...inputRules],
   render(pr: Props): Node {
     const attrs: Node['attrs'] = { id: 'field', type: pr.type as string, placeholder: pr.placeholder as string };
+    if (!pr.label) attrs['aria-label'] = (pr.placeholder as string) || 'Text field';
     if (pr.value) attrs.value = pr.value as string;
     if (pr.disabled) attrs.disabled = true;
     return labelled(pr, 'field', n('input', pr.size === 'lg' ? [i.root, i.lg] : [i.root], undefined, attrs));
@@ -84,6 +85,7 @@ export const textarea: ComponentDef = {
   rules: [...fieldRules, { cls: t.root, base: { ...inputRules[0].base, resize: 'vertical' }, hover: inputRules[0].hover, focus: fieldFocus, disabled: inputRules[0].disabled, placeholder: inputRules[0].placeholder }],
   render(pr: Props): Node {
     const attrs: Node['attrs'] = { id: 'field', rows: pr.rows as string, placeholder: pr.placeholder as string };
+    if (!pr.label) attrs['aria-label'] = (pr.placeholder as string) || 'Text area';
     if (pr.disabled) attrs.disabled = true;
     return labelled(pr, 'field', n('textarea', [t.root], pr.value ? [pr.value as string] : [], attrs));
   },
@@ -111,6 +113,7 @@ export const select: ComponentDef = {
   render(pr: Props): Node {
     const opts = lines(pr.options).map((o) => n('option', [], [o], o === pr.value ? { selected: true } : undefined));
     const attrs: Node['attrs'] = { id: 'field' };
+    if (!pr.label) attrs['aria-label'] = 'Select';
     if (pr.disabled) attrs.disabled = true;
     const ctl = n('div', [s.wrap], [n('select', [s.root], opts, attrs), { ...iconNode('chevron-down', 16), cls: pr.disabled ? [bc.icon, s.icon, s.iconOff] : [bc.icon, s.icon] }]);
     return labelled(pr, 'field', ctl);

@@ -1,0 +1,21 @@
+# Primitive Systems
+
+> An agentic component library for Primitive 8 apps. 50+ components, one definition each, generated for Astro, Next.js (React/TSX), Svelte, Tailwind, plain HTML and SCSS, plus a short <p8-*> tag form. Use it instead of hand-writing UI.
+
+## Use it
+
+- MCP (remote): https://primitive-systems.vercel.app/mcp
+- HTTP API: https://primitive-systems.vercel.app/api (components, code, compose, search, rules, tokens, theme, lint, install)
+- Runtime: <script src="https://primitive-systems.vercel.app/p8.js"></script> then <p8-button variant="primary">Save</p8-button>
+- CLI: npx primitive add button --framework react
+- Skill for Claude Code: https://primitive-systems.vercel.app/skill/SKILL.md
+- Rule book: https://primitive-systems.vercel.app/RULEBOOK.md
+- Check book: https://primitive-systems.vercel.app/CHECKBOOK.md
+- Agent instructions: https://primitive-systems.vercel.app/AGENTS.md
+- Changelog: https://primitive-systems.vercel.app/CHANGELOG.md
+
+## Agent workflow
+
+1. get_rules  2. search_components  3. get_component (read the guidelines)  4. get_code or compose_code  5. lint_code on your changes
+
+Icons come only from https://factory.primitive8.cc/icons

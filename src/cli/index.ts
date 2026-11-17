@@ -1,0 +1,112 @@
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, extname, join, resolve } from 'node:path';
+import { composeCode, getCode, getComponent, getRules, getThemeBuild, listComponents, searchComponents } from '../api/handlers';
+import { FRAMEWORKS } from '../codegen';
+import { site } from '../config/site';
+import { lintSpacing } from '../lint/spacing';
+import { themeToCss } from '../tokens/theme';
+
+const argv = process.argv.slice(2);
+const cmd = argv.shift();
+const flags: Record<string, string | boolean> = {};
+const props: Record<string, string | boolean> = {};
+const rest: string[] = [];
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a === '--prop' || a === '-p') { const [k, ...v] = (argv[++i] ?? '').split('='); const val = v.join('='); props[k] = val === 'true' ? true : val === 'false' ? false : val; }
+  else if (a.startsWith('--')) { const [k, v] = a.slice(2).split('='); flags[k] = v ?? (argv[i + 1] && !argv[i + 1].startsWith('-') ? argv[++i] : true); }
+  else if (a === '-f') flags.framework = argv[++i];
+  else rest.push(a);
+}
+const bin = site.cli;
+const fail = (msg: string): never => { console.error(`${bin}: ${msg}`); process.exit(1); };
+const guard = <T>(fn: () => T): T => { try { return fn(); } catch (e) { return fail((e as Error).message); } };
+
+function help() {
+  console.log(`${site.name} CLI
+
+  ${bin} list                                  List components
+  ${bin} search "<need>"                       Find components for a need
+  ${bin} info <id>                             Props, defaults, guidelines
+  ${bin} add <id...> [-f framework] [--prop k=v] [--out dir] [--stdout] [--force]
+                                             Write component code into your project
+  ${bin} lint <path...>                        Flag padding/margin/gap/radius off the 4/8 grid
+  ${bin} theme [--ink #111111 --canvas #FFFFFF --dark-ink #E1E1E1 --dark-canvas #1D1D1D --radius 8] [--out theme.css]
+  ${bin} tokens [--out theme.css]              The default theme as CSS variables
+  ${bin} rules                                 The rule book
+
+Frameworks: ${FRAMEWORKS.join(', ')} (default: html)`);
+}
+
+const SKIP = new Set(['node_modules', 'dist', '.git', '.next', '.astro', '.vercel', 'build', 'coverage']);
+const EXT = new Set(['.css', '.scss', '.sass', '.less', '.tsx', '.jsx', '.ts', '.js', '.astro', '.svelte', '.vue', '.html']);
+function walk(p: string, out: string[] = []): string[] {
+  const st = statSync(p);
+  if (st.isFile()) { if (EXT.has(extname(p))) out.push(p); return out; }
+  for (const f of readdirSync(p)) if (!SKIP.has(f)) walk(join(p, f), out);
+  return out;
+}
+
+switch (cmd) {
+  case 'list': {
+    for (const c of guard(() => listComponents()).components) console.log(`${c.id.padEnd(20)} ${c.mark ? `[${c.mark}] `.padEnd(10) : ''.padEnd(10)}${c.description}`);
+    break;
+  }
+  case 'search': console.log(JSON.stringify(searchComponents(rest.join(' ')).results.map((r) => ({ id: r.id, name: r.name, score: r.score })), null, 2)); break;
+  case 'info': console.log(JSON.stringify(guard(() => getComponent(rest[0] ?? '')), null, 2)); break;
+  case 'rules': {
+    const r = getRules();
+    for (const x of r.rules) console.log(`• ${x.title} — ${x.statement}`);
+    break;
+  }
+  case 'add': {
+    if (!rest.length) fail('add: give at least one component id');
+    const fw = String(flags.framework ?? flags.f ?? 'html');
+    if (!(FRAMEWORKS as readonly string[]).includes(fw)) fail(`unknown framework "${fw}"`);
+    const out = resolve(String(flags.out ?? 'src/components/p8'));
+    for (const id of rest) {
+      const res = guard(() => getCode({ component: id, framework: fw, props }));
+      if (flags.stdout) { console.log(res.code); continue; }
+      const file = join(out, res.filename);
+      if (existsSync(file) && !flags.force) { console.error(`skip ${file} (exists, use --force)`); continue; }
+      mkdirSync(dirname(file), { recursive: true });
+      writeFileSync(file, res.code);
+      console.log(`added ${file}`);
+    }
+    if (!flags.stdout) console.log(`\nRequires the theme variables: ${bin} tokens --out src/theme.css`);
+    break;
+  }
+  case 'compose': {
+    // compose from a JSON file: { "items": [{ "component": "button", "props": {...} }] }
+    const file = rest[0] ?? fail('compose: give a JSON file');
+    const spec = JSON.parse(readFileSync(file, 'utf8'));
+    console.log(guard(() => composeCode({ framework: flags.framework ?? 'html', ...spec })).code);
+    break;
+  }
+  case 'lint': {
+    const targets = rest.length ? rest : ['.'];
+    let errors = 0, warns = 0, files = 0;
+    for (const t of targets) for (const f of guard(() => walk(t))) {
+      files++;
+      for (const i of lintSpacing(readFileSync(f, 'utf8'))) {
+        console.log(`${f}:${i.line}  ${i.severity}  ${i.property}: ${i.value}  ${i.message}`);
+        i.severity === 'error' ? errors++ : warns++;
+      }
+    }
+    console.log(`\n${files} files, ${errors} error${errors === 1 ? '' : 's'}, ${warns} warning${warns === 1 ? '' : 's'}`);
+    process.exit(errors ? 1 : 0);
+    break;
+  }
+  case 'theme': {
+    const r = guard(() => getThemeBuild({ light: { ink: flags.ink, canvas: flags.canvas }, dark: { ink: flags['dark-ink'], canvas: flags['dark-canvas'] }, radius: flags.radius ? String(flags.radius) : undefined }));
+    if (flags.out) { writeFileSync(String(flags.out), r.css + '\n'); console.log(`wrote ${flags.out}${r.passes ? '' : ' (WARNING: contrast below 4.5:1 somewhere)'}`); }
+    else console.log(r.css);
+    break;
+  }
+  case 'tokens': {
+    if (flags.out) { writeFileSync(String(flags.out), themeToCss() + '\n'); console.log(`wrote ${flags.out}`); } else console.log(themeToCss());
+    break;
+  }
+  case undefined: case 'help': case '--help': help(); break;
+  default: fail(`unknown command "${cmd}" (try ${bin} help)`);
+}

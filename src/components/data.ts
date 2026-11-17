@@ -83,7 +83,7 @@ export const keyValue: ComponentDef = {
 
 /* ---------- Stack ---------- */
 const st = { root: `${p}-stack`, item: `${p}-stack__item`, row: `${p}-stack--row` };
-const GAPS = ['4', '8', '12', '16', '24'];
+const GAPS = ['4', '8', '12'];
 const ALIGN = ['start', 'center', 'end', 'stretch'];
 const alignVal = (a: string) => (a === 'start' ? 'flex-start' : a === 'end' ? 'flex-end' : a);
 export const stack: ComponentDef = {
@@ -91,7 +91,7 @@ export const stack: ComponentDef = {
   usage: 'The Item blocks are placeholders; put your own content inside the stack. Gap defaults to 12px.',
   props: [
     P.select('direction', ['column', 'row'], 'column', 'Main axis.'),
-    P.select('gap', GAPS, '12', 'Gap in px.'),
+    P.select('gap', GAPS, '12', 'Gap in px (4, 8 or 12 — the only gaps the system allows).'),
     P.select('align', ALIGN, 'stretch', 'Cross-axis alignment.'),
     P.select('count', ['1', '2', '3', '4', '5', '6'], '3', 'Placeholder items shown.'),
   ],
@@ -115,7 +115,7 @@ export const toolbar: ComponentDef = {
   id: 'toolbar', name: 'Toolbar', description: 'A row of icon buttons, with optional separators.', tags: ['layout', 'actions'], status: 'stable',
   usage: 'List Primitive8 icon names one per line; "---" adds a vertical divider. Each button gets an aria-label from its icon name.',
   composition: 'Contains Icon Buttons and vertical Dividers.',
-  props: [P.area('items', 'edit\ncopy\n---\ntrash', 'Icon names one per line; "---" is a separator.', 'string (one per line)')],
+  props: [P.area('items', 'edit\ncopy\ndownload\n---\nstar\ntrash', 'Icon names one per line; "---" is a separator.', 'string (one per line)')],
   rules: [{ cls: tl.root, base: { display: 'inline-flex', 'align-items': 'center', gap: v('space-4'), 'box-sizing': 'border-box', padding: v('space-4'), 'border-radius': v('radius-12'), background: v('color-surface'), color: v('color-ink'), ...ringDecl } }],
   render(pr: Props): Node {
     const kids = lines(pr.items).map((l): Node =>

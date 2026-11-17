@@ -2,6 +2,7 @@ import { v } from '../tokens/theme';
 import { button, iconNode, iconRule } from './button';
 import { ov, overlayRules, menu } from './display';
 import { P, focus, hiddenRule, n, p, ringDecl, text } from './shared';
+import { iconButton } from './bits';
 import type { ComponentDef, Node, Props, Rule } from './types';
 
 const btnNode = (label: string, extra: Node['attrs']): Node => {
@@ -12,7 +13,7 @@ const btnNode = (label: string, extra: Node['attrs']): Node => {
 const po = { root: `${p}-popover`, panel: `${p}-popover__panel`, end: `${p}-popover__panel--end`, bare: `${p}-popover__panel--bare` };
 const popRules: Rule[] = [
   { cls: po.root, base: { position: 'relative', display: 'inline-block' } },
-  { cls: po.panel, base: { position: 'absolute', top: '100%', left: '0', 'margin-top': v('space-8'), 'z-index': '40', 'box-sizing': 'border-box', 'min-width': v('size-240'), padding: v('space-12'), 'border-radius': v('radius-8'), background: v('color-canvas'), color: v('color-ink'), ...ringDecl, ...text('sm') }, nested: [hiddenRule] },
+  { cls: po.panel, base: { position: 'absolute', top: '100%', left: '0', 'margin-top': v('space-8'), 'z-index': '40', 'box-sizing': 'border-box', 'min-width': v('size-240'), 'padding-block': v('space-12'), 'padding-inline': v('space-16'), 'border-radius': v('radius-8'), background: v('color-canvas'), color: v('color-ink'), ...ringDecl, ...text('sm') }, nested: [hiddenRule] },
   { cls: po.end, base: { left: 'auto', right: '0' } },
   { cls: po.bare, base: { padding: '0', background: 'transparent', outline: 'none' } },
 ];
@@ -70,12 +71,11 @@ export const sheet: ComponentDef = {
     { cls: sh.head, base: { display: 'flex', 'align-items': 'center', 'justify-content': 'space-between' } },
     { cls: sh.title, base: { margin: '0', ...text('md'), 'font-weight': v('type-weight-strong') } },
     { cls: sh.body, base: { color: v('color-ink-muted') } },
-    { cls: sh.close, base: { display: 'inline-flex', padding: v('space-4'), border: 'none', background: 'transparent', color: 'inherit', cursor: 'pointer', 'border-radius': v('radius-8') }, hover: { background: v('color-control') }, focus },
     iconRule,
   ],
   render(pr: Props): Node {
     const panel = n('div', pr.side === 'bottom' ? [sh.root, sh.bottom] : [sh.root], [
-      n('div', [sh.head], [n('h2', [sh.title], [pr.title as string]), n('button', [sh.close], [iconNode('close', 16)], { type: 'button', 'aria-label': 'Close', 'data-close': true })]),
+      n('div', [sh.head], [n('h2', [sh.title], [pr.title as string]), { ...iconButton.render({ icon: 'close', label: 'Close', size: '16', variant: 'ghost-flat', disabled: false }), attrs: { type: 'button', 'aria-label': 'Close', 'data-close': true } }]),
       n('div', [sh.body], [pr.body as string]),
     ], { role: 'dialog', 'aria-modal': 'true' });
     const side = pr.side === 'left' ? ov.start : pr.side === 'bottom' ? ov.bottom : ov.end;

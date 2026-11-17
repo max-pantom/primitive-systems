@@ -10,7 +10,7 @@ test('/ shows the first component immediately; no seeds banner', async ({ page }
 test('nav lists all components and switches in place', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(42);
+  await expect(nav.getByRole('link')).toHaveCount(52);
   await nav.getByRole('link', { name: 'Tabs' }).click();
   await expect(page.getByRole('heading', { name: 'Tabs', level: 1 })).toBeVisible();
   await expect(page).toHaveURL(/#tabs$/);
@@ -89,10 +89,10 @@ test('spacing rules hold in the rendered preview', async ({ page }) => {
 test('every component renders and has code in every tab', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(42);
-  const names = await nav.getByRole('link').allInnerTexts();
+  await expect(nav.getByRole('link')).toHaveCount(52);
+  const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   for (const name of names) {
-    await nav.getByRole('link', { name, exact: true }).click();
+    await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
     await expect(page.getByRole('heading', { name, level: 1, exact: true })).toBeVisible();
     expect((await page.getByTestId('preview').innerHTML()).length).toBeGreaterThan(20);
     for (const fw of ['p8', 'astro', 'react', 'svelte', 'tailwind', 'html', 'scss']) {
@@ -126,14 +126,14 @@ test('dark mode toggle', async ({ page }) => {
 test('no layout shift when interacting with any component', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Components' });
-  await expect(nav.getByRole('link')).toHaveCount(42);
-  const names = await nav.getByRole('link').allInnerTexts();
+  await expect(nav.getByRole('link')).toHaveCount(52);
+  const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   const box = async () => {
     const root = page.getByTestId('preview').locator('> div > *').first();
     return (await root.boundingBox())!;
   };
   for (const name of names) {
-    await nav.getByRole('link', { name, exact: true }).click();
+    await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
     await expect(page.getByRole('heading', { name, level: 1, exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(150);

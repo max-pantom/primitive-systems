@@ -5,3 +5,10 @@ dist
 test-results
 playwright-report
 .vercel
+public/p8.js
+api/
+public/skill/
+public/RULEBOOK.md
+public/CHECKBOOK.md
+public/CHANGELOG.md
+public/AGENTS.md

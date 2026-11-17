@@ -16,7 +16,7 @@ const parse = (r: any) => JSON.parse(r.content[0].text);
 describe('MCP and HTTP return the same data', () => {
   it('lists tools', async () => {
     const c = await mcp();
-    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['get_code', 'get_component', 'get_tokens', 'list_components']);
+    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['build_theme', 'compose_code', 'get_code', 'get_component', 'get_install', 'get_rules', 'get_tokens', 'lint_code', 'list_components', 'search_components']);
   });
   it('list_components', async () => {
     const c = await mcp();

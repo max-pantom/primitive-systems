@@ -1,5 +1,23 @@
 # Progress
 
+## Agent release (0.7.0) — done
+
+- **Rule book + check book:** `src/rules/rulebook.ts` → RULEBOOK.md / CHECKBOOK.md, enforced by `pnpm rules` and `pnpm test`. The checker caught real violations, including the Toolbar's Icon Buttons (8px side padding; now 12/8), plus Popover/Disclosure padding, Dialog gap, Stack gaps and muted-text contrast. Toolbar now passes.
+- **10 new components:** Combobox, Number Input, OTP Input, Stepper, Rating, Accordion, Stat Card, Avatar Group, Progress Ring, Banner (52 total). Every component has do/don't guidelines and a New/Refined marker.
+- **`<p8-*>` runtime:** `/p8.js` registers every component as a custom element (attributes = props, text = content, behavior included, theme injected).
+- **Agent surface:** remote MCP at `/mcp` (Streamable HTTP), HTTP API at `/api`, CLI (`primitive add|search|info|lint|theme|tokens|rules|compose`), Claude Code skill, `llms.txt`, AGENTS.md, README. New MCP tools: `search_components`, `compose_code`, `get_rules`, `build_theme`, `lint_code`, `get_install`.
+- **Theme builder** (ink/canvas per mode + radius → full contrast-checked token CSS), **spacing lint** for consumer code, **changelog** (CHANGELOG.md, `since`/`mark` in the catalog).
+- Icons: Toolbar defaults now use six pack icons (edit, copy, download, star, trash + separator).
+
+## Later slices (not started)
+
+**Blocks** (explicitly later): sign-in, settings, pricing, onboarding, chat, empty dashboard, and then a generative "describe it" tool on top of them. Today `search_components` + `compose_code` cover the agent-driven version.
+
+**More components:** Date picker, Time picker, Multi-select with chips, File upload (dropzone + list), Color swatch picker, Carousel, Timeline / activity feed, Context menu, Hover card.
+
+**Bigger features:** Figma sync of tokens and components (needs the Figma connection); motion presets beyond the two motion tokens (enter / exit / press); accessibility *page* per component showing contrast / keyboard / labels (the automated checks exist, the docs UI for them does not); theme builder UI in the docs site (CLI, MCP and API exist); publish the CLI to npm so `npx primitive` works without the repo; changelog view in the docs site; per-framework live previews (Svelte island).
+
+## Earlier work
 ## Behavior + 25 new components — done
 
 - **Behavior runtime** (`src/codegen/behavior.ts`): one small `initP8(root)` generated per component, containing only the handlers its markup needs (`data-p8` hooks). Plain HTML/Tailwind/SCSS include a `<script>`; Astro a `<script>`; React a `useEffect`+ref; Svelte `onMount`+`bind:this`. The docs preview runs the same runtime, so what you click is what ships.

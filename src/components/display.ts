@@ -64,7 +64,7 @@ export const disclosure: ComponentDef = {
     { name: 'open', type: 'boolean', default: true, description: 'Initially open.', control: { kind: 'boolean' } },
   ],
   rules: [
-    { cls: d.root, base: { 'box-sizing': 'border-box', padding: v('space-12'), ...surface, 'min-width': v('size-320'), 'interpolate-size': 'allow-keywords' },
+    { cls: d.root, base: { 'box-sizing': 'border-box', 'padding-block': v('space-12'), 'padding-inline': v('space-16'), ...surface, 'min-width': v('size-320'), 'interpolate-size': 'allow-keywords' },
       nested: [
         { sel: '::details-content', decls: { height: '0', overflow: 'clip', transition: `height ${motion}, content-visibility ${motion} allow-discrete` } },
         { sel: '[open]::details-content', decls: { height: 'auto' } },
@@ -187,7 +187,7 @@ export const dialog: ComponentDef = {
   ],
   rules: [
     ...overlayRules,
-    { cls: g.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-16'), 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', padding: v('space-16'), ...surface, background: v('color-canvas') } },
+    { cls: g.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-12'), 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', padding: v('space-16'), ...surface, background: v('color-canvas') } },
     { cls: g.title, base: { margin: '0', ...text('md'), 'font-weight': v('type-weight-strong') } },
     { cls: g.body, base: { margin: '0', ...text('sm'), color: v('color-ink-muted') } },
     { cls: g.foot, base: { display: 'flex', 'justify-content': 'flex-end', gap: v('space-12') } },

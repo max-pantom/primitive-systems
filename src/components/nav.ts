@@ -59,7 +59,7 @@ export const pagination: ComponentDef = {
   props: [P.select('pages', ['3', '5', '7', '10'], '5', 'Number of pages.'), P.text('current', '1', 'Current page number.')],
   rules: [
     { cls: pg.root, base: { display: 'flex', 'align-items': 'center', gap: v('space-4') } },
-    { cls: pg.btn, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'min-width': v('size-32'), height: v('size-32'), 'box-sizing': 'border-box', padding: '0', 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink-muted'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control'), color: v('color-ink') }, focus },
+    { cls: pg.btn, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'min-width': v('size-32'), height: v('size-32'), 'box-sizing': 'border-box', 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink-muted'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control'), color: v('color-ink') }, focus },
     { cls: pg.page, base: {} },
     { cls: pg.on, base: { background: v('color-control-strong'), color: v('color-ink') } },
     iconRule,

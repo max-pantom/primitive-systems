@@ -8,7 +8,7 @@ import type { ComponentDef, Node, Props } from './types';
 const ib = { root: `${p}-iconbtn`, ghost: `${p}-iconbtn--ghost`, flat: `${p}-iconbtn--flat` };
 export const iconButton: ComponentDef = {
   id: 'icon-button', name: 'Icon Button', description: 'A square button with just an icon.', tags: ['control', 'action'], status: 'stable',
-  usage: 'Always set a label: it becomes aria-label. Padding is 8px on all sides (12px left/right would make it wider than tall).',
+  usage: 'Always set a label: it becomes aria-label. Follows the control rule: 12px left/right, 8px top/bottom.',
   props: [
     P.select('icon', ICON_NAMES as string[], 'plus', 'Icon from the Primitive8 pack.'),
     P.text('label', 'Add', 'Accessible name (aria-label).'),
@@ -17,7 +17,7 @@ export const iconButton: ComponentDef = {
     P.bool('disabled', false, 'Disables the button.'),
   ],
   rules: [
-    { cls: ib.root, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'box-sizing': 'border-box', padding: v('space-8'), 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
+    { cls: ib.root, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'box-sizing': 'border-box', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
     { cls: ib.ghost, base: { background: 'transparent', ...ringDecl }, hover: { background: v('color-control') } },
     { cls: ib.flat, base: { background: 'transparent' }, hover: { background: v('color-control') } },
     iconRule,

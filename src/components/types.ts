@@ -48,6 +48,11 @@ export interface ComponentDef {
   /** Prop rendered as the element's text content in the P8 shorthand. */
   content?: string;
   composition?: string;
+  /** Usage rules for agents: how to use the component well, not just correctly. */
+  guidelines?: { do: string[]; dont: string[] };
+  /** Release marker shown in the catalog. */
+  since?: string;
+  mark?: 'new' | 'refined';
   props: PropMeta[];
   rules: Rule[];
   render(props: Props): Node;

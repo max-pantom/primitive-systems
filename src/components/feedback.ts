@@ -67,7 +67,6 @@ export const alert: ComponentDef = {
   ],
   rules: [
     { cls: al.root, base: { display: 'flex', gap: v('space-12'), 'align-items': 'flex-start', 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', 'padding-block': v('space-12'), 'padding-inline': v('space-16'), 'border-radius': v('radius-8'), background: v('color-surface'), color: v('color-ink'), ...ringDecl, ...text('sm') } },
-    { cls: al.icon, base: { 'margin-top': v('space-2') } },
     { cls: al.text, base: { flex: '1', display: 'flex', 'flex-direction': 'column', gap: v('space-4') } },
     { cls: al.title, base: { 'font-weight': v('type-weight-strong') } },
     { cls: al.body, base: { color: v('color-ink-muted') } },

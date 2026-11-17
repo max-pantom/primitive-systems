@@ -44,7 +44,20 @@ function Docs({ def }: { def: ComponentDef }) {
   return (
     <div className="docs" data-testid="docs">
       <section><h2>Usage</h2><p>{def.usage}</p></section>
+      {def.guidelines && (
+        <section data-testid="guidelines">
+          <h2>Guidelines</h2>
+          <ul className="rules do">{def.guidelines.do.map((t) => <li key={t}><span className="tick">Do</span>{t}</li>)}</ul>
+          <ul className="rules dont">{def.guidelines.dont.map((t) => <li key={t}><span className="tick">Don't</span>{t}</li>)}</ul>
+        </section>
+      )}
       {def.composition && <section><h2>Composition</h2><p>{def.composition}</p></section>}
+      <section data-testid="install">
+        <h2>Install</h2>
+        <code className="block">npx {site.cli} add {def.id} -f react</code>
+        <code className="block">&lt;{site.cssPrefix}-{def.id}&gt;</code>
+        <p className="muted">Add <code>{'<script src="' + site.url + '/p8.js">'}</code> once and the tag works anywhere.</p>
+      </section>
       <section>
         <h2>Props</h2>
         <table className="props" data-testid="props-table">
@@ -178,7 +191,7 @@ export default function App() {
         </div>
         <nav className="nav" aria-label="Components">
           {components.map((c) => (
-            <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}</a>
+            <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}{c.mark === 'new' && <span className="mark">New</span>}</a>
           ))}
         </nav>
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">
