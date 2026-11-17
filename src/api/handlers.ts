@@ -5,6 +5,7 @@ import { site } from '../config/site';
 import { EXCEPTIONS, GAPS, GRID_SPACE, RADII, RULES } from '../rules/rulebook';
 import { buildTheme } from '../tokens/builder';
 import { lintSpacing } from '../lint/spacing';
+import { a11yReport } from '../rules/a11y';
 import { FRAMEWORKS, generate } from '../codegen';
 import { flatTokens } from '../tokens/theme';
 
@@ -34,6 +35,7 @@ const detail = (d: ComponentDef) => ({
   composition: d.composition ?? null,
   props: d.props.map((p) => ({ name: p.name, type: p.type, default: p.default, description: p.description, control: p.control })),
   defaults: defaultsOf(d.props),
+  a11y: (({ contrast, keyboard, labels }) => ({ contrast, keyboard, labels }))(a11yReport(d, d.render(defaultsOf(d.props)))),
   frameworks: [...FRAMEWORKS],
 });
 

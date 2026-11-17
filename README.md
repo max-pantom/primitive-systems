@@ -39,3 +39,7 @@ pnpm build        # runtime + API + CLI bundles, then the static site
 A component is one definition in `src/components/` (props, style rules over named tokens, a framework-agnostic node tree) plus do/don't guidelines in `src/components/guidelines.ts`. Everything else — six code outputs, behavior script, docs page, MCP/HTTP payloads — is generated.
 
 Name, tagline and URL live only in `src/config/site.ts`. Icons come only from https://factory.primitive8.cc/icons.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

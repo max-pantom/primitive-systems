@@ -7,6 +7,7 @@ import { hasBehavior, runtime } from '../codegen/behavior';
 import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { iconElements } from '../icons/icons';
 import { highlight } from './highlight';
+import { a11yReport } from '../rules/a11y';
 
 const camel = (k: string) => (k === 'for' ? 'htmlFor' : k === 'tabindex' ? 'tabIndex' : /^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, c) => c.toUpperCase()));
 
@@ -40,7 +41,8 @@ function useHash(): [string, (id: string) => void] {
   return [h, (id) => { location.hash = id; }];
 }
 
-function Docs({ def }: { def: ComponentDef }) {
+function Docs({ def, tree }: { def: ComponentDef; tree: Node }) {
+  const a11y = useMemo(() => a11yReport(def, tree), [def, tree]);
   return (
     <div className="docs" data-testid="docs">
       <section><h2>Usage</h2><p>{def.usage}</p></section>
@@ -52,6 +54,37 @@ function Docs({ def }: { def: ComponentDef }) {
         </section>
       )}
       {def.composition && <section><h2>Composition</h2><p>{def.composition}</p></section>}
+      <section data-testid="a11y">
+        <h2>Accessibility</h2>
+        <h3>Contrast <span className="muted">(WCAG AA, 4.5:1)</span></h3>
+        <table className="props a11y" data-testid="a11y-contrast">
+          <thead><tr><th>Text</th><th>Light</th><th>Dark</th></tr></thead>
+          <tbody>
+            {a11y.contrast.map((r) => (
+              <tr key={`${r.fg}${r.bg}${r.state}`} className={r.pass ? '' : 'fail'}>
+                <td><code>{r.fg}</code> on <code>{r.bg}</code>{r.state !== 'default' && <span className="muted"> · {r.state}</span>}{r.exempt && <div className="muted">Exempt: placeholder</div>}</td>
+                <td className="nowrap">{r.light}:1 {r.light >= 4.5 ? '✓' : '✗'}</td>
+                <td className="nowrap">{r.dark}:1 {r.dark >= 4.5 ? '✓' : '✗'}</td>
+              </tr>
+            ))}
+            {!a11y.contrast.length && <tr><td colSpan={3} className="muted">No text in this component.</td></tr>}
+          </tbody>
+        </table>
+        <h3>Keyboard</h3>
+        <ul className="keys" data-testid="a11y-keyboard">
+          {a11y.keyboard.map((k) => <li key={k.keys + k.does}><kbd>{k.keys}</kbd><span>{k.does}</span></li>)}
+        </ul>
+        <h3>Labels and roles</h3>
+        <table className="props a11y" data-testid="a11y-labels">
+          <thead><tr><th>Role</th><th>Name</th></tr></thead>
+          <tbody>
+            {a11y.labels.map((l, i) => (
+              <tr key={i}><td><code>{l.role}</code>{l.state && <div className="muted">{l.state}</div>}</td><td>{l.name}<div className="muted">{l.source}</div></td></tr>
+            ))}
+            {!a11y.labels.length && <tr><td colSpan={2} className="muted">Presentational: no interactive roles.</td></tr>}
+          </tbody>
+        </table>
+      </section>
       <section data-testid="install">
         <h2>Install</h2>
         <code className="block">npx {site.cli} add {def.id} -f react</code>
@@ -144,7 +177,7 @@ function Workbench({ def }: { def: ComponentDef }) {
             </div>
           );
         })}
-        <Docs def={def} />
+        <Docs def={def} tree={tree} />
       </aside>
     </>
   );

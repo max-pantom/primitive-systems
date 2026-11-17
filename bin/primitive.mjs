@@ -725,12 +725,12 @@ function cleanRegex(source) {
   return source.slice(start, end);
 }
 function floatSafeRemainder(val, step) {
-  const ratio = val / step;
-  const roundedRatio = Math.round(ratio);
-  const tolerance = 4 * Number.EPSILON * Math.max(Math.abs(ratio), 1);
-  if (Math.abs(ratio - roundedRatio) < tolerance)
+  const ratio2 = val / step;
+  const roundedRatio = Math.round(ratio2);
+  const tolerance = 4 * Number.EPSILON * Math.max(Math.abs(ratio2), 1);
+  if (Math.abs(ratio2 - roundedRatio) < tolerance)
     return 0;
-  return ratio - roundedRatio;
+  return ratio2 - roundedRatio;
 }
 var EVALUATING = /* @__PURE__ */ Symbol("evaluating");
 function defineLazy(object2, key, getter) {
@@ -1314,8 +1314,8 @@ function base64urlToUint8Array(base64url3) {
 function uint8ArrayToBase64url(bytes) {
   return uint8ArrayToBase64(bytes).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
-function hexToUint8Array(hex3) {
-  const cleanHex = hex3.replace(/^0x/, "");
+function hexToUint8Array(hex4) {
+  const cleanHex = hex4.replace(/^0x/, "");
   if (cleanHex.length % 2 !== 0) {
     throw new Error("Invalid hex string length");
   }
@@ -4068,13 +4068,13 @@ function handleIntersectionResults(result, left, right) {
         result.issues.push(keyIssues.get(k2));
     }
   }
-  const merged = mergeValues(left.value, right.value);
-  if (!merged.valid) {
+  const merged2 = mergeValues(left.value, right.value);
+  if (!merged2.valid) {
     if (aborted(result))
       return result;
-    throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged.mergeErrorPath)}`);
+    throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged2.mergeErrorPath)}`);
   }
-  result.value = merged.data;
+  result.value = merged2.data;
   return result;
 }
 var $ZodTuple = /* @__PURE__ */ $constructor("$ZodTuple", (inst, def) => {
@@ -15874,8 +15874,8 @@ function foldObjects(members2) {
         if (!parts.some((seen) => JSON.stringify(seen) === JSON.stringify(part)))
           parts.push(part);
       }
-      const merged = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
-      assignProp(properties, key, merged);
+      const merged2 = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
+      assignProp(properties, key, merged2);
     }
     for (const key of object2.required ?? [])
       required2.add(key);
@@ -21683,139 +21683,15 @@ var EXCEPTIONS = [
   { rule: "a11y", target: "placeholder text", reason: "Placeholder color is the seed #C0C0C0 (about 1.8:1). Placeholders never carry required information; labels do." }
 ];
 
-// src/rules/check.ts
-var lum = (hex3) => {
-  const [r2, g2, b2] = [1, 3, 5].map((i2) => parseInt(hex3.slice(i2, i2 + 2), 16) / 255).map((c3) => c3 <= 0.03928 ? c3 / 12.92 : ((c3 + 0.055) / 1.055) ** 2.4);
+// src/rules/contrast.ts
+var lum = (hex4) => {
+  const [r2, g2, b2] = [1, 3, 5].map((i2) => parseInt(hex4.slice(i2, i2 + 2), 16) / 255).map((c3) => c3 <= 0.03928 ? c3 / 12.92 : ((c3 + 0.055) / 1.055) ** 2.4);
   return 0.2126 * r2 + 0.7152 * g2 + 0.0722 * b2;
 };
 var contrast = (a2, b2) => {
-  const [x, y] = [lum(a2), lum(b2)].sort((m2, n2) => n2 - m2);
+  const [x, y] = [lum(a2.slice(0, 7)), lum(b2.slice(0, 7))].sort((m2, n2) => n2 - m2);
   return (x + 0.05) / (y + 0.05);
 };
-
-// src/tokens/builder.ts
-var HEX = /^#[0-9a-fA-F]{6}$/;
-var toRgb = (h) => [1, 3, 5].map((i2) => parseInt(h.slice(i2, i2 + 2), 16));
-var toHex = (c3) => `#${c3.map((x) => Math.round(Math.min(255, Math.max(0, x))).toString(16).padStart(2, "0")).join("").toUpperCase()}`;
-var mix = (a2, b2, t3) => toHex(toRgb(a2).map((x, i2) => x + (toRgb(b2)[i2] - x) * t3));
-function derive(ink, canvas, mode) {
-  const dark = mode === "dark";
-  const strong = mix(canvas, ink, dark ? 0.13 : 0.1);
-  let t3 = 0.4;
-  let muted = mix(ink, canvas, t3);
-  while (contrast(muted, strong) < 4.5 && t3 > 0) {
-    t3 -= 0.02;
-    muted = mix(ink, canvas, Math.max(0, t3));
-  }
-  return {
-    canvas,
-    surface: dark ? canvas : mix(canvas, ink, 0.06),
-    control: mix(canvas, ink, dark ? 0.066 : 0.067),
-    "control-strong": strong,
-    ink,
-    "ink-inverse": canvas,
-    "ink-muted": muted,
-    placeholder: mix(ink, canvas, 0.75),
-    backdrop: dark ? "#00000080" : "#00000033",
-    ring: `${mix(ink, canvas, dark ? 0.5 : 0.57)}40`,
-    "ring-focus": `${mix(ink, canvas, dark ? 0.5 : 0.57)}4D`,
-    "syntax-1": ink,
-    "syntax-2": mix(ink, canvas, 0.3),
-    "syntax-3": mix(ink, canvas, 0.52),
-    "syntax-4": mix(ink, canvas, 0.67)
-  };
-}
-function buildTheme(input3 = {}) {
-  const errors = [];
-  const pick2 = (v2, fallback, label) => {
-    if (v2 === void 0) return fallback;
-    if (!HEX.test(v2)) {
-      errors.push(`${label} must be a #RRGGBB hex color`);
-      return fallback;
-    }
-    return v2;
-  };
-  const L = { ink: pick2(input3.light?.ink, theme.color.light.ink, "light.ink"), canvas: pick2(input3.light?.canvas, theme.color.light.canvas, "light.canvas") };
-  const D = { ink: pick2(input3.dark?.ink, theme.color.dark.ink, "dark.ink"), canvas: pick2(input3.dark?.canvas, theme.color.dark.canvas, "dark.canvas") };
-  const radius = input3.radius ?? "8";
-  if (!["4", "8", "12", "16"].includes(radius)) errors.push("radius must be 4, 8, 12 or 16");
-  if (errors.length) return { ok: false, errors };
-  const light = derive(L.ink, L.canvas, "light");
-  const dark = derive(D.ink, D.canvas, "dark");
-  const block = (sel, o2) => `${sel} {
-${Object.entries(o2).map(([k2, v2]) => `  --p8-color-${k2}: ${v2};`).join("\n")}
-}`;
-  const r2 = Number(radius);
-  const css2 = [
-    block(":root", light).replace(/\n}$/, `
-  --p8-radius-8: ${r2}px;
-  --p8-radius-12: ${r2 + 4}px;
-  --p8-radius-16: ${r2 + 8}px;
-}`),
-    block('[data-theme="dark"]', dark)
-  ].join("\n\n");
-  const checks = ["light", "dark"].flatMap((m2) => {
-    const c3 = m2 === "light" ? light : dark;
-    return ["ink", "ink-muted"].flatMap((fg) => ["canvas", "surface", "control", "control-strong"].map((bg) => ({ mode: m2, fg, bg, ratio: Math.round(contrast(c3[fg], c3[bg]) * 100) / 100 })));
-  });
-  return { ok: true, css: css2, tokens: { light, dark, radius }, contrast: checks, passes: checks.every((c3) => c3.ratio >= 4.5) };
-}
-
-// src/lint/spacing.ts
-var PROP = "(padding|margin|gap|row-gap|column-gap|border-radius|border-(?:top|bottom)-(?:left|right)-radius|padding-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?|margin-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)";
-var CAMEL = "(padding|margin|gap|rowGap|columnGap|borderRadius|padding(?:Top|Right|Bottom|Left|Inline|Block)|margin(?:Top|Right|Bottom|Left|Inline|Block))";
-function judge(px) {
-  if (px === 0 || px % 4 === 0) return null;
-  if (px === 2 || px === 6) return { severity: "warn", message: `${px}px is only allowed for line gaps (2) and menu item sides (6)` };
-  const near = Math.round(px / 4) * 4;
-  return { severity: "error", message: `${px}px is off the 4/8 grid \u2014 use ${near}px` };
-}
-function lintSpacing(code) {
-  const issues = [];
-  const lines2 = code.split("\n");
-  const seen = /* @__PURE__ */ new Set();
-  const push = (line, property, value, px) => {
-    const j = judge(px);
-    const key = `${line}|${property}|${px}`;
-    if (j && !seen.has(key)) {
-      seen.add(key);
-      issues.push({ line, property, value, ...j });
-    }
-  };
-  lines2.forEach((text2, i2) => {
-    const line = i2 + 1;
-    for (const m2 of text2.matchAll(new RegExp(`\\b${PROP}\\s*:\\s*([^;}"'\`]+)`, "g"))) {
-      for (const v2 of m2[2].matchAll(/(-?\d*\.?\d+)(px|rem)\b/g)) push(line, m2[1], v2[0], parseFloat(v2[1]) * (v2[2] === "rem" ? 16 : 1));
-    }
-    for (const m2 of text2.matchAll(new RegExp(`\\b${CAMEL}\\s*:\\s*['"]?(-?\\d*\\.?\\d+)(px|rem)?['"]?`, "g"))) push(line, m2[1], m2[2] + (m2[3] ?? ""), parseFloat(m2[2]) * (m2[3] === "rem" ? 16 : 1));
-    for (const m2 of text2.matchAll(/\b(?:p[xytrbl]?|m[xytrbl]?|gap(?:-[xy])?|space-[xy]|rounded(?:-[a-z]{1,2})?)-\[(-?\d*\.?\d+)(px|rem)\]/g)) push(line, m2[0].split("-[")[0], m2[1] + m2[2], parseFloat(m2[1]) * (m2[2] === "rem" ? 16 : 1));
-  });
-  return issues;
-}
-
-// src/codegen/react-node.ts
-function reactify(node2) {
-  const attrs = { ...node2.attrs ?? {} };
-  let children = node2.children?.map((c3) => typeof c3 === "string" ? c3 : reactify(c3));
-  if (node2.tag === "input" && "value" in attrs) {
-    attrs.defaultValue = attrs.value;
-    delete attrs.value;
-  }
-  if (node2.tag === "textarea" && children?.length) {
-    attrs.defaultValue = children.join("");
-    children = [];
-  }
-  if (node2.tag === "select" && children) {
-    const sel = children.find((c3) => typeof c3 !== "string" && c3.attrs?.selected);
-    if (sel) attrs.defaultValue = sel.children?.[0] ?? "";
-    children = children.map((c3) => {
-      if (typeof c3 === "string" || !c3.attrs?.selected) return c3;
-      const { selected: _s, ...rest2 } = c3.attrs;
-      return { ...c3, attrs: rest2 };
-    });
-  }
-  return { ...node2, attrs, children };
-}
 
 // src/codegen/behavior.ts
 function kindsIn(node2, acc = /* @__PURE__ */ new Set()) {
@@ -22158,6 +22034,232 @@ function ruleMapHasAny(base2, node2) {
   return seen.has(base2);
 }
 
+// src/rules/a11y.ts
+var tokenOf = (v2) => v2?.match(/var\(--p8-color-([\w-]+)\)/)?.[1];
+var hex3 = (mode, name) => theme.color[mode][name];
+var textOf = (n2) => typeof n2 === "string" ? n2 : (n2.children ?? []).map(textOf).join("");
+var ownText = (n2) => (n2.children ?? []).filter((c3) => typeof c3 === "string").join("").trim();
+var merged = (cls, key) => Object.assign({}, ...(cls ?? []).map((k2) => ruleMap.get(k2)?.[key] ?? {}));
+var ratio = (mode, fg, bg) => Math.round(contrast(hex3(mode, fg), hex3(mode, bg)) * 100) / 100;
+function contrastReport(node2) {
+  const rows = /* @__PURE__ */ new Map();
+  const add = (el, sample, fg, bg, state, exempt) => {
+    if (!hex3("light", fg) || !hex3("light", bg)) return;
+    const key = `${fg}|${bg}|${state}`;
+    if (rows.has(key)) return;
+    const light = ratio("light", fg, bg), dark = ratio("dark", fg, bg);
+    rows.set(key, { element: el.cls?.[0] ?? el.tag, sample: sample.slice(0, 28), fg, bg, state, light, dark, pass: light >= 4.5 && dark >= 4.5, exempt });
+  };
+  const walk2 = (n2, inheritedFg, inheritedBg) => {
+    const base2 = merged(n2.cls, "base");
+    const fg = tokenOf(base2.color) ?? inheritedFg;
+    const bg = tokenOf(base2.background) ?? inheritedBg;
+    const text2 = ownText(n2) || (["input", "textarea", "select"].includes(n2.tag) ? String(n2.attrs?.value ?? "") || String(n2.attrs?.["aria-label"] ?? "field text") : "");
+    if (text2) {
+      add(n2, text2, fg, bg, "default");
+      const hov = tokenOf(merged(n2.cls, "hover").background);
+      if (hov) add(n2, text2, tokenOf(merged(n2.cls, "hover").color) ?? fg, hov, "hover");
+      const ph = tokenOf(merged(n2.cls, "placeholder").color);
+      if (ph && n2.attrs?.placeholder) add(n2, String(n2.attrs.placeholder), ph, bg, "placeholder", "Placeholder color is the seed #C0C0C0; labels carry the meaning, never the placeholder.");
+    }
+    for (const c3 of n2.children ?? []) if (typeof c3 !== "string") walk2(c3, fg, bg);
+  };
+  walk2(node2, "ink", "canvas");
+  return [...rows.values()];
+}
+var KIND_KEYS = {
+  toggle: [{ keys: "Space", does: "Toggle on / off" }],
+  group: [{ keys: "\u2190 \u2192 \u2191 \u2193", does: "Move the selection (wraps)" }, { keys: "Home / End", does: "Select first / last" }],
+  menu: [{ keys: "\u2191 \u2193", does: "Move between items" }, { keys: "Home / End", does: "First / last item" }, { keys: "Enter", does: "Choose the item" }, { keys: "Esc", does: "Close the menu" }],
+  popover: [{ keys: "Enter / Space", does: "Open from the trigger" }, { keys: "Esc", does: "Close and return focus to the trigger" }],
+  overlay: [{ keys: "Tab / Shift+Tab", does: "Cycles inside (focus trap)" }, { keys: "Esc", does: "Close" }],
+  palette: [{ keys: "Type", does: "Filter commands" }, { keys: "\u2191 \u2193", does: "Move" }, { keys: "Enter", does: "Run" }, { keys: "Cmd / Ctrl + K", does: "Open or close" }],
+  combobox: [{ keys: "Type", does: "Filter options" }, { keys: "\u2191 \u2193", does: "Move" }, { keys: "Enter", does: "Choose" }, { keys: "Esc", does: "Close the list" }],
+  otp: [{ keys: "Type", does: "Fill and advance" }, { keys: "Backspace", does: "Clear and go back" }, { keys: "\u2190 \u2192", does: "Move between boxes" }, { keys: "Paste", does: "Fills every box" }],
+  rating: [{ keys: "\u2190 \u2192 \u2191 \u2193", does: "Change the rating" }],
+  number: [{ keys: "\u2191 \u2193", does: "Step the value (native)" }, { keys: "Type", does: "Enter a number" }],
+  pager: [{ keys: "Enter / Space", does: "Go to the page" }],
+  tooltip: [{ keys: "Tab", does: "Focusing the trigger shows the tooltip" }]
+};
+function keyboardReport(node2) {
+  const out = [];
+  const push = (rows) => rows.forEach((r2) => {
+    if (!out.some((o2) => o2.keys === r2.keys && o2.does === r2.does)) out.push(r2);
+  });
+  const tags = /* @__PURE__ */ new Set();
+  const types = /* @__PURE__ */ new Set();
+  (function walk2(n2) {
+    tags.add(n2.tag);
+    if (typeof n2.attrs?.type === "string") types.add(n2.attrs.type);
+    (n2.children ?? []).forEach((c3) => typeof c3 !== "string" && walk2(c3));
+  })(node2);
+  const kinds = kindsIn(node2);
+  push([{ keys: "Tab / Shift+Tab", does: "Move focus to and from the control" }]);
+  if (tags.has("button") && !kinds.has("toggle") && !kinds.has("group") && !kinds.has("rating")) push([{ keys: "Enter / Space", does: "Activate" }]);
+  if (tags.has("a")) push([{ keys: "Enter", does: "Follow the link" }]);
+  if (tags.has("summary")) push([{ keys: "Enter / Space", does: "Open or close" }]);
+  if (tags.has("select")) push([{ keys: "\u2191 \u2193", does: "Change the option" }, { keys: "Type", does: "Jump to an option" }]);
+  if (types.has("range")) push([{ keys: "\u2190 \u2192", does: "Change the value" }, { keys: "Home / End", does: "Minimum / maximum" }, { keys: "PgUp / PgDn", does: "Larger step" }]);
+  if (tags.has("input") && ![...types].every((t3) => ["range", "number"].includes(t3)) || tags.has("textarea")) {
+    if (!kinds.has("otp") && !kinds.has("combobox") && !kinds.has("palette") && !kinds.has("number")) push([{ keys: "Type", does: "Enter text" }]);
+  }
+  for (const k2 of kinds) push(KIND_KEYS[k2] ?? []);
+  if (!tags.has("button") && !tags.has("a") && !tags.has("summary") && !tags.has("input") && !tags.has("select") && !tags.has("textarea")) return [{ keys: "\u2014", does: "Not interactive: no keyboard interaction and not in the tab order" }];
+  return out;
+}
+function labelReport(node2) {
+  const rows = [];
+  const labelFor = /* @__PURE__ */ new Map();
+  (function find(n2) {
+    if (n2.tag === "label" && n2.attrs?.for) labelFor.set(String(n2.attrs.for), textOf(n2).trim());
+    (n2.children ?? []).forEach((c3) => typeof c3 !== "string" && find(c3));
+  })(node2);
+  (function walk2(n2, parents) {
+    const a2 = n2.attrs ?? {};
+    const role = typeof a2.role === "string" ? a2.role : { button: "button", a: "link", input: "textbox", textarea: "textbox", select: "combobox", img: "img", summary: "button", progress: "progressbar", table: "table", nav: "navigation", dialog: "dialog", details: "group", kbd: "text" }[n2.tag];
+    const interesting = a2.role || ["button", "a", "input", "textarea", "select", "img", "summary", "progress", "nav", "table"].includes(n2.tag);
+    if (interesting && role) {
+      const labelledParent = [...parents].reverse().find((p4) => p4.tag === "label");
+      const aria = typeof a2["aria-label"] === "string" ? a2["aria-label"] : "";
+      const forLabel = typeof a2.id === "string" ? labelFor.get(a2.id) : void 0;
+      const own2 = textOf(n2).trim();
+      const container = ["tablist", "menu", "radiogroup", "listbox", "toolbar", "group"].includes(role);
+      const [name, source] = !aria && container ? ["\u2014", "container: name not required"] : aria ? [aria, "aria-label"] : forLabel ? [forLabel, "<label for>"] : own2 ? [own2, "visible text"] : labelledParent ? [textOf(labelledParent).trim(), "wrapping <label>"] : typeof a2.alt === "string" ? [a2.alt, "alt"] : ["", "none"];
+      const state = ["aria-checked", "aria-selected", "aria-expanded", "aria-current", "aria-invalid", "aria-valuenow", "aria-haspopup", "aria-modal", "disabled"].filter((k2) => a2[k2] !== void 0).map((k2) => a2[k2] === true ? k2 : `${k2}=${a2[k2]}`).join(" ");
+      rows.push({ element: n2.tag, role, name: name || "\u2014", source, state: state || void 0 });
+    }
+    (n2.children ?? []).forEach((c3) => typeof c3 !== "string" && walk2(c3, [...parents, n2]));
+  })(node2, []);
+  return rows;
+}
+function a11yReport(def, node2) {
+  return { contrast: contrastReport(node2), keyboard: keyboardReport(node2), labels: labelReport(node2), classes: usedClasses(node2).length };
+}
+
+// src/tokens/builder.ts
+var HEX = /^#[0-9a-fA-F]{6}$/;
+var toRgb = (h) => [1, 3, 5].map((i2) => parseInt(h.slice(i2, i2 + 2), 16));
+var toHex = (c3) => `#${c3.map((x) => Math.round(Math.min(255, Math.max(0, x))).toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+var mix = (a2, b2, t3) => toHex(toRgb(a2).map((x, i2) => x + (toRgb(b2)[i2] - x) * t3));
+function derive(ink, canvas, mode) {
+  const dark = mode === "dark";
+  const strong = mix(canvas, ink, dark ? 0.13 : 0.1);
+  let t3 = 0.4;
+  let muted = mix(ink, canvas, t3);
+  while (contrast(muted, strong) < 4.5 && t3 > 0) {
+    t3 -= 0.02;
+    muted = mix(ink, canvas, Math.max(0, t3));
+  }
+  return {
+    canvas,
+    surface: dark ? canvas : mix(canvas, ink, 0.06),
+    control: mix(canvas, ink, dark ? 0.066 : 0.067),
+    "control-strong": strong,
+    ink,
+    "ink-inverse": canvas,
+    "ink-muted": muted,
+    placeholder: mix(ink, canvas, 0.75),
+    backdrop: dark ? "#00000080" : "#00000033",
+    ring: `${mix(ink, canvas, dark ? 0.5 : 0.57)}40`,
+    "ring-focus": `${mix(ink, canvas, dark ? 0.5 : 0.57)}4D`,
+    "syntax-1": ink,
+    "syntax-2": mix(ink, canvas, 0.3),
+    "syntax-3": mix(ink, canvas, 0.52),
+    "syntax-4": mix(ink, canvas, 0.67)
+  };
+}
+function buildTheme(input3 = {}) {
+  const errors = [];
+  const pick2 = (v2, fallback, label) => {
+    if (v2 === void 0) return fallback;
+    if (!HEX.test(v2)) {
+      errors.push(`${label} must be a #RRGGBB hex color`);
+      return fallback;
+    }
+    return v2;
+  };
+  const L = { ink: pick2(input3.light?.ink, theme.color.light.ink, "light.ink"), canvas: pick2(input3.light?.canvas, theme.color.light.canvas, "light.canvas") };
+  const D = { ink: pick2(input3.dark?.ink, theme.color.dark.ink, "dark.ink"), canvas: pick2(input3.dark?.canvas, theme.color.dark.canvas, "dark.canvas") };
+  const radius = input3.radius ?? "8";
+  if (!["4", "8", "12", "16"].includes(radius)) errors.push("radius must be 4, 8, 12 or 16");
+  if (errors.length) return { ok: false, errors };
+  const light = derive(L.ink, L.canvas, "light");
+  const dark = derive(D.ink, D.canvas, "dark");
+  const block = (sel, o2) => `${sel} {
+${Object.entries(o2).map(([k2, v2]) => `  --p8-color-${k2}: ${v2};`).join("\n")}
+}`;
+  const r2 = Number(radius);
+  const css2 = [
+    block(":root", light).replace(/\n}$/, `
+  --p8-radius-8: ${r2}px;
+  --p8-radius-12: ${r2 + 4}px;
+  --p8-radius-16: ${r2 + 8}px;
+}`),
+    block('[data-theme="dark"]', dark)
+  ].join("\n\n");
+  const checks = ["light", "dark"].flatMap((m2) => {
+    const c3 = m2 === "light" ? light : dark;
+    return ["ink", "ink-muted"].flatMap((fg) => ["canvas", "surface", "control", "control-strong"].map((bg) => ({ mode: m2, fg, bg, ratio: Math.round(contrast(c3[fg], c3[bg]) * 100) / 100 })));
+  });
+  return { ok: true, css: css2, tokens: { light, dark, radius }, contrast: checks, passes: checks.every((c3) => c3.ratio >= 4.5) };
+}
+
+// src/lint/spacing.ts
+var PROP = "(padding|margin|gap|row-gap|column-gap|border-radius|border-(?:top|bottom)-(?:left|right)-radius|padding-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?|margin-(?:top|right|bottom|left|inline|block)(?:-(?:start|end))?)";
+var CAMEL = "(padding|margin|gap|rowGap|columnGap|borderRadius|padding(?:Top|Right|Bottom|Left|Inline|Block)|margin(?:Top|Right|Bottom|Left|Inline|Block))";
+function judge(px) {
+  if (px === 0 || px % 4 === 0) return null;
+  if (px === 2 || px === 6) return { severity: "warn", message: `${px}px is only allowed for line gaps (2) and menu item sides (6)` };
+  const near = Math.round(px / 4) * 4;
+  return { severity: "error", message: `${px}px is off the 4/8 grid \u2014 use ${near}px` };
+}
+function lintSpacing(code) {
+  const issues = [];
+  const lines2 = code.split("\n");
+  const seen = /* @__PURE__ */ new Set();
+  const push = (line, property, value, px) => {
+    const j = judge(px);
+    const key = `${line}|${property}|${px}`;
+    if (j && !seen.has(key)) {
+      seen.add(key);
+      issues.push({ line, property, value, ...j });
+    }
+  };
+  lines2.forEach((text2, i2) => {
+    const line = i2 + 1;
+    for (const m2 of text2.matchAll(new RegExp(`\\b${PROP}\\s*:\\s*([^;}"'\`]+)`, "g"))) {
+      for (const v2 of m2[2].matchAll(/(-?\d*\.?\d+)(px|rem)\b/g)) push(line, m2[1], v2[0], parseFloat(v2[1]) * (v2[2] === "rem" ? 16 : 1));
+    }
+    for (const m2 of text2.matchAll(new RegExp(`\\b${CAMEL}\\s*:\\s*['"]?(-?\\d*\\.?\\d+)(px|rem)?['"]?`, "g"))) push(line, m2[1], m2[2] + (m2[3] ?? ""), parseFloat(m2[2]) * (m2[3] === "rem" ? 16 : 1));
+    for (const m2 of text2.matchAll(/\b(?:p[xytrbl]?|m[xytrbl]?|gap(?:-[xy])?|space-[xy]|rounded(?:-[a-z]{1,2})?)-\[(-?\d*\.?\d+)(px|rem)\]/g)) push(line, m2[0].split("-[")[0], m2[1] + m2[2], parseFloat(m2[1]) * (m2[2] === "rem" ? 16 : 1));
+  });
+  return issues;
+}
+
+// src/codegen/react-node.ts
+function reactify(node2) {
+  const attrs = { ...node2.attrs ?? {} };
+  let children = node2.children?.map((c3) => typeof c3 === "string" ? c3 : reactify(c3));
+  if (node2.tag === "input" && "value" in attrs) {
+    attrs.defaultValue = attrs.value;
+    delete attrs.value;
+  }
+  if (node2.tag === "textarea" && children?.length) {
+    attrs.defaultValue = children.join("");
+    children = [];
+  }
+  if (node2.tag === "select" && children) {
+    const sel = children.find((c3) => typeof c3 !== "string" && c3.attrs?.selected);
+    if (sel) attrs.defaultValue = sel.children?.[0] ?? "";
+    children = children.map((c3) => {
+      if (typeof c3 === "string" || !c3.attrs?.selected) return c3;
+      const { selected: _s, ...rest2 } = c3.attrs;
+      return { ...c3, attrs: rest2 };
+    });
+  }
+  return { ...node2, attrs, children };
+}
+
 // src/codegen/index.ts
 var FRAMEWORKS = ["p8", "astro", "react", "svelte", "tailwind", "html", "scss"];
 var STATES = ["hover", "focus", "disabled", "placeholder"];
@@ -22234,17 +22336,17 @@ function tailwindClasses(cls) {
   for (const [p4, val] of Object.entries(mergedDecls(cls, "base"))) out.push(arb(p4, val));
   for (const s2 of STATES) for (const [p4, val] of Object.entries(mergedDecls(cls, s2))) out.push(arb(p4, val, twState[s2]));
   for (const ps of PSTATES) {
-    const merged = {};
+    const merged2 = {};
     let parent = "";
     for (const k2 of cls) {
       const r2 = ruleMap.get(k2);
       if (r2?.parent?.[ps]) {
-        Object.assign(merged, r2.parent[ps]);
+        Object.assign(merged2, r2.parent[ps]);
         parent = r2.parent.cls;
       }
     }
     const variants = PARENT[ps].tw(parent).split(":").filter(Boolean);
-    for (const [p4, val] of Object.entries(merged)) for (const vr of variants) out.push(arb(p4, val, `${vr}:`));
+    for (const [p4, val] of Object.entries(merged2)) for (const vr of variants) out.push(arb(p4, val, `${vr}:`));
   }
   const nested = /* @__PURE__ */ new Map();
   for (const k2 of cls) for (const nx of ruleMap.get(k2)?.nested ?? []) nested.set(nx.sel, { ...nested.get(nx.sel) ?? {}, ...nx.decls });
@@ -22469,6 +22571,7 @@ var detail = (d2) => ({
   composition: d2.composition ?? null,
   props: d2.props.map((p4) => ({ name: p4.name, type: p4.type, default: p4.default, description: p4.description, control: p4.control })),
   defaults: defaultsOf(d2.props),
+  a11y: (({ contrast: contrast2, keyboard, labels }) => ({ contrast: contrast2, keyboard, labels }))(a11yReport(d2, d2.render(defaultsOf(d2.props)))),
   frameworks: [...FRAMEWORKS]
 });
 function getComponent(id) {

@@ -12,12 +12,9 @@ const tokensIn = (value: string) => [...value.matchAll(/var\(--p8-([\w-]+)\)/g)]
 const entries = (r: Rule) => [['base', r.base], ['hover', r.hover], ['focus', r.focus], ['disabled', r.disabled], ['placeholder', r.placeholder], ...(r.nested ?? []).map((n): [string, Decls] => [`nested ${n.sel}`, n.decls]),
   ...(r.parent?.hover ? [['parent hover', r.parent.hover] as [string, Decls]] : []), ...(r.parent?.active ? [['parent active', r.parent.active] as [string, Decls]] : [])] as [string, Decls | undefined][];
 
-/* ---------- WCAG contrast ---------- */
-const lum = (hex: string) => {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
-export const contrast = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+import { contrast } from './contrast';
+import { contrastReport } from './a11y';
+export { contrast };
 
 export function checkTokens(): Violation[] {
   const out: Violation[] = [];
@@ -138,7 +135,11 @@ export function checkAll(): Violation[] {
   const out: Violation[] = [...checkTokens(), ...checkSource()];
   for (const def of components) {
     out.push(...checkRules(def));
-    variants(def).forEach((props, i) => out.push(...checkNode(def, def.render(props), i === 0 ? 'defaults' : 'alt')));
+    variants(def).forEach((props, i) => {
+      const node = def.render(props);
+      out.push(...checkNode(def, node, i === 0 ? 'defaults' : 'alt'));
+      for (const r of contrastReport(node)) if (!r.pass && !r.exempt) out.push({ rule: 'a11y', target: `${def.id} (${i === 0 ? 'defaults' : 'alt'})`, message: `text "${r.sample}" ${r.fg} on ${r.bg} (${r.state}): ${r.light}:1 light, ${r.dark}:1 dark (needs 4.5:1)` });
+    });
     if (!def.guidelines?.do.length || !def.guidelines?.dont.length) out.push({ rule: 'guidelines', target: def.id, message: 'missing guidelines (do / dont)' });
   }
   return out;

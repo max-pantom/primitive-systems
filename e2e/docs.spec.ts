@@ -183,3 +183,19 @@ test('responsive: no horizontal overflow and every section reachable at phone an
     await expect(page.getByRole('heading', { name: 'Avatar Group', level: 1 })).toBeVisible();
   }
 });
+
+test('accessibility panel shows contrast, keyboard and labels and follows the props', async ({ page }) => {
+  await page.goto('/#button');
+  await expect(page.getByTestId('a11y')).toBeVisible();
+  await expect(page.getByTestId('a11y-contrast')).toContainText('ink');
+  await expect(page.getByTestId('a11y-keyboard')).toContainText('Enter / Space');
+  await expect(page.getByTestId('a11y-labels')).toContainText('Button');
+  await page.getByLabel('variant').selectOption('primary');
+  await expect(page.getByTestId('a11y-contrast')).toContainText('ink-inverse');
+  await page.getByLabel('label', { exact: true }).fill('Save changes');
+  await expect(page.getByTestId('a11y-labels')).toContainText('Save changes');
+  await page.goto('/#icon-button');
+  await expect(page.getByTestId('a11y-labels')).toContainText('aria-label');
+  await page.goto('/#switch');
+  await expect(page.getByTestId('a11y-keyboard')).toContainText('Space');
+});
