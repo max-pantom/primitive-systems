@@ -115,7 +115,7 @@ function Workbench({ def }: { def: ComponentDef }) {
       </section>
 
       <aside className="right" aria-label="Props" data-testid="panel">
-        <div className="panel-head"><h2>Props</h2><button className="link" onClick={() => setProps(defaultsOf(def.props))}>Reset</button></div>
+        <div className="panel-head"><h2>Controls</h2><button className="link" onClick={() => setProps(defaultsOf(def.props))}>Reset</button></div>
         {def.props.map((p) => {
           const c = p.control;
           const id = `prop-${p.name}`;
@@ -132,6 +132,7 @@ function Workbench({ def }: { def: ComponentDef }) {
             </div>
           );
         })}
+        <Docs def={def} />
       </aside>
     </>
   );
@@ -141,20 +142,27 @@ export default function App() {
   const [hash, go] = useHash();
   const def = components.find((c) => c.id === hash) ?? components[0];
   const [theme, setTheme] = useState('light');
-  const [width, setWidth] = useState(220);
-  useEffect(() => { const w = Number(localStorage.getItem('leftWidth')); if (w) setWidth(w); }, []);
-  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
+  const [left, setLeft] = useState(220);
+  const [right, setRight] = useState(360);
+  useEffect(() => {
+    const l = Number(localStorage.getItem('leftWidth'));
+    const r = Number(localStorage.getItem('rightWidth'));
+    if (l) setLeft(l);
+    if (r) setRight(r);
+  }, []);
+  const startResize = (side: 'left' | 'right') => (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId);
-    const move = (ev: PointerEvent) => setWidth(Math.min(480, Math.max(180, ev.clientX)));
+    const calc = (x: number) => (side === 'left' ? Math.min(480, Math.max(180, x)) : Math.min(560, Math.max(280, window.innerWidth - x)));
+    const apply = side === 'left' ? setLeft : setRight;
+    const move = (ev: PointerEvent) => apply(calc(ev.clientX));
     const up = (ev: PointerEvent) => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
-      localStorage.setItem('leftWidth', String(Math.min(480, Math.max(180, ev.clientX))));
+      localStorage.setItem(side === 'left' ? 'leftWidth' : 'rightWidth', String(calc(ev.clientX)));
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
   };
-  useEffect(() => setTheme(document.documentElement.dataset.theme ?? 'light'), []);
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
@@ -163,7 +171,7 @@ export default function App() {
   };
 
   return (
-    <div className="app" style={{ gridTemplateColumns: `${width}px minmax(0, 1fr) 300px` }}>
+    <div className="app" style={{ gridTemplateColumns: `${left}px minmax(0, 1fr) ${right}px` }}>
       <aside className="left">
         <div>
           <div className="brand">{site.name}</div>
@@ -174,13 +182,13 @@ export default function App() {
             <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}</a>
           ))}
         </nav>
-        <Docs def={def} />
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
           {theme === 'dark' ? 'Light' : 'Dark'} mode
         </button>
       </aside>
-      <div className="resize" style={{ left: width - 4 }} onPointerDown={startResize} role="separator" aria-orientation="vertical" aria-label="Resize sidebar" data-testid="resize" />
+      <div className="resize" style={{ left: left - 4 }} onPointerDown={startResize('left')} role="separator" aria-orientation="vertical" aria-label="Resize left sidebar" data-testid="resize" />
+      <div className="resize" style={{ right: right - 4 }} onPointerDown={startResize('right')} role="separator" aria-orientation="vertical" aria-label="Resize right sidebar" data-testid="resize-right" />
       <Workbench key={def.id} def={def} />
       {import.meta.env.DEV && <Agentation />}
     </div>

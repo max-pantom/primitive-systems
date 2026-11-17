@@ -1,7 +1,7 @@
 import { site } from '../config/site';
 import { v } from '../tokens/theme';
 import { ICON_NAMES, iconElements, type IconName, type IconSize } from '../icons/icons';
-import { focus, ring } from './shared';
+import { focus, ringDecl } from './shared';
 import type { ComponentDef, Node, Props, Rule } from './types';
 
 const p = site.cssPrefix;
@@ -54,7 +54,7 @@ export const button: ComponentDef = {
       base: {
         display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', gap: v('space-8'),
         'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'),
-        border: 'none', 'box-shadow': 'none', background: v('color-control'), color: v('color-ink'),
+        border: 'none', background: v('color-control'), color: v('color-ink'),
         'font-family': v('type-family'), 'font-size': v('type-size-sm'), 'line-height': v('type-line-sm'),
         'font-weight': v('type-weight'), cursor: 'pointer',
       },
@@ -63,7 +63,7 @@ export const button: ComponentDef = {
       disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' },
     },
     { cls: c.primary, base: { background: v('color-ink'), color: v('color-ink-inverse') }, hover: { background: v('color-ink'), opacity: v('opacity-hover') } },
-    { cls: c.ghost, base: { background: 'transparent', 'box-shadow': ring }, hover: { background: v('color-control') } },
+    { cls: c.ghost, base: { background: 'transparent', ...ringDecl }, hover: { background: v('color-control') } },
     { cls: c.lg, base: { 'padding-block': v('space-12'), 'font-size': v('type-size-md'), 'line-height': v('type-line-md') } },
     { cls: c.block, base: { display: 'flex', width: '100%' } },
     iconRule,

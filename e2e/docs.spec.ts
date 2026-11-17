@@ -31,13 +31,13 @@ test('props panel updates preview and code', async ({ page }) => {
   await expect(page.getByTestId('code')).toContainText('p8-button--primary');
 });
 
-test('docs live in the left sidebar; props on the right; code below the preview; no page jump between tabs', async ({ page }) => {
+test('docs and props live in the right sidebar; code below the preview; no page jump between tabs', async ({ page }) => {
   await page.goto('/#button');
   const [panel, preview, code] = await Promise.all(['panel', 'preview', 'code'].map((t) => page.getByTestId(t).boundingBox()));
   expect(panel!.x).toBeGreaterThan(preview!.x + preview!.width - 1);
   expect(code!.y).toBeGreaterThan(preview!.y + preview!.height);
   const docs = await page.getByTestId('docs').boundingBox();
-  expect(docs!.x + docs!.width).toBeLessThan(preview!.x);
+  expect(docs!.x).toBeGreaterThan(preview!.x + preview!.width - 1);
   const h = async () => (await page.getByTestId('code').boundingBox())!.height;
   const first = await h();
   for (const fw of ['astro', 'scss', 'p8']) { await page.getByTestId(`tab-${fw}`).click(); expect(await h()).toBe(first); }
@@ -120,4 +120,47 @@ test('dark mode toggle', async ({ page }) => {
   await page.getByTestId('theme-toggle').click();
   const b = await page.evaluate(() => document.documentElement.dataset.theme);
   expect(new Set([a, b])).toEqual(new Set(['light', 'dark']));
+});
+
+/** Layout-shift guard: interacting with any component must never move or resize it. */
+test('no layout shift when interacting with any component', async ({ page }) => {
+  await page.goto('/');
+  const nav = page.getByRole('navigation', { name: 'Components' });
+  await expect(nav.getByRole('link')).toHaveCount(17);
+  const names = await nav.getByRole('link').allInnerTexts();
+  const box = async () => {
+    const root = page.getByTestId('preview').locator('> div > *').first();
+    return (await root.boundingBox())!;
+  };
+  for (const name of names) {
+    await nav.getByRole('link', { name }).click();
+    await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
+    await page.waitForTimeout(150);
+    const before = await box();
+    const targets = page.getByTestId('preview').locator('button, input, select, textarea');
+    const count = await targets.count();
+    for (let i = 0; i < count; i++) {
+      const t = targets.nth(i);
+      if (!(await t.isEnabled())) continue;
+      await t.click({ force: true });
+      await page.waitForTimeout(220);
+      const after = await box();
+      expect(Math.round(after.x), `${name} x after click #${i}`).toBe(Math.round(before.x));
+      expect(Math.round(after.y), `${name} y after click #${i}`).toBe(Math.round(before.y));
+      expect(Math.round(after.width), `${name} width after click #${i}`).toBe(Math.round(before.width));
+      expect(Math.round(after.height), `${name} height after click #${i}`).toBe(Math.round(before.height));
+    }
+  }
+});
+
+test('text fields are 500px wide; focus matches hover; light fill is #EEEEEE', async ({ page }) => {
+  await page.goto('/#text-input');
+  const input = page.getByTestId('preview').locator('input');
+  expect((await input.boundingBox())!.width).toBe(500);
+  expect(await input.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe('rgb(238, 238, 238)');
+  await input.hover();
+  const hover = await input.evaluate((e) => getComputedStyle(e).backgroundColor);
+  await page.mouse.move(5, 5);
+  await input.focus();
+  expect(await input.evaluate((e) => getComputedStyle(e).backgroundColor)).toBe(hover);
 });

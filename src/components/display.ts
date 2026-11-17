@@ -1,13 +1,13 @@
 import { v } from '../tokens/theme';
 import { button, c as bc, iconNode, iconRule } from './button';
 import { divider } from './forms';
-import { focus, lines, motion, n, p, ring, text } from './shared';
+import { focus, lines, motion, n, p, noRing, ringDecl, text } from './shared';
 import type { ComponentDef, Node, Props } from './types';
 
 const btn = (label: string, variant: string, icon = 'none'): Node =>
   button.render({ label, variant, size: 'md', icon, iconSize: '14', iconPosition: 'start', fullWidth: false, disabled: false });
 const dividerNode = () => divider.render({ orientation: 'horizontal', spacing: 'none' });
-const surface = { background: v('color-surface'), color: v('color-ink'), 'box-shadow': ring, 'border-radius': v('radius-8'), 'font-family': v('type-family') };
+const surface = { background: v('color-surface'), color: v('color-ink'), ...ringDecl, 'border-radius': v('radius-8'), 'font-family': v('type-family') };
 
 /* ---------- Menu ---------- */
 const m = { root: `${p}-menu`, item: `${p}-menu__item`, active: `${p}-menu__item--active` };
@@ -22,7 +22,7 @@ export const menu: ComponentDef = {
   rules: [
     { cls: m.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'box-sizing': 'border-box', padding: v('space-4'), 'min-width': v('size-320'), ...surface, 'border-radius': v('radius-12') } },
     { cls: m.item, base: { 'box-sizing': 'border-box', 'text-align': 'left', width: '100%', 'padding-block': v('space-4'), 'padding-inline': v('space-6'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus },
-    { cls: m.active, base: { background: v('color-control') } },
+    { cls: m.active, base: { background: v('color-control-strong') } },
   ],
   render(pr: Props): Node {
     const kids = lines(pr.items).map((l) =>
@@ -44,7 +44,7 @@ export const tabs: ComponentDef = {
     { cls: t.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-12'), 'font-family': v('type-family'), color: v('color-ink') } },
     { cls: t.list, base: { display: 'flex', gap: v('space-12') } },
     { cls: t.tab, base: { 'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink-muted'), cursor: 'pointer', ...text('sm') }, hover: { color: v('color-ink') }, focus },
-    { cls: t.on, base: { background: v('color-control'), color: v('color-ink') } },
+    { cls: t.on, base: { background: v('color-control-strong'), color: v('color-ink') } },
   ],
   render(pr: Props): Node {
     const tabsN = lines(pr.tabs).map((l) => n('button', l === pr.active ? [t.tab, t.on] : [t.tab], [l], { type: 'button', role: 'tab', 'aria-selected': String(l === pr.active) }));
@@ -105,26 +105,26 @@ export const dataList: ComponentDef = {
 };
 
 /* ---------- Badge ---------- */
-const b = { soft: `${p}-badge--soft`, root: `${p}-badge`, outline: `${p}-badge--outline`, solid: `${p}-badge--solid` };
+const b = { root: `${p}-badge`, outline: `${p}-badge--outline`, solid: `${p}-badge--solid`, normal: `${p}-badge--normal-font` };
 export const badge: ComponentDef = {
-  id: 'badge', content: 'label', name: 'Badge', description: 'Small status or count label.', tags: ['content', 'status'], status: 'stable',
-  usage: 'Keep labels to one or two words.',
+  id: 'badge', content: 'label', name: 'Badge', description: 'Small status or count label. Mono type, 4px radius.', tags: ['content', 'status'], status: 'stable',
+  usage: 'Keep labels to one or two words. Set font to normal to use the interface font instead of the mono face.',
   props: [
     { name: 'label', type: 'string', default: 'Badge', description: 'Text.', control: { kind: 'text' } },
-    { name: 'shape', type: "'pill' | 'soft'", default: 'pill', description: 'pill is fully rounded; soft is barely rounded (4px).', control: { kind: 'select', options: ['pill', 'soft'] } },
     { name: 'variant', type: "'default' | 'outline' | 'solid'", default: 'default', description: 'Emphasis.', control: { kind: 'select', options: ['default', 'outline', 'solid'] } },
+    { name: 'font', type: "'mono' | 'normal'", default: 'mono', description: 'mono is Geist Mono with -0.02em tracking; normal is the interface font.', control: { kind: 'select', options: ['mono', 'normal'] } },
   ],
   rules: [
-    { cls: b.root, base: { display: 'inline-flex', 'align-items': 'center', 'padding-block': v('space-4'), 'padding-inline': v('space-8'), 'border-radius': v('radius-full'), background: v('color-control'), color: v('color-ink'), ...text('sm') } },
-    { cls: b.outline, base: { background: 'transparent', 'box-shadow': ring } },
-    { cls: b.soft, base: { 'border-radius': v('radius-4') } },
+    { cls: b.root, base: { display: 'inline-flex', 'align-items': 'center', 'padding-block': v('space-4'), 'padding-inline': v('space-8'), 'border-radius': v('radius-4'), background: v('color-control-strong'), color: v('color-ink'), ...text('sm'), 'font-family': v('type-mono'), 'letter-spacing': v('type-tracking-mono') } },
+    { cls: b.outline, base: { background: 'transparent', ...ringDecl } },
     { cls: b.solid, base: { background: v('color-ink'), color: v('color-ink-inverse') } },
+    { cls: b.normal, base: { 'font-family': v('type-family'), 'letter-spacing': v('type-tracking-normal') } },
   ],
   render(pr: Props): Node {
     const cls = [b.root];
     if (pr.variant === 'outline') cls.push(b.outline);
     if (pr.variant === 'solid') cls.push(b.solid);
-    if (pr.shape === 'soft') cls.push(b.soft);
+    if (pr.font === 'normal') cls.push(b.normal);
     return n('span', cls, [pr.label as string]);
   },
 };
@@ -197,7 +197,7 @@ export const toast: ComponentDef = {
   ],
   rules: [
     { cls: o.root, base: { display: 'flex', 'align-items': 'center', gap: v('space-12'), 'box-sizing': 'border-box', 'min-width': v('size-320'), 'padding-block': v('space-12'), 'padding-inline': v('space-16'), ...surface, ...text('sm') } },
-    { cls: o.inv, base: { background: v('color-ink'), color: v('color-ink-inverse'), 'box-shadow': 'none' } },
+    { cls: o.inv, base: { background: v('color-ink'), color: v('color-ink-inverse'), ...noRing } },
     { cls: o.msg, base: { flex: '1' } },
     { cls: o.action, base: { border: 'none', background: 'transparent', color: 'inherit', padding: '0', cursor: 'pointer', 'font-weight': v('type-weight-strong'), ...text('sm') }, focus },
     { cls: o.close, base: { display: 'inline-flex', border: 'none', background: 'transparent', color: 'inherit', padding: '0', cursor: 'pointer' }, focus },

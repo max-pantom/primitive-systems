@@ -1,5 +1,6 @@
 import { site } from '../config/site';
 import { v } from '../tokens/theme';
+import { noRing, ringDecl } from './shared';
 import { button } from './button';
 import type { ComponentDef, Node, Props } from './types';
 
@@ -36,12 +37,12 @@ export const card: ComponentDef = {
       base: {
         display: 'flex', 'flex-direction': 'column', gap: v('space-12'),
         'padding-block': v('space-12'), 'padding-inline': v('space-16'), 'border-radius': v('radius-8'),
-        background: v('color-surface'), color: v('color-ink'), 'box-shadow': `0 0 0 ${v('border-hairline')} ${v('color-ring')}`,
+        background: v('color-surface'), color: v('color-ink'), ...ringDecl,
         'font-family': v('type-family'),
       },
     },
     { cls: c.even, base: { 'padding-block': v('space-16') } },
-    { cls: c.flat, base: { 'box-shadow': 'none' } },
+    { cls: c.flat, base: { ...noRing } },
     { cls: c.text, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4') } },
     { cls: c.title, base: { 'font-size': v('type-size-md'), 'line-height': v('type-line-md'), 'font-weight': v('type-weight-strong') } },
     { cls: c.body, base: { 'font-size': v('type-size-sm'), 'line-height': v('type-line-sm'), 'font-weight': v('type-weight') } },

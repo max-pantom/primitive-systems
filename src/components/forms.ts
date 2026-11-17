@@ -1,6 +1,6 @@
 import { v } from '../tokens/theme';
 import { c as bc, iconNode, iconRule } from './button';
-import { controlBase, focus, lines, motion, n, p, ring, text } from './shared';
+import { controlBase, fieldFocus, focus, lines, motion, n, p, ringDecl, text } from './shared';
 import type { ComponentDef, Node, Props, Rule } from './types';
 
 /* ---------- Divider ---------- */
@@ -14,12 +14,12 @@ export const divider: ComponentDef = {
     { name: 'spacing', type: "'none' | '12' | '16'", default: 'none', description: 'Margin around the line, in px.', control: { kind: 'select', options: ['none', '12', '16'] } },
   ],
   rules: [
-    { cls: dv.root, base: { 'flex-shrink': '0', width: v('size-400'), 'max-width': '100%', height: v('border-hairline'), background: v('color-ring') } },
-    { cls: dv.v, base: { width: v('border-hairline'), height: v('size-48') } },
+    { cls: dv.root, base: { 'flex-shrink': '0', width: v('size-400'), 'max-width': '100%', height: '0', 'border-top': `${v('border-hairline')} solid ${v('color-ring')}` } },
+    { cls: dv.v, base: { width: '0', height: v('size-48'), 'border-top': 'none', 'border-left': `${v('border-hairline')} solid ${v('color-ring')}` } },
     { cls: dv.m12, base: { margin: v('space-12') } },
     { cls: dv.m16, base: { margin: v('space-16') } },
     { cls: dv.row, base: { display: 'flex', 'align-items': 'center', gap: v('space-12'), width: v('size-400'), 'max-width': '100%', color: v('color-ink-muted'), ...text('sm') } },
-    { cls: dv.line, base: { flex: '1', height: v('border-hairline'), background: v('color-ring') } },
+    { cls: dv.line, base: { flex: '1', height: '0', 'border-top': `${v('border-hairline')} solid ${v('color-ring')}` } },
   ],
   render(pr: Props): Node {
     const spacing = pr.spacing === '12' ? [dv.m12] : pr.spacing === '16' ? [dv.m16] : [];
@@ -45,7 +45,7 @@ const labelled = (pr: Props, id: string, control: Node): Node => {
 /* ---------- Text input ---------- */
 const i = { root: `${p}-input`, lg: `${p}-input--lg` };
 const inputRules: Rule[] = [
-  { cls: i.root, base: { ...controlBase, width: '100%' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' }, placeholder: { color: v('color-placeholder') } },
+  { cls: i.root, base: { ...controlBase, width: '100%' }, hover: { background: v('color-control-strong') }, focus: fieldFocus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' }, placeholder: { color: v('color-placeholder') } },
   { cls: i.lg, base: { 'padding-block': v('space-12'), 'font-size': v('type-size-md'), 'line-height': v('type-line-md') } },
 ];
 export const input: ComponentDef = {
@@ -81,7 +81,7 @@ export const textarea: ComponentDef = {
     { name: 'rows', type: "'3' | '4' | '6'", default: '4', description: 'Visible rows.', control: { kind: 'select', options: ['3', '4', '6'] } },
     { name: 'disabled', type: 'boolean', default: false, description: 'Disables the field.', control: { kind: 'boolean' } },
   ],
-  rules: [...fieldRules, { cls: t.root, base: { ...inputRules[0].base, resize: 'vertical' }, hover: inputRules[0].hover, focus, disabled: inputRules[0].disabled, placeholder: inputRules[0].placeholder }],
+  rules: [...fieldRules, { cls: t.root, base: { ...inputRules[0].base, resize: 'vertical' }, hover: inputRules[0].hover, focus: fieldFocus, disabled: inputRules[0].disabled, placeholder: inputRules[0].placeholder }],
   render(pr: Props): Node {
     const attrs: Node['attrs'] = { id: 'field', rows: pr.rows as string, placeholder: pr.placeholder as string };
     if (pr.disabled) attrs.disabled = true;
@@ -103,7 +103,7 @@ export const select: ComponentDef = {
   rules: [
     ...fieldRules,
     { cls: s.wrap, base: { position: 'relative', display: 'flex', 'align-items': 'center' } },
-    { cls: s.root, base: { ...controlBase, width: '100%', appearance: 'none', 'padding-inline-end': v('space-32'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
+    { cls: s.root, base: { ...controlBase, width: '100%', appearance: 'none', 'padding-inline-end': v('space-32'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus: fieldFocus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
     { cls: s.icon, base: { position: 'absolute', 'inset-inline-end': v('space-12'), 'pointer-events': 'none', color: v('color-ink') } },
     { cls: s.iconOff, base: { opacity: v('opacity-disabled') } },
     iconRule,
@@ -119,7 +119,7 @@ export const select: ComponentDef = {
 
 /* ---------- Checkbox ---------- */
 const k = { row: `${p}-check`, box: `${p}-check__box`, on: `${p}-check__box--on` };
-const rowBase = { display: 'inline-flex', 'align-items': 'center', gap: v('space-8'), ...text('sm'), color: v('color-ink'), cursor: 'pointer' };
+const rowBase = { display: 'flex', width: 'max-content', 'align-items': 'center', gap: v('space-8'), ...text('sm'), color: v('color-ink'), cursor: 'pointer' };
 export const checkbox: ComponentDef = {
   id: 'checkbox', content: 'label', name: 'Checkbox', description: 'Two-state choice with a label.', tags: ['control', 'form'], status: 'stable',
   usage: 'Rendered as role="checkbox" with aria-checked; toggle aria-checked and the --on class in your handler.',
@@ -130,7 +130,7 @@ export const checkbox: ComponentDef = {
   ],
   rules: [
     { cls: k.row, base: rowBase },
-    { cls: k.box, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'flex-shrink': '0', width: v('size-16'), height: v('size-16'), padding: '0', 'box-sizing': 'border-box', 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink-inverse'), 'box-shadow': ring, cursor: 'inherit' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
+    { cls: k.box, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'flex-shrink': '0', width: v('size-16'), height: v('size-16'), padding: '0', 'box-sizing': 'border-box', 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink-inverse'), ...ringDecl, cursor: 'inherit' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
     { cls: k.on, base: { background: v('color-ink') }, hover: { background: v('color-ink'), opacity: v('opacity-hover') } },
     iconRule,
   ],
@@ -157,7 +157,7 @@ export const switchC: ComponentDef = {
     { cls: w.row, base: rowBase },
     { cls: w.root, base: { position: 'relative', display: 'inline-block', 'flex-shrink': '0', width: v('size-40'), height: v('size-24'), padding: '0', 'box-sizing': 'border-box', 'border-radius': v('radius-full'), border: 'none', background: v('color-control-strong'), cursor: 'inherit', transition: `background ${motion}` }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
     { cls: w.on, base: { background: v('color-ink') } },
-    { cls: w.thumb, base: { position: 'absolute', top: v('space-2'), left: v('space-2'), width: v('size-20'), height: v('size-20'), 'border-radius': v('radius-full'), background: v('color-canvas'), 'box-shadow': ring, transition: `left ${motion}, width ${motion}` }, parent: { cls: w.root, active: { width: v('size-28') } } },
+    { cls: w.thumb, base: { position: 'absolute', top: v('space-2'), left: v('space-2'), width: v('size-20'), height: v('size-20'), 'border-radius': v('radius-full'), background: v('color-canvas'), ...ringDecl, 'box-sizing': 'border-box', transition: `left ${motion}, width ${motion}` }, parent: { cls: w.root, active: { width: v('size-28') } } },
     { cls: w.thumbOn, base: { left: edge('size-20') }, parent: { cls: w.root, active: { width: v('size-28'), left: edge('size-28') } } },
   ],
   render(pr: Props): Node {

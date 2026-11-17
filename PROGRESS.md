@@ -1,5 +1,19 @@
 # Progress
 
+## Next slice (planned, not started): make components actually work
+
+Known gaps: Checkbox, Switch, Tabs, Menu, Tooltip, Disclosure ship as markup only (no click behavior in generated code; the docs preview wires up checkbox/switch/tabs/menu itself). Dialog, Toast, Tooltip are just the panel.
+Plan: Checkbox/Switch toggle (click + keys); Tabs switch panels (click + arrows); Menu open/close, arrows/Enter/Escape/outside click; Disclosure animates; Tooltip positions next to its trigger without clipping; Dialog gets backdrop, Escape, focus trap; Toast gets a stack, auto-dismiss, close. Delivered in all outputs: small scripts for HTML/Astro/Tailwind/SCSS, built-in state for React/Svelte.
+Then new components, most-used first: (1) Radio group, Field (label/hint/error), Search input, Segmented control, Slider; (2) Spinner, Skeleton, Progress, Alert; (3) Sidebar nav, Breadcrumbs, Pagination, Command palette; (4) List row, Table, Key-value row, Stack, Toolbar; (5) Popover, Dropdown menu, Sheet; (6) Icon button, Kbd, Tag/chip, Copy button.
+
+## Feedback round 2 — done
+
+- Strokes: the hairline is the seed's 0.5px again, but drawn as an inset outline (pixel-snapped on all sides, no layout impact) instead of box-shadow, which lost sides at half-pixel positions.
+- Divider lines use a border (always visible). Light control fill is #EEEEEE; text-field focus = hover fill, no ring.
+- Badge: 4px radius only, Geist Mono at -0.02em by default, `font: normal` prop for the interface font; stronger fill for light mode. Tabs/menu highlight uses control-strong.
+- Right sidebar is wider (360, resizable) and holds controls + usage/composition/props; left sidebar is nav only. Thin low-contrast scrollbars.
+- e2e guard: clicking any interactive element in any preview must not move or resize the component (found and fixed a 1px checkbox shift from inline-flex baseline).
+
 ## Feedback round 1 — done
 
 - Spacing: header/nav text gaps are 4px (no 2px); data list gap options are 4 and 8.
