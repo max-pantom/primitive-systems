@@ -1,8 +1,0 @@
-<!-- Requires the Primitive Systems theme variables (theme.css). Tailwind v4 arbitrary properties over named tokens. -->
-<button class="[display:inline-flex] [align-items:center] [justify-content:center] [gap:var(--p8-space-8)] [padding-block:var(--p8-space-12)] [padding-inline:var(--p8-space-12)] [border-radius:var(--p8-radius-8)] [border:none] [box-shadow:none] [background:var(--p8-color-ink)] [color:var(--p8-color-ink-inverse)] [font-family:var(--p8-type-family)] [font-size:var(--p8-type-size-md)] [line-height:var(--p8-type-line-md)] [font-weight:var(--p8-type-weight)] [cursor:pointer] enabled:hover:[background:var(--p8-color-ink)] enabled:hover:[opacity:var(--p8-opacity-hover)] focus-visible:[outline:var(--p8-border-focus)_solid_var(--p8-color-ink)] focus-visible:[outline-offset:var(--p8-border-focus-offset)] disabled:[opacity:var(--p8-opacity-disabled)] disabled:[cursor:not-allowed]" type="button">
-  Button
-  <svg class="[flex-shrink:0]" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <line x1="2.75" y1="7.75" x2="13.25" y2="7.75" />
-    <path d="M10.5 5L13.25 7.75L10.5 10.5" />
-  </svg>
-</button>

@@ -8,6 +8,7 @@ export interface Rule {
   hover?: Decls;
   focus?: Decls;
   disabled?: Decls;
+  placeholder?: Decls;
 }
 /** Framework-agnostic structure. `cls` are semantic class names (rules are looked up by them). */
 export interface Node {

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { components, getDef, defaultsOf } from '../components';
 import type { ComponentDef } from '../components';
 import { FRAMEWORKS, generate } from '../codegen';
+import { flatTokens } from '../tokens/theme';
 
 /** Shared by the MCP server and the HTTP API so both return identical payloads. */
 export class ApiError extends Error {
@@ -35,6 +36,8 @@ export function getComponent(id: string) {
   return detail(def);
 }
 
+export const getTokens = () => flatTokens();
+
 const codeInput = z.object({
   component: z.string(),
   framework: z.enum(FRAMEWORKS),
@@ -65,6 +68,7 @@ export function route(method: string, path: string, body?: unknown): RouteResult
     if (method === 'GET' && path === '/api/components') return { status: 200, body: listComponents() };
     const m = path.match(/^\/api\/components\/([^/]+)$/);
     if (method === 'GET' && m) return { status: 200, body: getComponent(decodeURIComponent(m[1])) };
+    if (method === 'GET' && path === '/api/tokens') return { status: 200, body: getTokens() };
     if (method === 'POST' && path === '/api/code') return { status: 200, body: getCode(body) };
     return { status: 404, body: { error: 'Not found' } };
   } catch (e) {

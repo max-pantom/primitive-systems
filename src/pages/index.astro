@@ -1,17 +1,24 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
 import { site } from '../config/site';
-import { components } from '../components';
+import { allCss } from '../codegen';
+import App from '../docs/App';
 ---
-<Layout title="Catalog">
-  <h1 class="m-0 text-xl font-medium">{site.name}</h1>
-  <p class="muted mt-2 mb-8">{site.tagline} {site.description}</p>
-  <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
-    {components.map((c) => (
-      <a href={`/components/${c.id}`} class="hairline rounded-lg p-4 flex flex-col gap-1">
-        <span class="font-medium">{c.name}</span>
-        <span class="muted">{c.description}</span>
-      </a>
-    ))}
-  </div>
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.name}</title>
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" />
+    <style set:html={allCss()} />
+    <script is:inline>
+      document.documentElement.dataset.theme = localStorage.getItem('theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+  </head>
+  <body>
+    <App client:only="react" />
+  </body>
+</html>

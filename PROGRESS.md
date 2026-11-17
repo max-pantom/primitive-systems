@@ -1,5 +1,21 @@
 # Progress
 
+## Slices 2–5 — done (one commit)
+
+- Slice 2: Text Input, Textarea, Divider, `get_tokens` (MCP) + `GET /api/tokens`.
+- Slice 3: Menu (6px sides, 4px top/bottom), Tabs (12px spacing), Disclosure (native details), Data List (4px or 2px gap).
+- Slice 4: Select, Checkbox, Switch, Badge, Tooltip.
+- Slice 5: Dialog, Toast, Avatar, Empty State.
+- 18 components total, 288 Vitest tests (snapshots for all six outputs, parity, MCP≡HTTP), 8 Playwright tests (including every component rendering with six code tabs).
+- Docs is now a one-page app at `/` (hash routes, first component loads immediately): left nav, centre preview + docs, right props panel, code at the bottom, vertical hairline dividers. Seeds banner removed. Custom grey-scale code highlighter. Agentation toolbar mounts in dev only.
+- New tokens: `ink-muted` (derived), `syntax-1..4`, `size-*`, `radius-full`, `space-32`.
+- Codegen fixes found by tests: attribute escaping, non-void empty elements, React `defaultValue` handling.
+
+Caveats:
+- Checkbox, Switch, Tabs, Menu, Tooltip, Disclosure ship as static markup with ARIA state (no behavior JS); toggle `aria-checked`/modifier classes in your app. Dialog/Toast/Tooltip are the panel only (no backdrop, positioning or timers).
+- `ink-muted`, tooltip/toast/dialog styling and the 12px dialog/menu radius are derived from the seeds, not designed; confirm.
+- Per-framework live previews (Svelte island) are still not done.
+
 ## Slice 1 — done (design seeds applied)
 
 - Tokens: `src/tokens/theme.ts` → CSS variables (light/dark), served at `/theme.css`. Named colors only; space/radius on the 4/8 grid (2px and 6px documented exceptions).

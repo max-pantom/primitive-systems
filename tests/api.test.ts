@@ -16,7 +16,7 @@ const parse = (r: any) => JSON.parse(r.content[0].text);
 describe('MCP and HTTP return the same data', () => {
   it('lists tools', async () => {
     const c = await mcp();
-    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['get_code', 'get_component', 'list_components']);
+    expect((await c.listTools()).tools.map((t) => t.name).sort()).toEqual(['get_code', 'get_component', 'get_tokens', 'list_components']);
   });
   it('list_components', async () => {
     const c = await mcp();
@@ -25,6 +25,10 @@ describe('MCP and HTTP return the same data', () => {
   it('get_component', async () => {
     const c = await mcp();
     expect(parse(await c.callTool({ name: 'get_component', arguments: { id: 'card' } }))).toEqual(route('GET', '/api/components/card').body);
+  });
+  it('get_tokens', async () => {
+    const c = await mcp();
+    expect(parse(await c.callTool({ name: 'get_tokens', arguments: {} }))).toEqual(route('GET', '/api/tokens').body);
   });
   it('get_code', async () => {
     const c = await mcp();

@@ -1,8 +1,10 @@
 import { button } from './button';
 import { card } from './card';
+import { divider, input, textarea, select, checkbox, switchC } from './forms';
+import { menu, tabs, disclosure, dataList, badge, tooltip, dialog, toast, avatar, emptyState } from './display';
 import type { ComponentDef, Node, Rule } from './types';
 
-export const components: ComponentDef[] = [button, card];
+export const components: ComponentDef[] = [button, card, input, textarea, divider, menu, tabs, disclosure, dataList, select, checkbox, switchC, badge, tooltip, dialog, toast, avatar, emptyState];
 export const getDef = (id: string) => components.find((c) => c.id === id);
 
 /** Every rule across the library, keyed by class (first definition wins; button rules are reused by card). */

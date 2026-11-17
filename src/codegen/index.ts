@@ -1,5 +1,6 @@
 import { site } from '../config/site';
 import { getDef, ruleMap, usedClasses, parseProps } from '../components';
+import { reactify } from './react-node';
 import type { ComponentDef, Decls, Node, Props, Rule } from '../components';
 
 export const FRAMEWORKS = ['astro', 'react', 'svelte', 'tailwind', 'html', 'scss'] as const;
@@ -24,9 +25,9 @@ export interface CodeResult {
 }
 
 type Mode = 'react' | 'class' | 'tailwind' | 'inline';
-const STATES = ['hover', 'focus', 'disabled'] as const;
-const stateSel = { hover: ':hover:not(:disabled)', focus: ':focus-visible', disabled: ':disabled' };
-const twState = { hover: 'enabled:hover:', focus: 'focus-visible:', disabled: 'disabled:' };
+const STATES = ['hover', 'focus', 'disabled', 'placeholder'] as const;
+const stateSel = { hover: ':hover:not(:disabled)', focus: ':focus-visible', disabled: ':disabled', placeholder: '::placeholder' };
+const twState = { hover: 'enabled:hover:', focus: 'focus-visible:', disabled: 'disabled:', placeholder: 'placeholder:' };
 
 const pascal = (s: string) => s.replace(/(^|[-_ ])(\w)/g, (_, __, ch) => ch.toUpperCase());
 const rulesFor = (node: Node): Rule[] => usedClasses(node).map((k) => ruleMap.get(k)).filter(Boolean) as Rule[];
@@ -84,6 +85,8 @@ const esc = (t: string, braces: boolean) => {
   if (braces) s = s.replace(/[{}]/g, (ch) => `{'${ch}'}`);
   return s;
 };
+const VOID = new Set(['input', 'img', 'hr', 'br', 'path', 'line', 'circle', 'rect']);
+const escAttr = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const camel = (k: string) => (/^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, ch) => ch.toUpperCase()));
 
 function attrString(node: Node, mode: Mode): string {
@@ -103,18 +106,19 @@ function attrString(node: Node, mode: Mode): string {
     if (base) parts.push(`style="${base}"`);
   }
   for (const [k, val] of Object.entries(node.attrs ?? {})) {
-    const name = mode === 'react' ? camel(k) : k;
-    parts.push(val === true ? name : `${name}="${val}"`);
+    const name = mode === 'react' ? (k === 'for' ? 'htmlFor' : camel(k)) : k;
+    parts.push(val === true ? name : `${name}="${escAttr(val)}"`);
   }
   return parts.length ? ' ' + parts.join(' ') : '';
 }
 
 export function markup(node: Node | string, mode: Mode, depth = 0): string {
+  if (mode === 'react' && typeof node !== 'string') node = reactify(node);
   const pad = '  '.repeat(depth);
   if (typeof node === 'string') return pad + esc(node, mode === 'react');
   const a = attrString(node, mode);
   const kids = node.children ?? [];
-  if (!kids.length) return `${pad}<${node.tag}${a} />`;
+  if (!kids.length) return VOID.has(node.tag) ? `${pad}<${node.tag}${a} />` : `${pad}<${node.tag}${a}></${node.tag}>`;
   if (kids.every((k) => typeof k === 'string')) return `${pad}<${node.tag}${a}>${kids.map((k) => esc(k as string, mode === 'react')).join('')}</${node.tag}>`;
   return `${pad}<${node.tag}${a}>\n${kids.map((k) => markup(k, mode, depth + 1)).join('\n')}\n${pad}</${node.tag}>`;
 }

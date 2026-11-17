@@ -2,10 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { components, defaultsOf, schemaOf } from '../src/components';
 import { FRAMEWORKS, generate, markup } from '../src/codegen';
 
-const variants: Record<string, Record<string, unknown>[]> = {
-  button: [{}, { variant: 'primary', size: 'lg', icon: 'arrow-right', iconSize: '16', iconPosition: 'end' }, { variant: 'ghost', disabled: true, fullWidth: true, label: 'A {b} <c>' }],
-  card: [{}, { padding: 'even', bordered: false, title: '', withAction: true, actionLabel: 'Go' }],
-};
+/** Defaults plus an "everything toggled" variant (last select option, flipped booleans, filled text). */
+function variantsOf(def: (typeof components)[number]): Record<string, unknown>[] {
+  const alt: Record<string, unknown> = {};
+  for (const p of def.props) {
+    if (p.control.kind === 'select') alt[p.name] = p.control.options[p.control.options.length - 1] === p.default ? p.control.options[1] : p.control.options[p.control.options.length - 1];
+    else if (p.control.kind === 'boolean') alt[p.name] = !p.default;
+    else alt[p.name] = p.default === '' ? 'Sample {x} <y>' : p.default;
+  }
+  return [{}, alt];
+}
+const variants: Record<string, Record<string, unknown>[]> = Object.fromEntries(components.map((d) => [d.id, variantsOf(d)]));
 
 describe('schemas', () => {
   it.each(components)('$id defaults parse to themselves', (def) => {
@@ -21,8 +28,8 @@ describe('codegen snapshots', () => {
   for (const def of components)
     for (const [i, props] of variants[def.id].entries())
       for (const fw of FRAMEWORKS)
-        it(`${def.id} #${i} → ${fw}`, async () => {
-          await expect(generate(def, props, fw).code).toMatchFileSnapshot(`__snapshots__/${def.id}-${i}.${fw}.txt`);
+        it(`${def.id} #${i} → ${fw}`, () => {
+          expect(generate(def, props, fw).code).toMatchSnapshot();
         });
 });
 
