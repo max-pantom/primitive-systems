@@ -149,3 +149,25 @@ main.changelog h2 { display: flex; gap: var(--p8-space-8); align-items: baseline
 .chips { display: flex; flex-wrap: wrap; gap: var(--p8-space-8); }
 a.chip { display: inline-flex; align-items: center; gap: var(--p8-space-8); padding: var(--p8-space-4) var(--p8-space-12); border-radius: var(--p8-radius-8); background: var(--p8-color-control); }
 a.chip:hover { background: var(--p8-color-control-strong); }
+
+/* Collapsible doc sections (Usage, Accessibility). */
+details.fold { display: flex; flex-direction: column; gap: var(--p8-space-8); }
+details.fold > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--p8-space-8); cursor: pointer; border-radius: var(--p8-radius-4); }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary h2 { margin: 0; }
+details.fold > summary:focus-visible { outline: none; box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus); }
+details.fold .chev { flex: 0 0 auto; color: var(--p8-color-ink-muted); transition: transform 150ms ease; }
+details.fold[open] .chev { transform: rotate(180deg); }
+details.fold[open] > summary { margin-bottom: var(--p8-space-8); }
+
+/* Props: stacked list, readable at any panel width. */
+ul.proplist { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+ul.proplist li { display: flex; flex-direction: column; gap: var(--p8-space-4); padding: var(--p8-space-12) 0; border-bottom: var(--p8-border-hairline) solid var(--p8-color-ring); min-width: 0; }
+ul.proplist li:first-child { padding-top: 0; }
+ul.proplist p { margin: 0; }
+.prop-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--p8-space-4) var(--p8-space-8); }
+.prop-name { color: var(--p8-color-ink); font-weight: var(--p8-type-weight-strong); }
+.prop-type { font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono); font-size: var(--p8-type-size-sm); color: var(--p8-color-ink-muted); overflow-wrap: anywhere; }
+.prop-default { display: flex; gap: var(--p8-space-8); align-items: baseline; font-size: var(--p8-type-size-sm); min-width: 0; }
+.prop-default code { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { details.fold .chev { transition: none; } }

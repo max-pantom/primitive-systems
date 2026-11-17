@@ -191,6 +191,11 @@ test('responsive: no horizontal overflow and every section reachable at phone an
 test('accessibility panel shows contrast, keyboard and labels and follows the props', async ({ page }) => {
   await page.goto('/#button');
   await expect(page.getByTestId('a11y')).toBeVisible();
+  // Collapsed by default; the report is still in the DOM for agents and opens on click.
+  await expect(page.getByTestId('a11y-contrast')).toBeHidden();
+  await expect(page.getByTestId('usage')).not.toHaveAttribute('open', '');
+  await page.getByTestId('a11y').locator('summary').click();
+  await expect(page.getByTestId('a11y-contrast')).toBeVisible();
   await expect(page.getByTestId('a11y-contrast')).toContainText('ink');
   await expect(page.getByTestId('a11y-keyboard')).toContainText('Enter / Space');
   await expect(page.getByTestId('a11y-labels')).toContainText('Button');

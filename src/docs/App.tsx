@@ -30,6 +30,14 @@ function Icon({ name }: { name: 'moon' | 'sun' }) {
   );
 }
 
+function Chevron() {
+  return (
+    <svg className="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {iconElements('chevron-down', 16).map(([tag, a], i) => createElement(tag, { key: i, ...a }))}
+    </svg>
+  );
+}
+
 function useHash(): [string, (id: string) => void] {
   const read = () => decodeURIComponent(location.hash.slice(1));
   const [h, setH] = useState(read);
@@ -45,7 +53,10 @@ function Docs({ def, tree }: { def: ComponentDef; tree: Node }) {
   const a11y = useMemo(() => a11yReport(def, tree), [def, tree]);
   return (
     <div className="docs" data-testid="docs">
-      <section><h2>Usage</h2><p>{def.usage}</p></section>
+      <details className="fold" data-testid="usage">
+        <summary><h2>Usage</h2><Chevron /></summary>
+        <p>{def.usage}</p>
+      </details>
       {def.guidelines && (
         <section data-testid="guidelines">
           <h2>Guidelines</h2>
@@ -54,8 +65,9 @@ function Docs({ def, tree }: { def: ComponentDef; tree: Node }) {
         </section>
       )}
       {def.composition && <section><h2>Composition</h2><p>{def.composition}</p></section>}
-      <section data-testid="a11y">
-        <h2>Accessibility</h2>
+      {/* Collapsed for people; the content stays in the DOM, and agents get the same report from get_component / GET /api/components/:id. */}
+      <details className="fold" data-testid="a11y">
+        <summary><h2>Accessibility</h2><Chevron /></summary>
         <h3>Contrast <span className="muted">(WCAG AA, 4.5:1)</span></h3>
         <table className="props a11y" data-testid="a11y-contrast">
           <thead><tr><th>Text</th><th>Light</th><th>Dark</th></tr></thead>
@@ -84,7 +96,7 @@ function Docs({ def, tree }: { def: ComponentDef; tree: Node }) {
             {!a11y.labels.length && <tr><td colSpan={2} className="muted">Presentational: no interactive roles.</td></tr>}
           </tbody>
         </table>
-      </section>
+      </details>
       <section data-testid="install">
         <h2>Install</h2>
         <code className="block">npx {site.cli} add {def.id} -f react</code>
@@ -93,17 +105,15 @@ function Docs({ def, tree }: { def: ComponentDef; tree: Node }) {
       </section>
       <section>
         <h2>Props</h2>
-        <table className="props" data-testid="props-table">
-          <thead><tr><th>Prop</th><th>Type</th><th>Default</th></tr></thead>
-          <tbody>
-            {def.props.map((p) => (
-              <Fragment key={p.name}>
-                <tr className="head"><td><code>{p.name}</code></td><td className="nowrap">{p.type.replace(/ \(.*\)$/, '')}</td><td><code>{JSON.stringify(p.default)}</code></td></tr>
-                <tr className="desc"><td colSpan={3} className="muted">{p.description}</td></tr>
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
+        <ul className="proplist" data-testid="props-table">
+          {def.props.map((p) => (
+            <li key={p.name}>
+              <div className="prop-head"><code className="prop-name">{p.name}</code><span className="prop-type">{p.type.replace(/ \(.*\)$/, '')}</span></div>
+              <p>{p.description}</p>
+              <div className="prop-default"><span className="muted">Default</span><code>{JSON.stringify(p.default)}</code></div>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
