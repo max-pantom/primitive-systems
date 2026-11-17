@@ -16,7 +16,8 @@ export const theme = {
       'ink-inverse': '#FFFFFF',
       'ink-muted': '#707070',
       placeholder: '#C0C0C0',
-      ring: '#91919140',
+      ring: '#91919126',
+      'ring-focus': '#9191914D',
       'syntax-1': '#000000',
       'syntax-2': '#4A4A4A',
       'syntax-3': '#7A7A7A',
@@ -31,7 +32,8 @@ export const theme = {
       'ink-inverse': '#1D1D1D',
       'ink-muted': '#9A9A9A',
       placeholder: '#C0C0C0',
-      ring: '#7A7A7A40',
+      ring: '#7A7A7A26',
+      'ring-focus': '#7A7A7A4D',
       'syntax-1': '#F2F2F2',
       'syntax-2': '#BDBDBD',
       'syntax-3': '#8C8C8C',
@@ -49,9 +51,9 @@ export const theme = {
     '24': '24px',
     '32': '32px',
   },
-  radius: { '8': '8px', '12': '12px', '16': '16px', full: '9999px' },
-  size: { '16': '16px', '20': '20px', '24': '24px', '32': '32px', '40': '40px', '48': '48px', '320': '320px', '400': '400px' },
-  border: { hairline: '0.5px', focus: '2px', 'focus-offset': '2px' },
+  radius: { '4': '4px', '8': '8px', '12': '12px', '16': '16px', full: '9999px' },
+  size: { '16': '16px', '20': '20px', '24': '24px', '28': '28px', '32': '32px', '40': '40px', '48': '48px', '320': '320px', '400': '400px', '500': '500px' },
+  border: { hairline: '1px', focus: '2px', 'focus-offset': '2px' },
   type: {
     family: '"Inter", system-ui, sans-serif',
     'size-sm': '14px',
@@ -63,6 +65,7 @@ export const theme = {
   },
   opacity: { disabled: '0.5', hover: '0.8' },
   icon: { sm: '14px', md: '16px' },
+  motion: { fast: '150ms', ease: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
 } as const;
 
 /** Named-token reference, e.g. v('space-12') -> var(--p8-space-12) */
@@ -82,6 +85,7 @@ function base(): string[] {
     ...vars(theme.type, 'type-'),
     ...vars(theme.opacity, 'opacity-'),
     ...vars(theme.icon, 'icon-'),
+    ...vars(theme.motion, 'motion-'),
   ];
 }
 
@@ -104,5 +108,6 @@ export function flatTokens() {
     type: theme.type,
     opacity: theme.opacity,
     icon: theme.icon,
+    motion: theme.motion,
   };
 }

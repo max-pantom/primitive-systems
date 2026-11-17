@@ -1,6 +1,7 @@
 import { site } from '../config/site';
 import { v } from '../tokens/theme';
 import { ICON_NAMES, iconElements, type IconName, type IconSize } from '../icons/icons';
+import { focus, ring } from './shared';
 import type { ComponentDef, Node, Props, Rule } from './types';
 
 const p = site.cssPrefix;
@@ -13,8 +14,6 @@ export const c = {
   icon: `${p}-icon`,
 };
 
-const ring = `0 0 0 ${v('border-hairline')} ${v('color-ring')}`;
-const focus = { outline: `${v('border-focus')} solid ${v('color-ink')}`, 'outline-offset': v('border-focus-offset') };
 
 export const iconRule: Rule = { cls: c.icon, base: { 'flex-shrink': '0' } };
 
@@ -35,6 +34,7 @@ export const button: ComponentDef = {
   id: 'button',
   name: 'Button',
   description: 'Triggers an action. Control surface from the design seeds, with optional icon.',
+  content: 'label',
   tags: ['control', 'action', 'form'],
   status: 'stable',
   usage: 'Use primary once per view for the main action. Use ghost for low-emphasis actions on a surface. Icons come from the Primitive8 Icon Factory pack.',

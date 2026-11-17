@@ -1,12 +1,13 @@
 import { site } from '../config/site';
-import { getDef, ruleMap, usedClasses, parseProps } from '../components';
+import { getDef, ruleMap, usedClasses, parseProps, defaultsOf } from '../components';
 import { reactify } from './react-node';
 import type { ComponentDef, Decls, Node, Props, Rule } from '../components';
 
-export const FRAMEWORKS = ['astro', 'react', 'svelte', 'tailwind', 'html', 'scss'] as const;
+export const FRAMEWORKS = ['p8', 'astro', 'react', 'svelte', 'tailwind', 'html', 'scss'] as const;
 export type Framework = (typeof FRAMEWORKS)[number];
 
 export const FRAMEWORK_LABELS: Record<Framework, string> = {
+  p8: 'P8',
   astro: 'Astro',
   react: 'Next.js (React/TSX)',
   svelte: 'Svelte',
@@ -29,6 +30,14 @@ const STATES = ['hover', 'focus', 'disabled', 'placeholder'] as const;
 const stateSel = { hover: ':hover:not(:disabled)', focus: ':focus-visible', disabled: ':disabled', placeholder: '::placeholder' };
 const twState = { hover: 'enabled:hover:', focus: 'focus-visible:', disabled: 'disabled:', placeholder: 'placeholder:' };
 
+const PARENT = {
+  hover: { css: (P: string, C: string) => `.${P}:hover .${C}, .${P}:focus-within .${C}`, scss: (P: string) => `.${P}:hover &, .${P}:focus-within &`, tw: (P: string) => `group-hover/${P}:group-focus-within/${P}:` },
+  active: { css: (P: string, C: string) => `.${P}:active:not(:disabled) .${C}`, scss: (P: string) => `.${P}:active:not(:disabled) &`, tw: (P: string) => `group-active/${P}:` },
+} as const;
+const PSTATES = ['hover', 'active'] as const;
+/** Parent classes that need a Tailwind `group/name` marker for the current output. */
+let ctxParents = new Set<string>();
+
 const pascal = (s: string) => s.replace(/(^|[-_ ])(\w)/g, (_, __, ch) => ch.toUpperCase());
 const rulesFor = (node: Node): Rule[] => usedClasses(node).map((k) => ruleMap.get(k)).filter(Boolean) as Rule[];
 const declLines = (d: Decls, important = false) => Object.entries(d).map(([k, val]) => `${k}: ${val}${important ? ' !important' : ''};`);
@@ -43,6 +52,10 @@ export function css(rules: Rule[], opts: { onlyStates?: boolean; important?: boo
       const d = r[s];
       if (d) out.push(`.${r.cls}${stateSel[s]} {\n${declLines(d, opts.important).map((l) => `  ${l}`).join('\n')}\n}`);
     }
+    for (const ps of PSTATES) {
+      const d = r.parent?.[ps];
+      if (d) out.push(`${PARENT[ps].css(r.parent!.cls, r.cls)} {\n${declLines(d, opts.important).map((l) => `  ${l}`).join('\n')}\n}`);
+    }
   }
   return out.join('\n\n');
 }
@@ -54,6 +67,10 @@ export function scss(rules: Rule[]): string {
       for (const s of STATES) {
         const d = r[s];
         if (d) lines.push(`  &${stateSel[s]} {\n${declLines(d).map((l) => `    ${l}`).join('\n')}\n  }`);
+      }
+      for (const ps of PSTATES) {
+        const d = r.parent?.[ps];
+        if (d) lines.push(`  ${PARENT[ps].scss(r.parent!.cls)} {\n${declLines(d).map((l) => `    ${l}`).join('\n')}\n  }`);
       }
       return `.${r.cls} {\n${lines.join('\n')}\n}`;
     })
@@ -76,7 +93,18 @@ function tailwindClasses(cls: string[]): string {
   const out: string[] = [];
   for (const [p, val] of Object.entries(mergedDecls(cls, 'base'))) out.push(arb(p, val));
   for (const s of STATES) for (const [p, val] of Object.entries(mergedDecls(cls, s))) out.push(arb(p, val, twState[s]));
-  return out.join(' ');
+  for (const ps of PSTATES) {
+    const merged: Decls = {};
+    let parent = '';
+    for (const k of cls) {
+      const r = ruleMap.get(k);
+      if (r?.parent?.[ps]) { Object.assign(merged, r.parent[ps]); parent = r.parent.cls; }
+    }
+    const variants = PARENT[ps].tw(parent).split(':').filter(Boolean);
+    for (const [p, val] of Object.entries(merged)) for (const vr of variants) out.push(arb(p, val, `${vr}:`));
+  }
+  const groups = cls.filter((k) => ctxParents.has(k)).map((k) => `group/${k}`);
+  return [...groups, ...out].join(' ');
 }
 
 /* ---------- Markup ---------- */
@@ -101,7 +129,7 @@ function attrString(node: Node, mode: Mode): string {
     if (t) parts.push(`class="${t}"`);
   } else {
     const base = declLines(mergedDecls(cls, 'base')).join(' ').replace(/;$/, '');
-    const stateful = cls.filter((k) => STATES.some((s) => ruleMap.get(k)?.[s]));
+    const stateful = cls.filter((k) => STATES.some((s) => ruleMap.get(k)?.[s]) || ruleMap.get(k)?.parent);
     if (stateful.length) parts.push(`class="${stateful.join(' ')}"`);
     if (base) parts.push(`style="${base}"`);
   }
@@ -130,10 +158,24 @@ export function generate(def: ComponentDef, input: unknown, framework: Framework
   const props = parseProps(def, input);
   const node = def.render(props);
   const rules = rulesFor(node);
+  ctxParents = new Set(rules.flatMap((r) => (r.parent ? [r.parent.cls] : [])));
   const name = pascal(def.id);
   let code: string, language: string, filename: string;
 
   switch (framework) {
+    case 'p8': {
+      language = 'html';
+      filename = `${def.id}.p8.html`;
+      const defaults = defaultsOf(def.props);
+      const attrs = def.props
+        .filter((pp) => pp.name !== def.content && props[pp.name] !== defaults[pp.name])
+        .map((pp) => (props[pp.name] === true ? pp.name : `${pp.name}="${escAttr(String(props[pp.name]))}"`));
+      const tag = `${site.cssPrefix}-${def.id}`;
+      const open = [tag, ...attrs].join(' ');
+      const inline = def.content ? `<${open}>${esc(String(props[def.content]), false)}</${tag}>` : `<${open} />`;
+      code = inline.length <= 80 ? `${inline}\n` : `<${tag}\n${attrs.map((a) => `  ${a}`).join('\n')}${def.content ? `\n>${esc(String(props[def.content]), false)}</${tag}>` : '\n/>'}\n`;
+      break;
+    }
     case 'react':
       language = 'tsx';
       filename = `${name}.tsx`;

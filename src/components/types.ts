@@ -9,6 +9,8 @@ export interface Rule {
   focus?: Decls;
   disabled?: Decls;
   placeholder?: Decls;
+  /** Styles applied to this element while an ancestor `parent` class is hovered/focused/active. */
+  parent?: { cls: string; hover?: Decls; active?: Decls };
 }
 /** Framework-agnostic structure. `cls` are semantic class names (rules are looked up by them). */
 export interface Node {
@@ -41,6 +43,8 @@ export interface ComponentDef {
   tags: string[];
   status: 'stable' | 'beta';
   usage: string;
+  /** Prop rendered as the element's text content in the P8 shorthand. */
+  content?: string;
   composition?: string;
   props: PropMeta[];
   rules: Rule[];

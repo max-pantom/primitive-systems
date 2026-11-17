@@ -26,7 +26,7 @@ export const card: ComponentDef = {
     { name: 'title', type: 'string', default: 'Card title', description: 'Heading line. Empty to omit.', control: { kind: 'text' } },
     { name: 'body', type: 'string', default: 'Supporting text for the card.', description: 'Body text. Empty to omit.', control: { kind: 'textarea' } },
     { name: 'padding', type: "'default' | 'even'", default: 'default', description: "'default' is 16/12 (sides/top-bottom). 'even' is 16 on all sides.", control: { kind: 'select', options: ['default', 'even'] } },
-    { name: 'bordered', type: 'boolean', default: true, description: 'Draws the 0.5px hairline ring from the design seeds.', control: { kind: 'boolean' } },
+    { name: 'bordered', type: 'boolean', default: true, description: 'Draws the hairline ring from the design seeds.', control: { kind: 'boolean' } },
     { name: 'withAction', type: 'boolean', default: false, description: 'Adds a Button below the text (composition).', control: { kind: 'boolean' } },
     { name: 'actionLabel', type: 'string', default: 'Continue', description: 'Label for the action button.', control: { kind: 'text' } },
   ],

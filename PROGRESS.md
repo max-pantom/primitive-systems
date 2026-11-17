@@ -1,5 +1,13 @@
 # Progress
 
+## Feedback round 1 — done
+
+- Spacing: header/nav text gaps are 4px (no 2px); data list gap options are 4 and 8.
+- Hairline is now 1px at lower alpha (0.5px dropped sides at fractional zoom); focus is a dim 2px stroke, no outline rings.
+- Docs (usage, composition, props) moved into the left sidebar, which is resizable (drag the divider, width saved). Code panel is fixed height so tab changes no longer move the page. Left padding 24, narrower, lighter inactive text.
+- New first code tab **P8**: short `<p8-button variant="primary">Save</p8-button>` form (non-default props only). This is the agent shorthand; no runtime that renders `<p8-*>` tags exists yet.
+- Fixes: divider shows (with label), tabs panel removed, selects/inputs 500px wide with no default label, disabled select icon dimmed, badge `shape` (pill/soft), tooltip is CSS hover/focus, switch toggles and its thumb stretches while pressed, preview checkbox/tabs/menu are clickable. Empty State removed.
+
 ## Slices 2–5 — done (one commit)
 
 - Slice 2: Text Input, Textarea, Divider, `get_tokens` (MCP) + `GET /api/tokens`.

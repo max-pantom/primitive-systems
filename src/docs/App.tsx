@@ -9,16 +9,25 @@ import { highlight } from './highlight';
 
 const camel = (k: string) => (k === 'for' ? 'htmlFor' : /^(aria|data)-/.test(k) ? k : k.replace(/-(\w)/g, (_, c) => c.toUpperCase()));
 
+interface Ctx { props: Props; set: (name: string, value: string | boolean) => void }
+
 /** Render the framework-agnostic node tree as live React. Styles come from the same rules the codegen uses. */
-function toReact(node: Node | string, key?: number): ReactNode {
+function toReact(node: Node | string, ctx: Ctx, key?: number): ReactNode {
   if (typeof node === 'string') return node;
   const r = reactify(node);
   const attrs: Record<string, unknown> = { key };
   if (r.cls?.length) attrs.className = r.cls.join(' ');
   for (const [k, v] of Object.entries(r.attrs ?? {})) attrs[camel(k)] = v;
-  if (r.tag === 'button') attrs.onClick = (e: { preventDefault(): void }) => e.preventDefault();
-  if (r.tag === 'details') { attrs.key = `${key}-${attrs.open}`; }
-  return createElement(r.tag, attrs, ...(r.children ?? []).map((c, i) => toReact(c, i)));
+  if (r.tag === 'button') {
+    const role = r.attrs?.role;
+    const label = r.children?.find((c) => typeof c === 'string') as string | undefined;
+    attrs.onClick = (e: { preventDefault(): void }) => {
+      e.preventDefault();
+      if (role === 'checkbox' || role === 'switch') ctx.set('checked', !ctx.props.checked);
+      else if ((role === 'tab' || role === 'menuitem') && label) ctx.set('active', label);
+    };
+  }
+  return createElement(r.tag, attrs, ...(r.children ?? []).map((c, i) => toReact(c, ctx, i)));
 }
 
 function Icon({ name }: { name: 'moon' | 'sun' }) {
@@ -40,14 +49,36 @@ function useHash(): [string, (id: string) => void] {
   return [h, (id) => { location.hash = id; }];
 }
 
+function Docs({ def }: { def: ComponentDef }) {
+  return (
+    <div className="docs" data-testid="docs">
+      <section><h2>Usage</h2><p>{def.usage}</p></section>
+      {def.composition && <section><h2>Composition</h2><p>{def.composition}</p></section>}
+      <section>
+        <h2>Props</h2>
+        <dl className="proplist" data-testid="props-table">
+          {def.props.map((p) => (
+            <div key={p.name}>
+              <dt><code>{p.name}</code> <span className="muted">{p.type}</span></dt>
+              <dd>{p.description} <span className="muted">Default: <code>{JSON.stringify(p.default)}</code></span></dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </div>
+  );
+}
+
 function Workbench({ def }: { def: ComponentDef }) {
   const [props, setProps] = useState<Props>(() => defaultsOf(def.props));
-  const [fw, setFw] = useState<Framework>('astro');
+  const [fw, setFw] = useState<Framework>('p8');
   const [copied, setCopied] = useState(false);
   const set = (name: string, value: string | boolean) => setProps((p) => ({ ...p, [name]: value }));
   const result = useMemo(() => generate(def, props, fw), [def, props, fw]);
   const tree = useMemo(() => def.render(props), [def, props]);
   const html = useMemo(() => highlight(result.code), [result]);
+  // checked/active change by interacting with the preview; keep the DOM so transitions can play.
+  const { checked: _c, active: _a, ...stable } = props;
 
   const copy = async () => {
     await navigator.clipboard.writeText(result.code);
@@ -68,31 +99,8 @@ function Workbench({ def }: { def: ComponentDef }) {
           <p className="muted">{def.description}</p>
         </header>
         <div data-testid="preview" className="preview">
-          <div key={JSON.stringify(props)} style={{ width: props.fullWidth ? '100%' : undefined }}>{toReact(tree)}</div>
+          <div key={JSON.stringify(stable)} style={{ width: props.fullWidth ? '100%' : undefined }}>{toReact(tree, { props, set })}</div>
         </div>
-
-        <h2>Usage</h2>
-        <p>{def.usage}</p>
-        {def.composition && (<><h2>Composition</h2><p>{def.composition}</p></>)}
-
-        <h2>Props</h2>
-        <div className="table-wrap">
-          <table className="props" data-testid="props-table">
-            <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              {def.props.map((p) => (
-                <tr key={p.name}>
-                  <td><code>{p.name}</code></td>
-                  <td><code>{p.type}</code></td>
-                  <td><code>{JSON.stringify(p.default)}</code></td>
-                  <td>{p.description}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2>Code</h2>
         <div className="codebox">
           <div className="tabs" role="tablist" aria-label="Framework" onKeyDown={onTabKey}>
             {FRAMEWORKS.map((f) => (
@@ -133,6 +141,19 @@ export default function App() {
   const [hash, go] = useHash();
   const def = components.find((c) => c.id === hash) ?? components[0];
   const [theme, setTheme] = useState('light');
+  const [width, setWidth] = useState(220);
+  useEffect(() => { const w = Number(localStorage.getItem('leftWidth')); if (w) setWidth(w); }, []);
+  const startResize = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const move = (ev: PointerEvent) => setWidth(Math.min(480, Math.max(180, ev.clientX)));
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      localStorage.setItem('leftWidth', String(Math.min(480, Math.max(180, ev.clientX))));
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
   useEffect(() => setTheme(document.documentElement.dataset.theme ?? 'light'), []);
   const toggle = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
@@ -142,7 +163,7 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <div className="app" style={{ gridTemplateColumns: `${width}px minmax(0, 1fr) 300px` }}>
       <aside className="left">
         <div>
           <div className="brand">{site.name}</div>
@@ -153,11 +174,13 @@ export default function App() {
             <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}</a>
           ))}
         </nav>
+        <Docs def={def} />
         <button className="link theme" onClick={toggle} aria-label="Toggle dark mode" data-testid="theme-toggle">
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
           {theme === 'dark' ? 'Light' : 'Dark'} mode
         </button>
       </aside>
+      <div className="resize" style={{ left: width - 4 }} onPointerDown={startResize} role="separator" aria-orientation="vertical" aria-label="Resize sidebar" data-testid="resize" />
       <Workbench key={def.id} def={def} />
       {import.meta.env.DEV && <Agentation />}
     </div>

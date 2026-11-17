@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { components, defaultsOf, schemaOf } from '../src/components';
 import { FRAMEWORKS, generate, markup } from '../src/codegen';
 
+const SIX = FRAMEWORKS.filter((f) => f !== 'p8');
+
 /** Defaults plus an "everything toggled" variant (last select option, flipped booleans, filled text). */
 function variantsOf(def: (typeof components)[number]): Record<string, unknown>[] {
   const alt: Record<string, unknown> = {};
@@ -43,7 +45,7 @@ describe('cross-framework parity', () => {
   for (const def of components)
     for (const [i, props] of variants[def.id].entries())
       it(`${def.id} #${i}`, () => {
-        const out = Object.fromEntries(FRAMEWORKS.map((fw) => [fw, generate(def, props, fw).code]));
+        const out = Object.fromEntries(SIX.map((fw) => [fw, generate(def, props, fw).code]));
         // scss ships markup as comments; compare against its commented markup
         const scssMarkup = out.scss.split('// Markup\n')[1].replace(/^\/\/ ?/gm, '');
         const ref = tags(out.astro);

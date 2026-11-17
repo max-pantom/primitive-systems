@@ -36,12 +36,12 @@ describe('hard spacing rules', () => {
     expect(rule('card', 'p8-card').base['padding-block']).toBe('var(--p8-space-12)');
     expect(rule('card', 'p8-card--even').base['padding-block']).toBe('var(--p8-space-16)');
   });
-  it('menu items 6px sides / 4px top-bottom; tabs spaced 12px; data list gap 4 or 2', () => {
+  it('menu items 6px sides / 4px top-bottom; tabs spaced 12px; data list gap 4 or 8', () => {
     expect(rule('menu', 'p8-menu__item').base['padding-inline']).toBe('var(--p8-space-6)');
     expect(rule('menu', 'p8-menu__item').base['padding-block']).toBe('var(--p8-space-4)');
     expect(rule('tabs', 'p8-tabs').base.gap).toBe('var(--p8-space-12)');
     expect(rule('data-list', 'p8-datalist').base.gap).toBe('var(--p8-space-4)');
-    expect(rule('data-list', 'p8-datalist--gap2').base.gap).toBe('var(--p8-space-2)');
+    expect(rule('data-list', 'p8-datalist--gap8').base.gap).toBe('var(--p8-space-8)');
   });
   it('all controls have 12px left/right padding', () => {
     for (const [id, cls] of [['text-input', 'p8-input'], ['textarea', 'p8-textarea'], ['select', 'p8-select__control']]) expect(rule(id, cls).base['padding-inline']).toBe('var(--p8-space-12)');

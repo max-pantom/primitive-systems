@@ -1,8 +1,7 @@
 import { v } from '../tokens/theme';
 import { button, c as bc, iconNode, iconRule } from './button';
 import { divider } from './forms';
-import { focus, lines, n, p, ring, text } from './shared';
-import { ICON_NAMES, type IconName } from '../icons/icons';
+import { focus, lines, motion, n, p, ring, text } from './shared';
 import type { ComponentDef, Node, Props } from './types';
 
 const btn = (label: string, variant: string, icon = 'none'): Node =>
@@ -40,20 +39,16 @@ export const tabs: ComponentDef = {
   props: [
     { name: 'tabs', type: 'string (one per line)', default: 'Overview\nActivity\nSettings', description: 'Tab labels, one per line.', control: { kind: 'textarea' } },
     { name: 'active', type: 'string', default: 'Overview', description: 'Label of the active tab.', control: { kind: 'text' } },
-    { name: 'panel', type: 'string', default: 'Panel content.', description: 'Text shown in the active panel. Empty to omit.', control: { kind: 'text' } },
   ],
   rules: [
     { cls: t.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-12'), 'font-family': v('type-family'), color: v('color-ink') } },
     { cls: t.list, base: { display: 'flex', gap: v('space-12') } },
     { cls: t.tab, base: { 'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: 'transparent', color: v('color-ink-muted'), cursor: 'pointer', ...text('sm') }, hover: { color: v('color-ink') }, focus },
     { cls: t.on, base: { background: v('color-control'), color: v('color-ink') } },
-    { cls: t.panel, base: { ...text('sm') } },
   ],
   render(pr: Props): Node {
     const tabsN = lines(pr.tabs).map((l) => n('button', l === pr.active ? [t.tab, t.on] : [t.tab], [l], { type: 'button', role: 'tab', 'aria-selected': String(l === pr.active) }));
-    const kids: Node[] = [n('div', [t.list], tabsN, { role: 'tablist' })];
-    if (pr.panel) kids.push(n('div', [t.panel], [pr.panel as string], { role: 'tabpanel' }));
-    return n('div', [t.root], kids);
+    return n('div', [t.root], [n('div', [t.list], tabsN, { role: 'tablist' })]);
   },
 };
 
@@ -84,17 +79,17 @@ export const disclosure: ComponentDef = {
 };
 
 /* ---------- Data list ---------- */
-const l = { root: `${p}-datalist`, row: `${p}-datalist__row`, term: `${p}-datalist__term`, def: `${p}-datalist__def`, g2: `${p}-datalist--gap2` };
+const l = { root: `${p}-datalist`, row: `${p}-datalist__row`, term: `${p}-datalist__term`, def: `${p}-datalist__def`, g8: `${p}-datalist--gap8` };
 export const dataList: ComponentDef = {
-  id: 'data-list', name: 'Data List', description: 'Label/value pairs on stacked lines with a 2px or 4px gap.', tags: ['content', 'data'], status: 'stable',
-  usage: 'Write each pair as "Label: Value". Line gap is 4px, or 2px for dense lists.',
+  id: 'data-list', name: 'Data List', description: 'Label/value pairs on stacked lines with a 4px or 8px gap.', tags: ['content', 'data'], status: 'stable',
+  usage: 'Write each pair as "Label: Value". Line gap is 4px, or 8px for roomier lists.',
   props: [
     { name: 'items', type: 'string (Label: Value per line)', default: 'Status: Active\nOwner: Primitive 8\nUpdated: Today', description: 'One pair per line.', control: { kind: 'textarea' } },
-    { name: 'gap', type: "'4' | '2'", default: '4', description: 'Gap between lines in px.', control: { kind: 'select', options: ['4', '2'] } },
+    { name: 'gap', type: "'4' | '8'", default: '4', description: 'Gap between lines in px.', control: { kind: 'select', options: ['4', '8'] } },
   ],
   rules: [
     { cls: l.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), margin: '0', 'min-width': v('size-320'), 'font-family': v('type-family'), ...text('sm'), color: v('color-ink') } },
-    { cls: l.g2, base: { gap: v('space-2') } },
+    { cls: l.g8, base: { gap: v('space-8') } },
     { cls: l.row, base: { display: 'flex', 'justify-content': 'space-between', gap: v('space-12') } },
     { cls: l.term, base: { margin: '0', color: v('color-ink-muted') } },
     { cls: l.def, base: { margin: '0', 'text-align': 'right' } },
@@ -105,55 +100,58 @@ export const dataList: ComponentDef = {
       const [a, b] = i < 0 ? [ln, ''] : [ln.slice(0, i).trim(), ln.slice(i + 1).trim()];
       return n('div', [l.row], [n('dt', [l.term], [a]), n('dd', [l.def], b ? [b] : [])]);
     });
-    return n('dl', pr.gap === '2' ? [l.root, l.g2] : [l.root], rows);
+    return n('dl', pr.gap === '8' ? [l.root, l.g8] : [l.root], rows);
   },
 };
 
 /* ---------- Badge ---------- */
-const b = { root: `${p}-badge`, outline: `${p}-badge--outline`, solid: `${p}-badge--solid` };
+const b = { soft: `${p}-badge--soft`, root: `${p}-badge`, outline: `${p}-badge--outline`, solid: `${p}-badge--solid` };
 export const badge: ComponentDef = {
-  id: 'badge', name: 'Badge', description: 'Small status or count label.', tags: ['content', 'status'], status: 'stable',
+  id: 'badge', content: 'label', name: 'Badge', description: 'Small status or count label.', tags: ['content', 'status'], status: 'stable',
   usage: 'Keep labels to one or two words.',
   props: [
     { name: 'label', type: 'string', default: 'Badge', description: 'Text.', control: { kind: 'text' } },
+    { name: 'shape', type: "'pill' | 'soft'", default: 'pill', description: 'pill is fully rounded; soft is barely rounded (4px).', control: { kind: 'select', options: ['pill', 'soft'] } },
     { name: 'variant', type: "'default' | 'outline' | 'solid'", default: 'default', description: 'Emphasis.', control: { kind: 'select', options: ['default', 'outline', 'solid'] } },
   ],
   rules: [
     { cls: b.root, base: { display: 'inline-flex', 'align-items': 'center', 'padding-block': v('space-4'), 'padding-inline': v('space-8'), 'border-radius': v('radius-full'), background: v('color-control'), color: v('color-ink'), ...text('sm') } },
     { cls: b.outline, base: { background: 'transparent', 'box-shadow': ring } },
+    { cls: b.soft, base: { 'border-radius': v('radius-4') } },
     { cls: b.solid, base: { background: v('color-ink'), color: v('color-ink-inverse') } },
   ],
   render(pr: Props): Node {
     const cls = [b.root];
     if (pr.variant === 'outline') cls.push(b.outline);
     if (pr.variant === 'solid') cls.push(b.solid);
+    if (pr.shape === 'soft') cls.push(b.soft);
     return n('span', cls, [pr.label as string]);
   },
 };
 
 /* ---------- Tooltip ---------- */
-const tt = { root: `${p}-tooltip`, bubble: `${p}-tooltip__bubble` };
+const tt = { root: `${p}-tooltip`, bubble: `${p}-tooltip__bubble`, top: `${p}-tooltip__bubble--top`, bottom: `${p}-tooltip__bubble--bottom`, open: `${p}-tooltip__bubble--open` };
 export const tooltip: ComponentDef = {
-  id: 'tooltip', name: 'Tooltip', description: 'Short hint attached to a trigger.', tags: ['overlay', 'content'], status: 'stable',
-  usage: 'Render the bubble while the trigger is hovered or focused. Preview keeps it visible; toggle with the open prop.',
+  id: 'tooltip', content: 'trigger', name: 'Tooltip', description: 'Short hint that appears on hover or focus.', tags: ['overlay', 'content'], status: 'stable',
+  usage: 'CSS only: the bubble shows while the trigger is hovered or focused. Turn on open to keep it visible for review.',
   composition: 'Wraps a Button as the trigger.',
   props: [
     { name: 'text', type: 'string', default: 'Helpful hint', description: 'Bubble text.', control: { kind: 'text' } },
     { name: 'trigger', type: 'string', default: 'Hover me', description: 'Label of the trigger button.', control: { kind: 'text' } },
     { name: 'placement', type: "'top' | 'bottom'", default: 'top', description: 'Side of the trigger.', control: { kind: 'select', options: ['top', 'bottom'] } },
-    { name: 'open', type: 'boolean', default: true, description: 'Show the bubble.', control: { kind: 'boolean' } },
+    { name: 'open', type: 'boolean', default: false, description: 'Keep the bubble visible.', control: { kind: 'boolean' } },
   ],
   rules: [
-    { cls: tt.root, base: { display: 'inline-flex', 'flex-direction': 'column', 'align-items': 'center', gap: v('space-8') } },
-    { cls: tt.bubble, base: { 'padding-block': v('space-4'), 'padding-inline': v('space-8'), 'border-radius': v('radius-8'), background: v('color-ink'), color: v('color-ink-inverse'), ...text('sm') } },
+    { cls: tt.root, base: { position: 'relative', display: 'inline-flex' } },
+    { cls: tt.bubble, base: { position: 'absolute', left: '50%', translate: '-50% 0', 'white-space': 'nowrap', 'pointer-events': 'none', opacity: '0', transition: `opacity ${motion}`, 'padding-block': v('space-4'), 'padding-inline': v('space-8'), 'border-radius': v('radius-8'), background: v('color-ink'), color: v('color-ink-inverse'), ...text('sm') }, parent: { cls: tt.root, hover: { opacity: '1' } } },
+    { cls: tt.top, base: { bottom: '100%', 'margin-bottom': v('space-8') } },
+    { cls: tt.bottom, base: { top: '100%', 'margin-top': v('space-8') } },
+    { cls: tt.open, base: { opacity: '1' } },
   ],
   render(pr: Props): Node {
-    const kids: Node[] = [btn(pr.trigger as string, 'default')];
-    if (pr.open) {
-      const bub = n('span', [tt.bubble], [pr.text as string], { role: 'tooltip' });
-      if (pr.placement === 'top') kids.unshift(bub); else kids.push(bub);
-    }
-    return n('span', [tt.root], kids);
+    const cls = [tt.bubble, pr.placement === 'bottom' ? tt.bottom : tt.top];
+    if (pr.open) cls.push(tt.open);
+    return n('span', [tt.root], [btn(pr.trigger as string, 'default'), n('span', cls, [pr.text as string], { role: 'tooltip' })]);
   },
 };
 
@@ -240,30 +238,3 @@ export const avatar: ComponentDef = {
   },
 };
 
-/* ---------- Empty state ---------- */
-const e = { root: `${p}-empty`, icon: `${p}-empty__icon`, title: `${p}-empty__title`, body: `${p}-empty__body` };
-export const emptyState: ComponentDef = {
-  id: 'empty-state', name: 'Empty State', description: 'Explains why there is nothing to show and what to do next.', tags: ['feedback', 'layout'], status: 'stable',
-  usage: 'Keep the title short and offer one clear action.',
-  composition: 'Contains an optional Button as the action.',
-  props: [
-    { name: 'title', type: 'string', default: 'Nothing here yet', description: 'Heading.', control: { kind: 'text' } },
-    { name: 'body', type: 'string', default: 'Items you add will show up here.', description: 'Supporting text.', control: { kind: 'textarea' } },
-    { name: 'icon', type: 'IconName | "none"', default: 'inbox', description: 'Icon from the Primitive8 pack.', control: { kind: 'select', options: ['none', ...ICON_NAMES] } },
-    { name: 'actionLabel', type: 'string', default: 'Add item', description: 'Action label. Empty to omit.', control: { kind: 'text' } },
-  ],
-  rules: [
-    { cls: e.root, base: { display: 'flex', 'flex-direction': 'column', 'align-items': 'center', gap: v('space-12'), 'text-align': 'center', 'box-sizing': 'border-box', padding: v('space-24'), 'min-width': v('size-320'), 'font-family': v('type-family'), color: v('color-ink') } },
-    { cls: e.icon, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', width: v('size-40'), height: v('size-40'), 'border-radius': v('radius-full'), background: v('color-control') } },
-    { cls: e.title, base: { margin: '0', ...text('md'), 'font-weight': v('type-weight-strong') } },
-    { cls: e.body, base: { margin: '0', ...text('sm'), color: v('color-ink-muted') } },
-    iconRule,
-  ],
-  render(pr: Props): Node {
-    const kids: Node[] = [];
-    if (pr.icon !== 'none') kids.push(n('span', [e.icon], [iconNode(pr.icon as IconName, 16)]));
-    kids.push(n('div', [], [n('h2', [e.title], [pr.title as string]), ...(pr.body ? [n('p', [e.body], [pr.body as string])] : [])]));
-    if (pr.actionLabel) kids.push(btn(pr.actionLabel as string, 'default'));
-    return n('div', [e.root], kids);
-  },
-};

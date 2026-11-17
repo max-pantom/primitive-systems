@@ -4,7 +4,9 @@ import type { Decls, Node, Rule } from './types';
 
 export const p = site.cssPrefix;
 export const ring = `0 0 0 ${v('border-hairline')} ${v('color-ring')}`;
-export const focus: Decls = { outline: `${v('border-focus')} solid ${v('color-ink')}`, 'outline-offset': v('border-focus-offset') };
+/** Focus is the same hairline stroke as the seeds, only a little stronger. No outline rings. */
+export const focus: Decls = { outline: 'none', 'box-shadow': `0 0 0 ${v('border-focus')} ${v('color-ring-focus')}` };
+export const motion = `${v('motion-fast')} ${v('motion-ease')}`;
 export const text = (size: 'sm' | 'md'): Decls => ({
   'font-family': v('type-family'), 'font-size': v(`type-size-${size}`), 'line-height': v(`type-line-${size}`), 'font-weight': v('type-weight'),
 });
