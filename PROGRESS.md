@@ -3,7 +3,7 @@
 ## 0.8.0 — done
 
 - Slider drag stretch; Menu shortcut hints; 5 new components (Tree View, Scroll Area, Timer, Inline Edit, Code Block) → 57 total.
-- **/usage:** aggregate counters for MCP + HTTP (tools, components, frameworks, clients, optional `?model=` / `x-p8-model`, 14-day chart) and a live overview of the public MCP. Store is Upstash Redis when `UPSTASH_REDIS_REST_*` / `KV_REST_API_*` exist, otherwise memory. **Not connected yet** — run `vercel integration add upstash` (needs you to accept the terms) for durable stats. MCP does not transmit the model, so "models" is self-reported.
+- **/usage:** aggregate counters for MCP + HTTP (tools, components, frameworks, clients, optional `?model=` / `x-p8-model`, 14-day chart) and a live overview of the public MCP. Store is Upstash Redis when `UPSTASH_REDIS_REST_*` / `KV_REST_API_*` exist, otherwise memory. **Not connected yet, so /usage is incomplete on Vercel** (the MCP and API functions don't share memory) — run `vercel integration add upstash` (needs you to accept the terms) for durable stats. MCP does not transmit the model, so "models" is self-reported.
 - Local dev: `pnpm api` now serves `/api/*` and `/mcp` exactly like Vercel; the docs dev server proxies to it.
 - Fixed by the checker: highlighter greys below 4.5:1; fixed by the layout-shift guard: Timer button/time widths, Inline Edit swap.
 

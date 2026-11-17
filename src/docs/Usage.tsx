@@ -64,7 +64,7 @@ export default function Usage() {
       </section>
 
       {data?.store === 'memory' && (
-        <p className="u-note" data-testid="usage-store">Counting in memory: totals reset when the server restarts. For durable stats connect Upstash Redis to this project: <code>vercel integration add upstash</code>.</p>
+        <p className="u-note" data-testid="usage-store">No durable store is connected, so these numbers are not reliable: each serverless function keeps its own memory, and it resets on every cold start. To count every MCP and API call, connect Upstash Redis to the Vercel project: <code>vercel integration add upstash</code>.</p>
       )}
       {data?.store === 'redis' && <p className="muted" data-testid="usage-store">Counting since {new Date(data.since).toLocaleDateString()} (Upstash Redis).</p>}
 
