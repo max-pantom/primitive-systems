@@ -27,7 +27,7 @@ const MAX_COLOR_DISTANCE = 48;
 const HEX = /(?<![\w&#/-])#([0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g;
 
 /* ---------- labels ---------- */
-function tagEnd(code: string, from: number): number {
+export function tagEnd(code: string, from: number): number {
   let depth = 0;
   let q = '';
   for (let i = from; i < code.length; i++) {
@@ -40,8 +40,8 @@ function tagEnd(code: string, from: number): number {
   }
   return -1;
 }
-const attr = (s: string, name: string) => new RegExp(`(?:^|\\s)${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|\\{([^}]*)\\})`).exec(s);
-const has = (s: string, name: string) => new RegExp(`(?:^|\\s)${name}(?=[\\s=/>]|$)`).test(s);
+export const attr = (s: string, name: string) => new RegExp(`(?:^|\\s)${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|\\{([^}]*)\\})`).exec(s);
+export const has = (s: string, name: string) => new RegExp(`(?:^|\\s)${name}(?=[\\s=/>]|$)`).test(s);
 const cap = (s: string) => s.replace(/[-_]+/g, ' ').trim().replace(/^./, (c) => c.toUpperCase());
 
 interface LabelHit { start: number; end: number; tag: string; attrs: string; line: number; add?: string; note?: string; why: string }

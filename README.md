@@ -25,6 +25,10 @@ Release history: `/changelog` (site), `GET /api/changelog` (JSON), and `get_chan
 - **Rule book:** [RULEBOOK.md](RULEBOOK.md) — 4/8 grid, 12px controls, 16/12 surfaces, default gap 12, menu 6/4, one stroke, dim focus, 14/16 icons from the Primitive8 pack, accessibility. Source of truth: `src/rules/rulebook.ts`.
 - **Check book:** [CHECKBOOK.md](CHECKBOOK.md) — `pnpm rules` checks every component's style rules and rendered markup against the rule book (tokens-only, grid, control/surface padding, gaps, type scale, hairline, focus, disabled, icons, ARIA, labels, contrast). It runs inside `pnpm test`.
 - **Lint your own code:** `npx primitive lint src` flags off-grid padding/margin/radius, gaps other than 4/8/12, raw hex colours and missing labels; add `--fix` (MCP: `lint_code` with `fix: true`) to correct them and list every change.
+- **Scan a project:** `npx primitive scan src` (MCP `scan_code`) lists every raw button, input, select, table, dialog and hand-rolled card/modal, plus MUI/Chakra/Ant/shadcn components, with the swap, props and command for each, and your adoption %.
+- **From a situation:** `npx primitive suggest "user has no projects yet"` (MCP `suggest_ui`) returns the component with props and house-voice wording; `suggest_copy` / `check_copy` write and check UI text.
+- **Brief mode:** `brief: true` (HTTP `?brief=1`) returns only props and the snippet for agents low on context.
+- **Docs search:** ⌘K / Ctrl+K on any docs page.
 - **Templates:** whole screens (sign-in, settings, dashboard, list-to-detail, empty page) at `/templates` and through `list_templates` / `get_template`.
 - **Versions:** `list_versions`, `diff_component` and a `version` argument on `get_component` / `get_code` show what changed between releases, with migration hints (snapshots are rebuilt from real release history).
 - **Themes:** `npx primitive theme --ink "#111" --canvas "#fff" --radius 12 --out theme.css` derives the whole token file and checks contrast.

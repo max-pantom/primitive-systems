@@ -81482,6 +81482,982 @@ exports[`codegen snapshots > link #1 → tailwind 1`] = `
 "
 `;
 
+exports[`codegen snapshots > link-preview #0 → astro 1`] = `
+"---
+// Requires the Primitive Systems theme variables (theme.css).
+---
+
+<a class="p8-linkcard" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+  <span class="p8-linkcard__media" aria-hidden="true">
+    <span class="p8-linkcard__ph">
+      <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="p8-linkcard__body">
+    <span class="p8-linkcard__site">example.com</span>
+    <span class="p8-linkcard__title">Field notes on building calm interfaces</span>
+    <span class="p8-linkcard__desc">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+  </span>
+</a>
+
+<style>
+  .p8-linkcard {
+    display: flex;
+    box-sizing: border-box;
+    width: var(--p8-size-500);
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--p8-radius-12);
+    background: var(--p8-color-surface);
+    color: var(--p8-color-ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+    outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+    outline-offset: calc(-1 * var(--p8-border-hairline));
+    font-family: var(--p8-type-family);
+    font-size: var(--p8-type-size-sm);
+    line-height: var(--p8-type-line-sm);
+    font-weight: var(--p8-type-weight);
+  }
+
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+
+  .p8-linkcard__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--p8-size-160);
+    min-height: var(--p8-size-96);
+    background: var(--p8-color-control);
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__ph {
+    display: inline-flex;
+  }
+
+  .p8-icon {
+    flex-shrink: 0;
+  }
+
+  .p8-linkcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p8-space-4);
+    min-width: 0;
+    padding-block: var(--p8-space-12);
+    padding-inline: var(--p8-space-16);
+  }
+
+  .p8-linkcard__site {
+    color: var(--p8-color-ink-muted);
+    font-family: var(--p8-type-mono);
+    letter-spacing: var(--p8-type-tracking-mono);
+  }
+
+  .p8-linkcard__title {
+    margin: 0;
+    font-weight: var(--p8-type-weight-strong);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .p8-linkcard__desc {
+    margin: 0;
+    color: var(--p8-color-ink-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → html 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). -->
+<style>
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control) !important;
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus) !important;
+  }
+</style>
+<a class="p8-linkcard" style="display: flex; box-sizing: border-box; width: var(--p8-size-500); max-width: 100%; overflow: hidden; padding: 0; border-radius: var(--p8-radius-12); background: var(--p8-color-surface); color: var(--p8-color-ink); text-decoration: none; cursor: pointer; transition: background var(--p8-motion-fast) var(--p8-motion-ease); outline: var(--p8-border-hairline) solid var(--p8-color-ring); outline-offset: calc(-1 * var(--p8-border-hairline)); font-family: var(--p8-type-family); font-size: var(--p8-type-size-sm); line-height: var(--p8-type-line-sm); font-weight: var(--p8-type-weight)" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+  <span style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--p8-size-160); min-height: var(--p8-size-96); background: var(--p8-color-control); color: var(--p8-color-ink-muted)" aria-hidden="true">
+    <span style="display: inline-flex">
+      <svg style="flex-shrink: 0" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span style="display: flex; flex-direction: column; gap: var(--p8-space-4); min-width: 0; padding-block: var(--p8-space-12); padding-inline: var(--p8-space-16)">
+    <span style="color: var(--p8-color-ink-muted); font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono)">example.com</span>
+    <span style="margin: 0; font-weight: var(--p8-type-weight-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Field notes on building calm interfaces</span>
+    <span style="margin: 0; color: var(--p8-color-ink-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+  </span>
+</a>
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → p8 1`] = `
+"<p8-link-preview />
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → react 1`] = `
+"// LinkPreview.tsx — Requires the Primitive Systems theme variables (theme.css).
+import './link-preview.css';
+
+export function LinkPreview() {
+  return (
+    <a className="p8-linkcard" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+      <span className="p8-linkcard__media" aria-hidden="true">
+        <span className="p8-linkcard__ph">
+          <svg className="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+            <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+          </svg>
+        </span>
+      </span>
+      <span className="p8-linkcard__body">
+        <span className="p8-linkcard__site">example.com</span>
+        <span className="p8-linkcard__title">Field notes on building calm interfaces</span>
+        <span className="p8-linkcard__desc">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+      </span>
+    </a>
+  );
+}
+
+/* link-preview.css */
+.p8-linkcard {
+  display: flex;
+  box-sizing: border-box;
+  width: var(--p8-size-500);
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--p8-radius-12);
+  background: var(--p8-color-surface);
+  color: var(--p8-color-ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+  outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+  outline-offset: calc(-1 * var(--p8-border-hairline));
+  font-family: var(--p8-type-family);
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+}
+
+.p8-linkcard:hover:not(:disabled) {
+  background: var(--p8-color-control);
+}
+
+.p8-linkcard:focus-visible {
+  box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+}
+
+.p8-linkcard__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--p8-size-160);
+  min-height: var(--p8-size-96);
+  background: var(--p8-color-control);
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__ph {
+  display: inline-flex;
+}
+
+.p8-icon {
+  flex-shrink: 0;
+}
+
+.p8-linkcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-4);
+  min-width: 0;
+  padding-block: var(--p8-space-12);
+  padding-inline: var(--p8-space-16);
+}
+
+.p8-linkcard__site {
+  color: var(--p8-color-ink-muted);
+  font-family: var(--p8-type-mono);
+  letter-spacing: var(--p8-type-tracking-mono);
+}
+
+.p8-linkcard__title {
+  margin: 0;
+  font-weight: var(--p8-type-weight-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.p8-linkcard__desc {
+  margin: 0;
+  color: var(--p8-color-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → scss 1`] = `
+"// _link-preview.scss — Requires the Primitive Systems theme variables (theme.css).
+.p8-linkcard {
+  display: flex;
+  box-sizing: border-box;
+  width: var(--p8-size-500);
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--p8-radius-12);
+  background: var(--p8-color-surface);
+  color: var(--p8-color-ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+  outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+  outline-offset: calc(-1 * var(--p8-border-hairline));
+  font-family: var(--p8-type-family);
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+  &:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+}
+
+.p8-linkcard__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--p8-size-160);
+  min-height: var(--p8-size-96);
+  background: var(--p8-color-control);
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__ph {
+  display: inline-flex;
+}
+
+.p8-icon {
+  flex-shrink: 0;
+}
+
+.p8-linkcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-4);
+  min-width: 0;
+  padding-block: var(--p8-space-12);
+  padding-inline: var(--p8-space-16);
+}
+
+.p8-linkcard__site {
+  color: var(--p8-color-ink-muted);
+  font-family: var(--p8-type-mono);
+  letter-spacing: var(--p8-type-tracking-mono);
+}
+
+.p8-linkcard__title {
+  margin: 0;
+  font-weight: var(--p8-type-weight-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.p8-linkcard__desc {
+  margin: 0;
+  color: var(--p8-color-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Markup
+// <a class="p8-linkcard" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+//   <span class="p8-linkcard__media" aria-hidden="true">
+//     <span class="p8-linkcard__ph">
+//       <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+//         <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+//         <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+//       </svg>
+//     </span>
+//   </span>
+//   <span class="p8-linkcard__body">
+//     <span class="p8-linkcard__site">example.com</span>
+//     <span class="p8-linkcard__title">Field notes on building calm interfaces</span>
+//     <span class="p8-linkcard__desc">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+//   </span>
+// </a>
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → svelte 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). -->
+<a class="p8-linkcard" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+  <span class="p8-linkcard__media" aria-hidden="true">
+    <span class="p8-linkcard__ph">
+      <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="p8-linkcard__body">
+    <span class="p8-linkcard__site">example.com</span>
+    <span class="p8-linkcard__title">Field notes on building calm interfaces</span>
+    <span class="p8-linkcard__desc">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+  </span>
+</a>
+
+<style>
+  .p8-linkcard {
+    display: flex;
+    box-sizing: border-box;
+    width: var(--p8-size-500);
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--p8-radius-12);
+    background: var(--p8-color-surface);
+    color: var(--p8-color-ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+    outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+    outline-offset: calc(-1 * var(--p8-border-hairline));
+    font-family: var(--p8-type-family);
+    font-size: var(--p8-type-size-sm);
+    line-height: var(--p8-type-line-sm);
+    font-weight: var(--p8-type-weight);
+  }
+
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+
+  .p8-linkcard__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--p8-size-160);
+    min-height: var(--p8-size-96);
+    background: var(--p8-color-control);
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__ph {
+    display: inline-flex;
+  }
+
+  .p8-icon {
+    flex-shrink: 0;
+  }
+
+  .p8-linkcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p8-space-4);
+    min-width: 0;
+    padding-block: var(--p8-space-12);
+    padding-inline: var(--p8-space-16);
+  }
+
+  .p8-linkcard__site {
+    color: var(--p8-color-ink-muted);
+    font-family: var(--p8-type-mono);
+    letter-spacing: var(--p8-type-tracking-mono);
+  }
+
+  .p8-linkcard__title {
+    margin: 0;
+    font-weight: var(--p8-type-weight-strong);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .p8-linkcard__desc {
+    margin: 0;
+    color: var(--p8-color-ink-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+"
+`;
+
+exports[`codegen snapshots > link-preview #0 → tailwind 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). Tailwind v4 arbitrary properties over named tokens. -->
+<a class="[display:flex] [box-sizing:border-box] [width:var(--p8-size-500)] [max-width:100%] [overflow:hidden] [padding:0] [border-radius:var(--p8-radius-12)] [background:var(--p8-color-surface)] [color:var(--p8-color-ink)] [text-decoration:none] [cursor:pointer] [transition:background_var(--p8-motion-fast)_var(--p8-motion-ease)] [outline:var(--p8-border-hairline)_solid_var(--p8-color-ring)] [outline-offset:calc(-1_*_var(--p8-border-hairline))] [font-family:var(--p8-type-family)] [font-size:var(--p8-type-size-sm)] [line-height:var(--p8-type-line-sm)] [font-weight:var(--p8-type-weight)] enabled:hover:[background:var(--p8-color-control)] focus-visible:[box-shadow:0_0_0_var(--p8-border-focus)_var(--p8-color-ring-focus)]" href="https://example.com/field-notes" target="_blank" rel="noopener noreferrer">
+  <span class="[display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [width:var(--p8-size-160)] [min-height:var(--p8-size-96)] [background:var(--p8-color-control)] [color:var(--p8-color-ink-muted)]" aria-hidden="true">
+    <span class="[display:inline-flex]">
+      <svg class="[flex-shrink:0]" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="[display:flex] [flex-direction:column] [gap:var(--p8-space-4)] [min-width:0] [padding-block:var(--p8-space-12)] [padding-inline:var(--p8-space-16)]">
+    <span class="[color:var(--p8-color-ink-muted)] [font-family:var(--p8-type-mono)] [letter-spacing:var(--p8-type-tracking-mono)]">example.com</span>
+    <span class="[margin:0] [font-weight:var(--p8-type-weight-strong)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] [overflow:hidden]">Field notes on building calm interfaces</span>
+    <span class="[margin:0] [color:var(--p8-color-ink-muted)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] [overflow:hidden]">A short write-up on spacing, type and the two sizes that carry an entire product.</span>
+  </span>
+</a>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → astro 1`] = `
+"---
+// Requires the Primitive Systems theme variables (theme.css).
+---
+
+<a class="p8-linkcard p8-linkcard--vertical" href="https://example.com/field-notes">
+  <span class="p8-linkcard__media p8-linkcard__media--vertical" aria-hidden="true">
+    <span class="p8-linkcard__ph">
+      <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="p8-linkcard__body">
+    <span class="p8-linkcard__site">Sample {x} &lt;y&gt;</span>
+    <span class="p8-linkcard__url">https://example.com/field-notes</span>
+    <span class="p8-linkcard__desc">Preview unavailable.</span>
+  </span>
+</a>
+
+<style>
+  .p8-linkcard {
+    display: flex;
+    box-sizing: border-box;
+    width: var(--p8-size-500);
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--p8-radius-12);
+    background: var(--p8-color-surface);
+    color: var(--p8-color-ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+    outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+    outline-offset: calc(-1 * var(--p8-border-hairline));
+    font-family: var(--p8-type-family);
+    font-size: var(--p8-type-size-sm);
+    line-height: var(--p8-type-line-sm);
+    font-weight: var(--p8-type-weight);
+  }
+
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+
+  .p8-linkcard--vertical {
+    flex-direction: column;
+  }
+
+  .p8-linkcard__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--p8-size-160);
+    min-height: var(--p8-size-96);
+    background: var(--p8-color-control);
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__media--vertical {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .p8-linkcard__ph {
+    display: inline-flex;
+  }
+
+  .p8-icon {
+    flex-shrink: 0;
+  }
+
+  .p8-linkcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p8-space-4);
+    min-width: 0;
+    padding-block: var(--p8-space-12);
+    padding-inline: var(--p8-space-16);
+  }
+
+  .p8-linkcard__site {
+    color: var(--p8-color-ink-muted);
+    font-family: var(--p8-type-mono);
+    letter-spacing: var(--p8-type-tracking-mono);
+  }
+
+  .p8-linkcard__url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__desc {
+    margin: 0;
+    color: var(--p8-color-ink-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → html 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). -->
+<style>
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control) !important;
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus) !important;
+  }
+</style>
+<a class="p8-linkcard" style="display: flex; box-sizing: border-box; width: var(--p8-size-500); max-width: 100%; overflow: hidden; padding: 0; border-radius: var(--p8-radius-12); background: var(--p8-color-surface); color: var(--p8-color-ink); text-decoration: none; cursor: pointer; transition: background var(--p8-motion-fast) var(--p8-motion-ease); outline: var(--p8-border-hairline) solid var(--p8-color-ring); outline-offset: calc(-1 * var(--p8-border-hairline)); font-family: var(--p8-type-family); font-size: var(--p8-type-size-sm); line-height: var(--p8-type-line-sm); font-weight: var(--p8-type-weight); flex-direction: column" href="https://example.com/field-notes">
+  <span style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; min-height: var(--p8-size-96); background: var(--p8-color-control); color: var(--p8-color-ink-muted); aspect-ratio: 16 / 9" aria-hidden="true">
+    <span style="display: inline-flex">
+      <svg style="flex-shrink: 0" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span style="display: flex; flex-direction: column; gap: var(--p8-space-4); min-width: 0; padding-block: var(--p8-space-12); padding-inline: var(--p8-space-16)">
+    <span style="color: var(--p8-color-ink-muted); font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono)">Sample {x} &lt;y&gt;</span>
+    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--p8-color-ink-muted)">https://example.com/field-notes</span>
+    <span style="margin: 0; color: var(--p8-color-ink-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Preview unavailable.</span>
+  </span>
+</a>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → p8 1`] = `
+"<p8-link-preview
+  site="Sample {x} &lt;y&gt;"
+  image="Sample {x} &lt;y&gt;"
+  layout="vertical"
+  state="error"
+  external="false"
+/>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → react 1`] = `
+"// LinkPreview.tsx — Requires the Primitive Systems theme variables (theme.css).
+import './link-preview.css';
+
+export function LinkPreview() {
+  return (
+    <a className="p8-linkcard p8-linkcard--vertical" href="https://example.com/field-notes">
+      <span className="p8-linkcard__media p8-linkcard__media--vertical" aria-hidden="true">
+        <span className="p8-linkcard__ph">
+          <svg className="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+            <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+          </svg>
+        </span>
+      </span>
+      <span className="p8-linkcard__body">
+        <span className="p8-linkcard__site">Sample {'{'}x{'}'} &lt;y&gt;</span>
+        <span className="p8-linkcard__url">https://example.com/field-notes</span>
+        <span className="p8-linkcard__desc">Preview unavailable.</span>
+      </span>
+    </a>
+  );
+}
+
+/* link-preview.css */
+.p8-linkcard {
+  display: flex;
+  box-sizing: border-box;
+  width: var(--p8-size-500);
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--p8-radius-12);
+  background: var(--p8-color-surface);
+  color: var(--p8-color-ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+  outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+  outline-offset: calc(-1 * var(--p8-border-hairline));
+  font-family: var(--p8-type-family);
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+}
+
+.p8-linkcard:hover:not(:disabled) {
+  background: var(--p8-color-control);
+}
+
+.p8-linkcard:focus-visible {
+  box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+}
+
+.p8-linkcard--vertical {
+  flex-direction: column;
+}
+
+.p8-linkcard__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--p8-size-160);
+  min-height: var(--p8-size-96);
+  background: var(--p8-color-control);
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__media--vertical {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.p8-linkcard__ph {
+  display: inline-flex;
+}
+
+.p8-icon {
+  flex-shrink: 0;
+}
+
+.p8-linkcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-4);
+  min-width: 0;
+  padding-block: var(--p8-space-12);
+  padding-inline: var(--p8-space-16);
+}
+
+.p8-linkcard__site {
+  color: var(--p8-color-ink-muted);
+  font-family: var(--p8-type-mono);
+  letter-spacing: var(--p8-type-tracking-mono);
+}
+
+.p8-linkcard__url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__desc {
+  margin: 0;
+  color: var(--p8-color-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → scss 1`] = `
+"// _link-preview.scss — Requires the Primitive Systems theme variables (theme.css).
+.p8-linkcard {
+  display: flex;
+  box-sizing: border-box;
+  width: var(--p8-size-500);
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: var(--p8-radius-12);
+  background: var(--p8-color-surface);
+  color: var(--p8-color-ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+  outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+  outline-offset: calc(-1 * var(--p8-border-hairline));
+  font-family: var(--p8-type-family);
+  font-size: var(--p8-type-size-sm);
+  line-height: var(--p8-type-line-sm);
+  font-weight: var(--p8-type-weight);
+  &:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+}
+
+.p8-linkcard--vertical {
+  flex-direction: column;
+}
+
+.p8-linkcard__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--p8-size-160);
+  min-height: var(--p8-size-96);
+  background: var(--p8-color-control);
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__media--vertical {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.p8-linkcard__ph {
+  display: inline-flex;
+}
+
+.p8-icon {
+  flex-shrink: 0;
+}
+
+.p8-linkcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p8-space-4);
+  min-width: 0;
+  padding-block: var(--p8-space-12);
+  padding-inline: var(--p8-space-16);
+}
+
+.p8-linkcard__site {
+  color: var(--p8-color-ink-muted);
+  font-family: var(--p8-type-mono);
+  letter-spacing: var(--p8-type-tracking-mono);
+}
+
+.p8-linkcard__url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--p8-color-ink-muted);
+}
+
+.p8-linkcard__desc {
+  margin: 0;
+  color: var(--p8-color-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Markup
+// <a class="p8-linkcard p8-linkcard--vertical" href="https://example.com/field-notes">
+//   <span class="p8-linkcard__media p8-linkcard__media--vertical" aria-hidden="true">
+//     <span class="p8-linkcard__ph">
+//       <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+//         <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+//         <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+//       </svg>
+//     </span>
+//   </span>
+//   <span class="p8-linkcard__body">
+//     <span class="p8-linkcard__site">Sample {x} &lt;y&gt;</span>
+//     <span class="p8-linkcard__url">https://example.com/field-notes</span>
+//     <span class="p8-linkcard__desc">Preview unavailable.</span>
+//   </span>
+// </a>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → svelte 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). -->
+<a class="p8-linkcard p8-linkcard--vertical" href="https://example.com/field-notes">
+  <span class="p8-linkcard__media p8-linkcard__media--vertical" aria-hidden="true">
+    <span class="p8-linkcard__ph">
+      <svg class="p8-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="p8-linkcard__body">
+    <span class="p8-linkcard__site">Sample {x} &lt;y&gt;</span>
+    <span class="p8-linkcard__url">https://example.com/field-notes</span>
+    <span class="p8-linkcard__desc">Preview unavailable.</span>
+  </span>
+</a>
+
+<style>
+  .p8-linkcard {
+    display: flex;
+    box-sizing: border-box;
+    width: var(--p8-size-500);
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--p8-radius-12);
+    background: var(--p8-color-surface);
+    color: var(--p8-color-ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--p8-motion-fast) var(--p8-motion-ease);
+    outline: var(--p8-border-hairline) solid var(--p8-color-ring);
+    outline-offset: calc(-1 * var(--p8-border-hairline));
+    font-family: var(--p8-type-family);
+    font-size: var(--p8-type-size-sm);
+    line-height: var(--p8-type-line-sm);
+    font-weight: var(--p8-type-weight);
+  }
+
+  .p8-linkcard:hover:not(:disabled) {
+    background: var(--p8-color-control);
+  }
+
+  .p8-linkcard:focus-visible {
+    box-shadow: 0 0 0 var(--p8-border-focus) var(--p8-color-ring-focus);
+  }
+
+  .p8-linkcard--vertical {
+    flex-direction: column;
+  }
+
+  .p8-linkcard__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--p8-size-160);
+    min-height: var(--p8-size-96);
+    background: var(--p8-color-control);
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__media--vertical {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .p8-linkcard__ph {
+    display: inline-flex;
+  }
+
+  .p8-icon {
+    flex-shrink: 0;
+  }
+
+  .p8-linkcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p8-space-4);
+    min-width: 0;
+    padding-block: var(--p8-space-12);
+    padding-inline: var(--p8-space-16);
+  }
+
+  .p8-linkcard__site {
+    color: var(--p8-color-ink-muted);
+    font-family: var(--p8-type-mono);
+    letter-spacing: var(--p8-type-tracking-mono);
+  }
+
+  .p8-linkcard__url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--p8-color-ink-muted);
+  }
+
+  .p8-linkcard__desc {
+    margin: 0;
+    color: var(--p8-color-ink-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+"
+`;
+
+exports[`codegen snapshots > link-preview #1 → tailwind 1`] = `
+"<!-- Requires the Primitive Systems theme variables (theme.css). Tailwind v4 arbitrary properties over named tokens. -->
+<a class="[display:flex] [box-sizing:border-box] [width:var(--p8-size-500)] [max-width:100%] [overflow:hidden] [padding:0] [border-radius:var(--p8-radius-12)] [background:var(--p8-color-surface)] [color:var(--p8-color-ink)] [text-decoration:none] [cursor:pointer] [transition:background_var(--p8-motion-fast)_var(--p8-motion-ease)] [outline:var(--p8-border-hairline)_solid_var(--p8-color-ring)] [outline-offset:calc(-1_*_var(--p8-border-hairline))] [font-family:var(--p8-type-family)] [font-size:var(--p8-type-size-sm)] [line-height:var(--p8-type-line-sm)] [font-weight:var(--p8-type-weight)] [flex-direction:column] enabled:hover:[background:var(--p8-color-control)] focus-visible:[box-shadow:0_0_0_var(--p8-border-focus)_var(--p8-color-ring-focus)]" href="https://example.com/field-notes">
+  <span class="[display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [width:100%] [min-height:var(--p8-size-96)] [background:var(--p8-color-control)] [color:var(--p8-color-ink-muted)] [aspect-ratio:16_/_9]" aria-hidden="true">
+    <span class="[display:inline-flex]">
+      <svg class="[flex-shrink:0]" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6.5 4.5L8 3A3.535 3.535 0 0 1 13 8L11.5 9.5M4.5 6.5L3 8A3.535 3.535 0 0 0 8 13L9.5 11.5" />
+        <line x1="5.5" y1="10.5" x2="10.5" y2="5.5" />
+      </svg>
+    </span>
+  </span>
+  <span class="[display:flex] [flex-direction:column] [gap:var(--p8-space-4)] [min-width:0] [padding-block:var(--p8-space-12)] [padding-inline:var(--p8-space-16)]">
+    <span class="[color:var(--p8-color-ink-muted)] [font-family:var(--p8-type-mono)] [letter-spacing:var(--p8-type-tracking-mono)]">Sample {x} &lt;y&gt;</span>
+    <span class="[overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap] [color:var(--p8-color-ink-muted)]">https://example.com/field-notes</span>
+    <span class="[margin:0] [color:var(--p8-color-ink-muted)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] [overflow:hidden]">Preview unavailable.</span>
+  </span>
+</a>
+"
+`;
+
 exports[`codegen snapshots > list-detail #0 → astro 1`] = `
 "---
 // Requires the Primitive Systems theme variables (theme.css).

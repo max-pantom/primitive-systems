@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { site } from '../config/site';
 import { RELEASES } from '../changelog';
 import { components, templates } from '../components';
+import DocsSearch from '../docs/DocsSearch';
 
 const byVersion = (v: string) => [...components, ...templates].filter((c) => c.since === v);
 ---
@@ -23,6 +24,7 @@ const byVersion = (v: string) => [...components, ...templates].filter((c) => c.s
     <main class="usage changelog" data-testid="changelog">
       <header>
         <a href="/" class="muted">← {site.name}</a>
+        <DocsSearch client:only="react" />
         <h1>Changelog</h1>
         <p class="muted">What changed in each release. Components are marked <span class="mark">New</span> or <span class="mark">Refined</span> in the catalog.</p>
       </header>

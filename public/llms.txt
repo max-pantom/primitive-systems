@@ -16,6 +16,7 @@
 
 ## Agent workflow
 
+0. situation known but not the component: suggest_ui; wording: suggest_copy / check_copy; low on context: brief: true; adopting in an existing project: scan_code
 1. get_rules  2. list_templates (whole screens) or search_components  3. get_component / get_template (read the guidelines)  4. get_code, get_template with a framework, or compose_code  5. lint_code with fix: true on your changes  6. diff_component to update older code
 
 Icons come only from https://factory.primitive8.cc/icons

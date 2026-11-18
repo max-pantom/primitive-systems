@@ -17,12 +17,15 @@ An agentic component library: one definition per component, six code outputs, a 
 ## Workflow
 
 1. `get_rules` once per task. Obey it.
-2. For a whole screen (sign-in, settings, dashboard, list-to-detail, empty page) call `list_templates` and `get_template` with a framework: you get the composed screen, behavior included. Otherwise `search_components` with the user's need in plain words ("confirm a destructive action") — pick from the results; do not invent components.
+1b. **Low on context?** Pass `brief: true` to `get_component`, `get_code`, `get_template`, `list_components`, `search_components`: you get only props and the snippet. Ask for the full form when there is room.
+2. If you only know the situation ("user has no projects yet", "saving failed", "confirm delete"), call `suggest_ui`: you get the component, props and house-voice wording. `suggest_copy` writes button labels, empty states and errors; `check_copy` checks yours.
+2b. For a whole screen (sign-in, settings, dashboard, list-to-detail, empty page) call `list_templates` and `get_template` with a framework: you get the composed screen, behavior included. Otherwise `search_components` with the user's need in plain words ("confirm a destructive action") — pick from the results; do not invent components.
 3. `get_component` for the props, defaults and **guidelines (do / don't)** of each one you will use.
 4. `get_code` for one component, or `compose_code` for a whole section (it stacks several with one script). Use the framework the project already uses; if unsure, `html` or `p8`.
 5. Put the theme in once: `get_tokens` (or `build_theme` for a custom palette), emitted as CSS variables. Never paste hex into components.
 6. After editing a project that uses the library, run `lint_code` with `fix: true` (or `npx primitive lint src --fix`) on the files you changed: it corrects off-grid spacing, gaps, raw colours and missing labels and lists each change; handle what remains.
-7. To update code you generated earlier, call `diff_component` (`from` = the version you used) and follow its migration hints; pin with `version` on `get_component` / `get_code` while you migrate.
+7. To adopt the library in an existing project, send its files to `scan_code` (or run `npx primitive scan src`) and apply the swaps it lists.
+8. To update code you generated earlier, call `diff_component` (`from` = the version you used) and follow its migration hints; pin with `version` on `get_component` / `get_code` while you migrate.
 
 ## The rules that matter most
 

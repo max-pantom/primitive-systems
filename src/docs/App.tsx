@@ -7,6 +7,7 @@ import { hasBehavior, runtime } from '../codegen/behavior';
 import { components, defaultsOf, type ComponentDef, type Node, type Props } from '../components';
 import { iconElements } from '../icons/icons';
 import { highlight } from './highlight';
+import DocsSearch from './DocsSearch';
 import { a11yReport } from '../rules/a11y';
 
 const camel = reactAttrName;
@@ -234,6 +235,7 @@ export default function App({ defs = components, section = 'Components' }: { def
           <div className="brand">{site.name}</div>
           <div className="muted">{site.tagline}</div>
         </div>
+        <DocsSearch />
         <nav className="nav" aria-label={section}>
           {defs.map((c) => (
             <a key={c.id} href={`#${c.id}`} aria-current={c.id === def.id ? 'page' : undefined} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.name}{c.mark === 'new' && <span className="mark">New</span>}</a>

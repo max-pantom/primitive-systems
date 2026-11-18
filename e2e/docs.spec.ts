@@ -347,6 +347,36 @@ test('0.10.0: drag to resize and reorder, table sort, range pick, lightbox and p
   await expect(preview.getByLabel('Password', { exact: true })).toHaveAttribute('type', 'text');
 });
 
+test('⌘K searches components, templates and pages', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('search-open')).toBeVisible();
+  await page.keyboard.press('Control+k');
+  const input = page.getByTestId('search-input');
+  await expect(input).toBeFocused();
+  await input.fill('login');
+  await expect(page.getByRole('option').first()).toContainText('Sign-in');
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/templates#sign-in$/);
+  await expect(page.getByTestId('search-open')).toBeVisible();
+  await page.keyboard.press('Control+k');
+  await page.getByTestId('search-input').fill('lightbox');
+  await expect(page.getByRole('option').first()).toContainText('Image Viewer');
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('search-input')).toHaveCount(0);
+  await page.getByTestId('search-open').click();
+  await page.getByTestId('search-input').fill('toggle');
+  await page.getByRole('option', { name: /Toggle Group/ }).click();
+});
+
+test('link preview renders its states', async ({ page }) => {
+  await page.goto('/#link-preview');
+  const card = page.getByTestId('preview').getByRole('link');
+  await expect(card).toHaveAttribute('rel', 'noopener noreferrer');
+  await expect(card).toContainText('example.com');
+  await page.getByLabel('state').selectOption('loading');
+  await expect(page.getByTestId('preview').getByRole('link')).toHaveAttribute('aria-busy', 'true');
+});
+
 test('templates page lists whole screens and they work', async ({ page }) => {
   await page.goto('/templates');
   const nav = page.getByRole('navigation', { name: 'Templates' });

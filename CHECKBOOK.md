@@ -117,3 +117,4 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Chat Composer | `chat-composer` | pass | pass | yes |
 | Navbar | `navbar` | pass | pass | yes |
 | App Shell | `app-shell` | pass | pass | yes |
+| Link Preview | `link-preview` | pass | pass | yes |

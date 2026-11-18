@@ -174,3 +174,12 @@ ul.proplist p { margin: 0; }
 
 /* Safe centering: margin:auto centers when there is room and never clips the top/left when the content is bigger than the pane. */
 .preview > div { margin: auto; }
+
+/* ⌘K search */
+.dsearch-backdrop { position: fixed; inset: 0; z-index: 100; display: flex; justify-content: center; align-items: flex-start; padding: 15vh var(--p8-space-16) var(--p8-space-16); background: var(--p8-color-backdrop); }
+.dsearch { display: flex; flex-direction: column; gap: var(--p8-space-8); box-sizing: border-box; width: var(--p8-size-500); max-width: 100%; max-height: 70vh; padding: var(--p8-space-8); border-radius: var(--p8-radius-12); background: var(--p8-color-canvas); outline: var(--p8-border-hairline) solid var(--p8-color-ring); outline-offset: calc(-1 * var(--p8-border-hairline)); }
+.dsearch-list { margin: 0; padding: 0; list-style: none; overflow-y: auto; display: flex; flex-direction: column; gap: var(--p8-space-4); }
+.dsearch-list li { display: flex; justify-content: space-between; gap: var(--p8-space-12); padding: var(--p8-space-8) var(--p8-space-12); border-radius: var(--p8-radius-8); cursor: pointer; }
+.dsearch-list li.on { background: var(--p8-color-control-strong); }
+.dsearch-list li.empty { cursor: default; }
+.dsearch-trigger kbd { font-family: var(--p8-type-mono); letter-spacing: var(--p8-type-tracking-mono); color: var(--p8-color-ink-muted); }

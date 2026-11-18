@@ -15,6 +15,7 @@ import { carousel, timeline, contextMenu, hoverCard } from './extras2';
 import { passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer } from './apps';
 import { toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton } from './kit';
 import { emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell } from './screens';
+import { linkPreview } from './linkpreview';
 import { templates } from './templates';
 import type { ComponentDef, Node, Rule } from './types';
 
@@ -26,7 +27,8 @@ export const components: ComponentDef[] = [button, card, input, textarea, divide
   datePicker, timePicker, multiSelect, fileUpload, swatchPicker, carousel, timeline, contextMenu, hoverCard,
   passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer,
   toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton,
-  emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell];
+  emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell,
+  linkPreview];
 import { GUIDELINES, MARKS } from './guidelines';
 for (const c of [...components, ...templates]) { c.guidelines = GUIDELINES[c.id]; c.since = MARKS[c.id]?.since ?? '0.6.0'; c.mark = MARKS[c.id]?.mark; }
 export const getDef = (id: string) => components.find((c) => c.id === id) ?? templates.find((c) => c.id === id);

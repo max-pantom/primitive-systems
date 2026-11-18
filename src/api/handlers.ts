@@ -1,5 +1,10 @@
 import { z } from 'zod';
 import { components, getDef, defaultsOf, parseProps, templates, getTemplate } from '../components';
+import { searchComponents } from '../lib/search';
+import { suggestForSituation } from '../lib/situation';
+import { VOICE, checkCopy, suggestCopy, type CopyKind } from '../copy/voice';
+import { scanCode } from '../lint/scan';
+export { searchComponents };
 import type { ComponentDef, Node } from '../components';
 import { site } from '../config/site';
 import { EXCEPTIONS, GAPS, GRID_SPACE, RADII, RULES } from '../rules/rulebook';
@@ -17,6 +22,8 @@ export class ApiError extends Error {
     super(message);
   }
 }
+
+export const listComponentsBrief = () => ({ components: components.map((c) => [c.id, c.name] as [string, string]) });
 
 export function listComponents() {
   return {
@@ -46,6 +53,12 @@ export function listTemplates() {
 }
 
 /** A whole screen: its props, guidelines and, when a framework is given, ready-to-paste code. */
+export function getTemplateBrief(id: string, framework?: string, props?: Record<string, unknown>) {
+  const t = getTemplate(id);
+  if (!t) throw new ApiError(404, `Unknown template: ${id}`);
+  return { id: t.id, name: t.name, uses: t.uses ?? [], props: briefProps(t), code: getCodeBrief({ component: id, framework: framework ?? 'p8', props: props ?? {} }).code };
+}
+
 export function getTemplateDetail(id: string, framework?: string, props?: Record<string, unknown>) {
   const t = getTemplate(id);
   if (!t) throw new ApiError(404, `Unknown template: ${id}`);
@@ -57,6 +70,16 @@ export function getTemplateDetail(id: string, framework?: string, props?: Record
 
 const vErr = <T,>(fn: () => T): T => { try { return fn(); } catch (e) { if (e instanceof VersionError) throw new ApiError(400, e.message); throw e; } };
 const isCurrent = (v?: string) => !v || v === LATEST || v === RELEASES[0].version;
+
+const briefProps = (d: ComponentDef) => d.props.map((p) => ({ name: p.name, type: p.type, default: p.default, ...(p.control.kind === 'select' ? { options: p.control.options } : {}) }));
+const snippet = (id: string) => generate(getDef(id)!, {}, 'p8').code.trim();
+
+/** Short form for agents low on context: props and the snippet, nothing else. */
+export function getComponentBrief(id: string) {
+  const def = getDef(id);
+  if (!def) throw new ApiError(404, `Unknown component: ${id}`);
+  return { id: def.id, name: def.name, description: def.description, props: briefProps(def), snippet: snippet(def.id) };
+}
 
 export function getComponent(id: string, version?: string) {
   const def = getDef(id);
@@ -82,6 +105,12 @@ export function getDiff(input: { id?: string; from?: string; to?: string }) {
 }
 
 export const getTokens = () => flatTokens();
+
+/** Only the code: for agents low on context. */
+export function getCodeBrief(input: unknown) {
+  const r = getCode(input);
+  return { framework: r.framework, code: r.code };
+}
 
 const zodMessage = (e: z.ZodError) => e.issues.map((i) => (i.code === 'unrecognized_keys' ? `unknown prop(s): ${(i as unknown as { keys: string[] }).keys.join(', ')}` : `props.${i.path.join('.')}: ${i.message}`)).join('; ');
 
@@ -113,39 +142,7 @@ export function getCode(input: unknown) {
   }
 }
 
-export const getRules = () => ({ rules: RULES, exceptions: EXCEPTIONS, grid: { space: GRID_SPACE, radius: RADII, gaps: GAPS }, guidelines: Object.fromEntries(components.map((c) => [c.id, c.guidelines])) });
-
-const SYNONYMS: Record<string, string[]> = {
-  modal: ['dialog'], popup: ['dialog', 'popover'], confirm: ['dialog'], drawer: ['sheet'], sidebar: ['sheet', 'sidebar-nav'], notification: ['toast', 'alert'], snackbar: ['toast'],
-  toggle: ['switch', 'checkbox'], chip: ['tag'], pill: ['badge', 'tag'], label: ['badge', 'field'], dropdown: ['dropdown-menu', 'select'], autocomplete: ['combobox'], typeahead: ['combobox'],
-  loading: ['spinner', 'skeleton', 'progress'], loader: ['spinner'], placeholder: ['skeleton'], percent: ['progress', 'progress-ring'], steps: ['stepper'], wizard: ['stepper'], onboarding: ['stepper'],
-  pin: ['otp-input'], otp: ['otp-input'], 'one-time': ['otp-input'], verification: ['otp-input'], code: ['otp-input', 'copy-button'], quantity: ['number-input'], stars: ['rating'], review: ['rating'], faq: ['accordion'], metric: ['stat-card'], kpi: ['stat-card'],
-  team: ['avatar-group'], users: ['avatar-group', 'avatar'], announcement: ['banner'], menu: ['menu', 'dropdown-menu'], nav: ['sidebar-nav', 'tabs', 'breadcrumbs'], navigation: ['sidebar-nav', 'tabs', 'breadcrumbs'],
-  input: ['text-input', 'field'], form: ['field', 'text-input', 'select', 'checkbox'], password: ['text-input'], search: ['search-input', 'command-palette', 'combobox'], list: ['list-row', 'data-list'], grid: ['stack'], layout: ['stack', 'card', 'app-shell'],
-  button: ['button', 'icon-button'], login: ['sign-in'], signin: ['sign-in'], auth: ['sign-in'], 'sign-in': ['sign-in'], preferences: ['settings'], account: ['settings'], profile: ['settings'], analytics: ['dashboard', 'chart'], overview: ['dashboard'], inbox: ['list-detail'], 'master-detail': ['list-detail'], screen: ['sign-in', 'settings', 'dashboard', 'list-detail', 'empty-page'], page: ['sign-in', 'settings', 'dashboard', 'list-detail', 'empty-page'], chat: ['chat-message', 'chat-composer'], graph: ['chart', 'sparkline'], trend: ['sparkline', 'chart'], topbar: ['navbar'], header: ['navbar', 'app-shell'], validation: ['form'], danger: ['dialog', 'alert'], error: ['alert', 'field'], help: ['tooltip', 'popover'], copy: ['copy-button'], shortcut: ['kbd', 'command-palette'], hotkey: ['kbd'],
-};
-
-/** "I need X" → ranked components, with why. */
-export function searchComponents(query: string, limit = 8) {
-  const words = query.toLowerCase().split(/[^a-z0-9-]+/).filter((w) => w.length > 1);
-  const scored = [...components, ...templates].map((c) => {
-    let score = 0;
-    const why: string[] = [];
-    const bump = (n: number, w: string, where: string) => { score += n; why.push(`${w} (${where})`); };
-    for (const w of words) {
-      const hay = (s: string) => s.toLowerCase().includes(w);
-      if (c.id === w || c.name.toLowerCase() === w) bump(8, w, 'name');
-      else if (hay(c.id) || hay(c.name)) bump(5, w, 'name');
-      if (c.tags.some((t) => t === w)) bump(4, w, 'tag');
-      if (hay(c.description)) bump(2, w, 'description');
-      if (hay(c.usage)) bump(1, w, 'usage');
-      if (c.guidelines && [...c.guidelines.do, ...c.guidelines.dont].some(hay)) bump(1, w, 'guidelines');
-      if ((SYNONYMS[w] ?? []).includes(c.id)) bump(6, w, 'related');
-    }
-    return { id: c.id, name: c.name, kind: c.tags.includes('template') ? 'template' : 'component', description: c.description, tags: c.tags, score, why };
-  });
-  return { query, results: scored.filter((r) => r.score > 0).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id)).slice(0, limit) };
-}
+export const getRules = () => ({ voice: VOICE, rules: RULES, exceptions: EXCEPTIONS, grid: { space: GRID_SPACE, radius: RADII, gaps: GAPS }, guidelines: Object.fromEntries(components.map((c) => [c.id, c.guidelines])) });
 
 const composeInput = z.object({
   framework: z.enum(FRAMEWORKS),
@@ -201,9 +198,47 @@ export const getChangelog = () => ({
   releases: RELEASES.map((r) => ({ ...r, components: [...components, ...templates].filter((c) => c.since === r.version).map((c) => ({ id: c.id, name: c.name, mark: c.mark ?? null, kind: c.tags.includes('template') ? 'template' : 'component' })) })),
 });
 
+export function searchBrief(query: string, limit = 8) {
+  return { results: searchComponents(query, limit).results.map((r) => [r.id, r.kind, r.score] as [string, string, number]) };
+}
+
+export function suggestUi(input: unknown) {
+  const { situation, framework, brief } = (input ?? {}) as { situation?: unknown; framework?: unknown; brief?: unknown };
+  if (typeof situation !== 'string' || !situation.trim()) throw new ApiError(400, 'situation: describe the state, e.g. "user has no projects yet"');
+  const r = suggestForSituation(situation);
+  const withCode = r.suggestions.map((sg) => {
+    let code: string | undefined;
+    if (typeof framework === 'string') { try { code = getCodeBrief({ component: sg.component, framework, props: sg.props }).code; } catch { code = undefined; } }
+    return brief === true ? { component: sg.component, props: sg.props, ...(code ? { code } : {}) } : { ...sg, ...(code ? { code } : {}) };
+  });
+  return { situation: r.situation, suggestions: withCode };
+}
+
+const COPY_KINDS = ['button', 'empty', 'error', 'success', 'confirm', 'loading'] as const;
+export function suggestCopyTool(input: unknown) {
+  const { kind, subject, action, reason, query } = (input ?? {}) as Record<string, unknown>;
+  if (!COPY_KINDS.includes(kind as never)) throw new ApiError(400, `kind: one of ${COPY_KINDS.join(', ')}`);
+  const str = (x: unknown) => (typeof x === 'string' ? x.slice(0, 80) : undefined);
+  return suggestCopy({ kind: kind as CopyKind, subject: str(subject), action: str(action), reason: str(reason), query: str(query) });
+}
+export function checkCopyTool(input: unknown) {
+  const { text, kind } = (input ?? {}) as { text?: unknown; kind?: unknown };
+  if (typeof text !== 'string') throw new ApiError(400, 'text: expected a string');
+  const k = ['button', 'heading', 'message', 'label'].includes(kind as string) ? (kind as 'button' | 'heading' | 'message' | 'label') : 'message';
+  return { text, kind: k, ...checkCopy(text.slice(0, 600), k) };
+}
+
+export function scanTool(input: unknown) {
+  const { files, framework } = (input ?? {}) as { files?: unknown; framework?: unknown };
+  if (!Array.isArray(files) || !files.length) throw new ApiError(400, 'files: [{ path, code }] is required');
+  const list = files.slice(0, 300).map((f) => ({ path: String((f as { path?: unknown }).path ?? 'file'), code: String((f as { code?: unknown }).code ?? '') }));
+  if (list.reduce((a, f) => a + f.code.length, 0) > 2_000_000) throw new ApiError(400, 'files: too large (2 MB limit); scan in batches');
+  return scanCode(list, { framework: typeof framework === 'string' ? framework : undefined });
+}
+
 export const getInstall = () => ({
   mcp: { remote: `${site.url}/mcp`, stdio: 'git clone <repo> && pnpm install && pnpm mcp' },
-  http: { base: `${site.url}/api`, endpoints: ['GET /components', 'GET /components/:id', 'POST /code', 'POST /compose', 'GET /search?q=', 'GET /tokens', 'GET /rules', 'GET /changelog', 'GET /templates', 'GET /templates/:id', 'POST /templates/code', 'GET /versions', 'GET /diff?from=&to=&id=', 'GET /components/:id?version=', 'POST /theme', 'POST /lint'] },
+  http: { base: `${site.url}/api`, endpoints: ['GET /components', 'GET /components/:id', 'POST /code', 'POST /compose', 'GET /search?q=', 'GET /tokens', 'GET /rules', 'GET /changelog', 'GET /situation?q=', 'POST /copy', 'POST /copy/check', 'POST /scan', '?brief=1 on components and templates', 'GET /templates', 'GET /templates/:id', 'POST /templates/code', 'GET /versions', 'GET /diff?from=&to=&id=', 'GET /components/:id?version=', 'POST /theme', 'POST /lint'] },
   cli: [`npx ${site.cli} add button --framework react`, `npx ${site.cli} lint src`, `npx ${site.cli} theme --ink "#111111" --canvas "#FFFFFF" --radius 8`],
   runtime: { script: `<script src="${site.url}/p8.js"></script>`, example: '<p8-button variant="primary">Save</p8-button>' },
   skill: `${site.url}/skill/SKILL.md`,
@@ -217,16 +252,22 @@ export interface RouteResult {
 /** Pure router, used by the HTTP server and tests. */
 export function route(method: string, path: string, body?: unknown, query?: Record<string, string>): RouteResult {
   try {
-    if (method === 'GET' && path === '/api/components') return { status: 200, body: listComponents() };
+    const brief = query?.brief === '1' || query?.brief === 'true';
+    if (method === 'GET' && path === '/api/components') return { status: 200, body: brief ? listComponentsBrief() : listComponents() };
+    if (method === 'GET' && path === '/api/situation') return { status: 200, body: suggestUi({ situation: query?.q, framework: query?.framework, brief }) };
+    if (method === 'POST' && path === '/api/situation') return { status: 200, body: suggestUi(body) };
+    if (method === 'POST' && path === '/api/copy') return { status: 200, body: suggestCopyTool(body) };
+    if (method === 'POST' && path === '/api/copy/check') return { status: 200, body: checkCopyTool(body) };
+    if (method === 'POST' && path === '/api/scan') return { status: 200, body: scanTool(body) };
     const m = path.match(/^\/api\/components\/([^/]+)$/);
-    if (method === 'GET' && m) return { status: 200, body: getComponent(decodeURIComponent(m[1]), query?.version) };
+    if (method === 'GET' && m) return { status: 200, body: brief ? getComponentBrief(decodeURIComponent(m[1])) : getComponent(decodeURIComponent(m[1]), query?.version) };
     if (method === 'GET' && path === '/api/versions') return { status: 200, body: listVersions() };
     if (method === 'GET' && path === '/api/diff') return { status: 200, body: getDiff({ id: query?.id, from: query?.from, to: query?.to }) };
     if (method === 'GET' && path === '/api/tokens') return { status: 200, body: getTokens() };
     if (method === 'GET' && path === '/api/templates') return { status: 200, body: listTemplates() };
     const tm = path.match(/^\/api\/templates\/([^/]+)$/);
-    if (method === 'GET' && tm && tm[1] !== 'code') return { status: 200, body: getTemplateDetail(decodeURIComponent(tm[1]), query?.framework) };
-    if (method === 'POST' && path === '/api/templates/code') { const b = (body ?? {}) as { id?: string; framework?: string; props?: Record<string, unknown> }; return { status: 200, body: getTemplateDetail(String(b.id ?? ''), String(b.framework ?? 'html'), b.props) }; }
+    if (method === 'GET' && tm && tm[1] !== 'code') return { status: 200, body: brief ? getTemplateBrief(decodeURIComponent(tm[1]), query?.framework) : getTemplateDetail(decodeURIComponent(tm[1]), query?.framework) };
+    if (method === 'POST' && path === '/api/templates/code') { const b = (body ?? {}) as { id?: string; framework?: string; props?: Record<string, unknown>; brief?: boolean }; return { status: 200, body: b.brief === true ? getTemplateBrief(String(b.id ?? ''), String(b.framework ?? 'html'), b.props) : getTemplateDetail(String(b.id ?? ''), String(b.framework ?? 'html'), b.props) }; }
     if (method === 'GET' && path === '/api/changelog') return { status: 200, body: getChangelog() };
     if (method === 'GET' && path === '/api/rules') return { status: 200, body: getRules() };
     if (method === 'GET' && path === '/api/install') return { status: 200, body: getInstall() };
@@ -234,7 +275,7 @@ export function route(method: string, path: string, body?: unknown, query?: Reco
     if (method === 'POST' && path === '/api/compose') return { status: 200, body: composeCode(body) };
     if (method === 'POST' && path === '/api/theme') return { status: 200, body: getThemeBuild(body) };
     if (method === 'POST' && path === '/api/lint') return { status: 200, body: lintCode(body) };
-    if (method === 'POST' && path === '/api/code') return { status: 200, body: getCode(body) };
+    if (method === 'POST' && path === '/api/code') return { status: 200, body: (body as { brief?: unknown } | undefined)?.brief === true ? getCodeBrief(body) : getCode(body) };
     return { status: 404, body: { error: 'Not found' } };
   } catch (e) {
     if (e instanceof ApiError) return { status: e.status, body: { error: e.message } };

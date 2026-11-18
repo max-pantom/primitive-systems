@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { site } from '../config/site';
+import DocsSearch from './DocsSearch';
 
 interface Counts { id: string; count: number }
 interface Summary { store: 'redis' | 'memory'; since: string; total: number; today: number; last7: number; days: { day: string; count: number }[]; components: Counts[]; tools: Counts[]; frameworks: Counts[]; clients: Counts[]; models: Counts[]; sources: Counts[] }
@@ -51,6 +52,7 @@ export default function Usage() {
     <main className="usage" data-testid="usage">
       <header>
         <a href="/" className="muted">← {site.name}</a>
+        <DocsSearch />
         <h1>Usage</h1>
         <p className="muted">What agents pull from the public MCP and API. Aggregate counts only: no IPs, prompts, props or code are stored.</p>
       </header>

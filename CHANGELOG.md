@@ -2,6 +2,15 @@
 
 Generated from `src/changelog.ts`. Components are marked **New** or **Refined** in the catalog and in `list_components` (`mark`, `since`).
 
+## 0.12.0 — Search, repo scan, house voice, situations
+- New: Link Preview (an unfurled URL as a card: image, site, title, description; loading and error states).
+- Docs search: press ⌘K / Ctrl+K (or /) on any docs page to search components, templates and pages with the same engine agents use.
+- scan_code (CLI: primitive scan <dir>): finds every raw button, input, select, textarea, table, dialog, hand-rolled card/modal/toast and MUI/Chakra/Ant/shadcn component in a project, with the swap, props taken from the markup, the command and an adoption %.
+- suggest_ui (CLI: primitive suggest): describe a state ("user has no projects yet", "confirm deleting a file", "saving failed") and get the right component or screen with props and wording filled in; pass a framework for the code.
+- House voice: written rules (get_rules → voice), suggest_copy (button labels, empty states, errors, confirmations, success, loading) and check_copy (flags exclamation marks, "please", "Oops", Title Case, "Submit", long text).
+- Context budget mode: brief: true on list_components, get_component, get_code, get_template and search_components (HTTP ?brief=1) returns only props and the snippet.
+- Lightbox: Image Viewer is the lightbox (one line = a single-image lightbox); it is now found by searching "lightbox".
+
 ## 0.11.0 — Templates, app components, lint --fix, diff_component
 - New templates (whole screens): Sign-in, Settings page, Dashboard, List to detail, Empty page. Page at /templates; tools list_templates and get_template; GET /api/templates. Search finds them ("login screen").
 - New app components: Empty State, Form (validation and submit wiring), Calendar (month view with events), Chart and Sparkline, Chat Message and Chat Composer, Navbar, App Shell.

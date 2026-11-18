@@ -1,5 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
+import { checkCopyTool, suggestCopyTool, suggestUi } from '../api/handlers';
+import { scanCode } from '../lint/scan';
 import { composeCode, getCode, getComponent, getRules, getThemeBuild, listComponents, searchComponents } from '../api/handlers';
 import { FRAMEWORKS } from '../codegen';
 import { site } from '../config/site';
@@ -31,6 +33,10 @@ function help() {
   ${bin} add <id...> [-f framework] [--prop k=v] [--out dir] [--stdout] [--force]
                                              Write component code into your project
   ${bin} lint <path...> [--fix]                Flag (and with --fix, correct) off-grid spacing, gaps, raw colours and missing labels
+  ${bin} scan <path...> [--json]               Find raw buttons/inputs/cards and other non-Primitive UI, with the swap for each
+  ${bin} suggest "<situation>" [-f framework]  The right component for a state, with wording ("user has no projects yet")
+  ${bin} copy <button|empty|error|success|confirm|loading> [--subject x --action y --reason z]
+  ${bin} check-copy "<text>" [--kind button|heading|message|label]
   ${bin} theme [--ink #111111 --canvas #FFFFFF --dark-ink #E1E1E1 --dark-canvas #1D1D1D --radius 8] [--out theme.css]
   ${bin} tokens [--out theme.css]              The default theme as CSS variables
   ${bin} rules                                 The rule book
@@ -102,6 +108,30 @@ switch (cmd) {
     }
     console.log(`\n${files} files, ${fixed ? `${fixed} fixed, ` : ''}${errors} error${errors === 1 ? '' : 's'}, ${warns} warning${warns === 1 ? '' : 's'}`);
     process.exit(errors ? 1 : 0);
+    break;
+  }
+  case 'scan': {
+    const targets = rest.length ? rest : ['.'];
+    const files = targets.flatMap((t) => guard(() => walk(t))).filter((f) => !/\.(css|scss|sass|less|json|md)$/.test(f)).map((f) => ({ path: f, code: readFileSync(f, 'utf8') }));
+    const r = scanCode(files, { framework: flags.framework ? String(flags.framework) : undefined });
+    if (flags.json) { console.log(JSON.stringify(r, null, 2)); break; }
+    for (const x of r.findings) console.log(`${x.file}:${x.line}  ${x.element}  →  ${x.swap.component}${Object.keys(x.swap.props).length ? ' ' + JSON.stringify(x.swap.props) : ''}\n    ${x.swap.why}`);
+    console.log(`\n${r.files} files · ${r.raw} to swap · ${r.adopted} already Primitive · adoption ${r.adoption}%`);
+    for (const c of r.byComponent.slice(0, 8)) console.log(`  ${String(c.count).padStart(4)}  ${c.component}`);
+    for (const l of r.libraries) console.log(`  library: ${l.name} (${l.files.length} files)`);
+    break;
+  }
+  case 'suggest': {
+    const r = guard(() => suggestUi({ situation: rest.join(' '), framework: flags.framework ?? flags.f }));
+    console.log(JSON.stringify(r, null, 2));
+    break;
+  }
+  case 'copy': console.log(JSON.stringify(guard(() => suggestCopyTool({ kind: rest[0], subject: flags.subject, action: flags.action, reason: flags.reason, query: flags.query })), null, 2)); break;
+  case 'check-copy': {
+    const r = guard(() => checkCopyTool({ text: rest.join(' '), kind: flags.kind }));
+    for (const i of r.issues) console.log(`${i.severity}  ${i.rule}  ${i.message}${i.suggestion ? `  → ${i.suggestion}` : ''}`);
+    console.log(r.ok ? 'ok' : 'needs changes');
+    process.exit(r.ok ? 0 : 1);
     break;
   }
   case 'theme': {

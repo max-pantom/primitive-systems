@@ -364,8 +364,8 @@ const SHADES = ['gainsboro', 'silver', 'darkgray', 'lightgray', 'gray', 'whitesm
 /** A neutral placeholder picture (SVG data URI) used when an image line has no src. */
 export const placeholderImage = (i: number) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='800' height='600' fill='${SHADES[i % SHADES.length]}'/><circle cx='${560 - (i % 3) * 120}' cy='180' r='70' fill='white' fill-opacity='0.7'/><path d='M0 600L${220 + (i % 4) * 40} ${300 + (i % 2) * 40}L420 460L560 340L800 520V600Z' fill='dimgray' fill-opacity='0.55'/></svg>`)}`;
 export const imageViewer: ComponentDef = {
-  id: 'image-viewer', name: 'Image Viewer', description: 'A thumbnail grid that opens images in a lightbox with captions and previous/next.', tags: ['content', 'overlay'], status: 'stable',
-  usage: 'One image per line: "Caption | image URL" (a line with only a caption gets a placeholder). Click a thumbnail to open it; ← / → or the arrow buttons move between images, Esc or the backdrop closes and focus returns to the thumbnail.',
+  id: 'image-viewer', name: 'Image Viewer', description: 'A thumbnail grid that opens images in a lightbox with captions and previous/next.', tags: ['content', 'overlay', 'lightbox'], status: 'stable',
+  usage: 'This is the lightbox: one line gives a single-image lightbox, several give a gallery. One image per line: "Caption | image URL" (a line with only a caption gets a placeholder). Click a thumbnail to open it; ← / → or the arrow buttons move between images, Esc or the backdrop closes and focus returns to the thumbnail.',
   composition: 'The lightbox is a Dialog-style overlay; navigation uses Icon Buttons.',
   props: [
     P.area('images', 'Dunes at dawn\nHarbour lights\nForest path\nCity at night\nMountain lake\nStill life', 'One per line: Caption | image URL. The URL is optional.', 'string (one per line)'),
