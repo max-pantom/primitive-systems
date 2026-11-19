@@ -2,6 +2,12 @@
 
 Generated from `src/changelog.ts`. Components are marked **New** or **Refined** in the catalog and in `list_components` (`mark`, `since`).
 
+## 0.13.0 — Media timeline, editor and input pieces
+- New: Media Timeline, a video-editor timeline. Tracks and clips on a ruler, a playhead you scrub (pointer or keyboard), drag to move clips between tracks, drag edges to trim, split at the playhead, snapping (toggle), zoom (buttons or Ctrl/⌘ + scroll), playback, timecode in frames. Clips never overlap; every action works by keyboard.
+- New: Rich Text (toolbar with bold, italic, underline, heading, quote, lists, link and undo/redo; plain-text paste; links validated), Mention Input (@people, #topics or /commands with a suggestion list) and Segmented Progress (a bar made of steps, with the current one partly filled).
+- Refined: Command Palette (sections, shortcut hints, recents, "no commands match", p8-run event, closes on run) and Skeleton (text, card, table, list and image variants).
+- Docs: the Playwright config reads P8_PORT when port 4321 is taken by another app.
+
 ## 0.12.0 — Search, repo scan, house voice, situations
 - New: Link Preview (an unfurled URL as a card: image, site, title, description; loading and error states).
 - Docs search: press ⌘K / Ctrl+K (or /) on any docs page to search components, templates and pages with the same engine agents use.

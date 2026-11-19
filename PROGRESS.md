@@ -1,5 +1,12 @@
 # Progress
 
+## 0.13.0 — media timeline, editor pieces
+
+- **Media Timeline** (video-editor timeline): tracks and clips on a ruler, scrubbable playhead (pointer or keyboard), move clips between tracks, trim by edges, split at the playhead, snapping, zoom (buttons or Ctrl/⌘ + scroll), real-time playback, frame timecode. Clips never overlap (a dropped clip goes to the nearest free gap); every action also works by keyboard (Alt + arrows move, [ ] trim, S split, Delete). Events `p8-seek`, `p8-select`, `p8-change`. Covered by 12 jsdom tests and a real-pointer Playwright test.
+- **Rich Text** (toolbar over contenteditable; plain-text paste; link address validated, no `javascript:`), **Mention Input**, **Segmented Progress**; **Command Palette** upgraded (sections, shortcut hints, recents, empty message, `p8-run`); **Skeleton** variants.
+- Bugs found by tests and fixed: `[hidden]` was overridden by `display` on palette items, buttons and icon buttons (so hidden Send/Stop and filtered commands still showed); the link bar and rich-text height shifted the layout.
+- Dev note: another app was holding port 4321 on this machine; Playwright now takes `P8_PORT` (I ran with 4323).
+
 ## 0.11.0 — templates, app components, lint --fix, diff_component
 
 - **Templates** (whole screens agents can request): Sign-in, Settings page, Dashboard, List to detail, Empty page. They are ComponentDefs, so they are generated for all six frameworks + `<p8-*>`, carry their behavior, and are held to the same rule book, a11y and parity tests. Page `/templates`, MCP `list_templates` / `get_template`, `GET /api/templates`, found by `search_components` ("login screen").

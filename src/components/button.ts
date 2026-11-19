@@ -61,6 +61,7 @@ export const button: ComponentDef = {
       hover: { background: v('color-control-strong') },
       focus,
       disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' },
+      nested: [{ sel: '[hidden]', decls: { display: 'none' } }],
     },
     { cls: c.primary, base: { background: v('color-ink'), color: v('color-ink-inverse') }, hover: { background: v('color-ink'), opacity: v('opacity-hover') } },
     { cls: c.ghost, base: { background: 'transparent', ...ringDecl }, hover: { background: v('color-control') } },

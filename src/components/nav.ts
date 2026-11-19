@@ -78,28 +78,54 @@ export const pagination: ComponentDef = {
 };
 
 /* ---------- Command palette ---------- */
-const cp = { root: `${p}-palette`, input: `${p}-palette__input`, list: `${p}-palette__list`, item: `${p}-palette__item`, on: `${p}-palette__item--active` };
+const cp = { root: `${p}-palette`, input: `${p}-palette__input`, list: `${p}-palette__list`, item: `${p}-palette__item`, on: `${p}-palette__item--active`, group: `${p}-palette__group`, head: `${p}-palette__heading`, hint: `${p}-palette__hint`, empty: `${p}-palette__empty` };
+const parseCommands = (s: unknown) => {
+  const groups: { name: string; items: { label: string; hint: string }[] }[] = [{ name: '', items: [] }];
+  for (const l of lines(s)) {
+    if (l.startsWith('# ')) { groups.push({ name: l.slice(2).trim(), items: [] }); continue; }
+    const [label, hint = ''] = l.split('|').map((x) => x.trim());
+    groups[groups.length - 1].items.push({ label, hint });
+  }
+  return groups.filter((g) => g.items.length);
+};
+const commandItem = (label: string, hint: string, section: string, active: boolean, recent = false): Node =>
+  n('button', active ? [cp.item, cp.on] : [cp.item], [n('span', [], [label], { 'data-label': true }), ...(hint ? [n('span', [cp.hint], [hint], { 'aria-hidden': 'true' })] : [])], { type: 'button', role: 'option', 'data-section': section, ...(recent ? { 'data-recent': true } : {}), ...(hint ? { 'aria-keyshortcuts': hint } : {}) });
 export const commandPalette: ComponentDef = {
-  id: 'command-palette', name: 'Command Palette', description: 'Search and run commands from the keyboard (Cmd/Ctrl + K).', tags: ['navigation', 'overlay'], status: 'stable',
-  usage: 'Type to filter, arrows to move, Enter to run, Escape to close. With the backdrop on, Cmd/Ctrl+K toggles it.',
+  id: 'command-palette', name: 'Command Palette', description: 'Search and run commands from the keyboard (Cmd/Ctrl + K), in sections, with shortcuts and recents.', tags: ['navigation', 'overlay'], status: 'stable',
+  usage: 'Type to filter (sections with no match disappear), ↑ ↓ to move, Enter to run, Escape to close. Start a line with "# " for a section, add " | ⌘N" for a shortcut hint. Recent commands (the recent prop, then whatever you run) show first until you type. Running fires p8-run with { command, section } and closes the palette. With the backdrop on, Cmd/Ctrl+K toggles it.',
   props: [
     P.text('placeholder', 'Type a command', 'Input placeholder.'),
-    P.area('items', 'Go to Overview\nCreate project\nOpen settings', 'Commands one per line.', 'string (one per line)'),
+    P.area('items', '# Navigate\nGo to Overview | G O\nGo to Projects | G P\n# Actions\nCreate project | ⌘N\nInvite people\nOpen settings | ⌘,', 'Commands one per line. "# Name" starts a section, "Label | shortcut" adds a hint.', 'string (one per line)'),
+    P.area('recent', 'Create project', 'Recent commands, one per line, shown first. Empty for none.', 'string (one per line)'),
     P.bool('backdrop', true, 'Wrap in a dimmed full-screen backdrop.'),
   ],
   rules: [
     ...overlayRules,
     { cls: cp.root, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-8'), 'box-sizing': 'border-box', width: v('size-400'), 'max-width': '100%', padding: v('space-8'), 'border-radius': v('radius-12'), background: v('color-canvas'), color: v('color-ink'), ...ringDecl } },
     { cls: cp.input, base: { 'box-sizing': 'border-box', width: '100%', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), border: 'none', 'border-radius': v('radius-8'), background: v('color-control'), color: v('color-ink'), ...text('sm') }, focus: { outline: 'none', background: v('color-control-strong') }, placeholder: { color: v('color-placeholder') } },
-    { cls: cp.list, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4') } },
-    { cls: cp.item, base: { 'text-align': 'left', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), border: 'none', 'border-radius': v('radius-8'), background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus },
+    { cls: cp.list, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4'), 'max-height': v('size-320'), 'overflow-y': 'auto' } },
+    { cls: cp.group, base: { display: 'flex', 'flex-direction': 'column', gap: v('space-4') }, nested: [{ sel: '[hidden]', decls: { display: 'none' } }] },
+    { cls: cp.head, base: { 'padding-block': v('space-4'), 'padding-inline': v('space-12'), color: v('color-ink-muted'), ...text('sm') } },
+    { cls: cp.item, base: { display: 'flex', 'align-items': 'center', 'justify-content': 'space-between', gap: v('space-12'), 'text-align': 'left', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), border: 'none', 'border-radius': v('radius-8'), background: 'transparent', color: v('color-ink'), cursor: 'pointer', ...text('sm') }, hover: { background: v('color-control') }, focus, nested: [{ sel: '[hidden]', decls: { display: 'none' } }] },
     { cls: cp.on, base: { background: v('color-control-strong') } },
+    { cls: cp.hint, base: { color: v('color-ink-muted'), 'font-family': v('type-mono'), 'letter-spacing': v('type-tracking-mono') } },
+    { cls: cp.empty, base: { margin: '0', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), color: v('color-ink-muted'), ...text('sm') }, nested: [{ sel: '[hidden]', decls: { display: 'none' } }] },
   ],
   render(pr: Props): Node {
-    const opts = lines(pr.items).map((l, idx) => n('button', idx === 0 ? [cp.item, cp.on] : [cp.item], [l], { type: 'button', role: 'option' }));
+    const groups = parseCommands(pr.items);
+    const hintOf = (label: string) => groups.flatMap((g) => g.items).find((i) => i.label === label)?.hint ?? '';
+    const recents = lines(pr.recent).slice(0, 3);
+    let first = true;
+    const take = () => { const f = first; first = false; return f; };
+    const section = (name: string, kids: Node[], extra: Node['attrs'] = {}): Node => n('div', [cp.group], [...(name ? [n('div', [cp.head], [name], { 'aria-hidden': 'true' })] : []), ...kids], { role: 'group', 'aria-label': name || 'Commands', ...extra });
     const panel = n('div', [cp.root], [
-      n('input', [cp.input], undefined, { type: 'text', role: 'combobox', 'aria-expanded': 'true', placeholder: pr.placeholder as string, 'aria-label': 'Command' }),
-      n('div', [cp.list], opts, { role: 'listbox' }),
+      n('input', [cp.input], undefined, { type: 'text', role: 'combobox', 'aria-expanded': 'true', 'aria-controls': 'palette-list', placeholder: pr.placeholder as string, 'aria-label': 'Command' }),
+      n('div', [cp.list], [
+        section('Recent', recents.map((l) => commandItem(l, hintOf(l), 'Recent', take(), true)), recents.length ? { 'data-group': 'recent' } : { 'data-group': 'recent', hidden: true }),
+        ...groups.map((g) => section(g.name, g.items.map((i) => commandItem(i.label, i.hint, g.name, take())))),
+        n('p', [cp.empty], ['No commands match.'], { 'data-empty': true, hidden: true, role: 'status' }),
+        n('template', [], [commandItem('__label__', '', 'Recent', false, true)], { 'data-item-template': true }),
+      ], { role: 'listbox', id: 'palette-list' }),
     ], { role: 'dialog', 'aria-label': 'Command palette', 'data-p8': 'palette' });
     return pr.backdrop ? n('div', [ov.root], [panel], { 'data-p8': 'overlay', 'data-hotkey': true }) : panel;
   },

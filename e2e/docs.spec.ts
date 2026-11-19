@@ -133,17 +133,19 @@ test('no layout shift when interacting with any component', async ({ page }) => 
   const names = (await nav.getByRole('link').allInnerTexts()).map((t) => t.replace(/\s*New$/, ''));
   const box = async () => {
     const root = page.getByTestId('preview').locator('> div > *').first();
-    const b = (await root.boundingBox())!;
+    const b = await root.boundingBox();
+    if (!b) return null;
     // the preview can scroll when a component is taller than the pane; scrolling is not a layout shift
     const scroll = await page.getByTestId('preview').evaluate((e) => [e.scrollLeft, e.scrollTop]);
     return { x: b.x + scroll[0], y: b.y + scroll[1], width: b.width, height: b.height };
   };
+  const mustBox = async (what: string) => { const b = await box(); if (!b) throw new Error(`${what}: the component disappeared`); return b; };
   for (const name of names) {
     await nav.getByRole('link', { name: new RegExp(`^${name}(\\s*New)?$`) }).click();
     await expect(page.getByRole('heading', { name, level: 1, exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(150);
-    const before = await box();
+    const before = await mustBox(`${name} before`);
     const targets = page.getByTestId('preview').locator('button:not([data-close]):not([role=treeitem]), input, select, textarea');
     const count = await targets.count();
     for (let i = 0; i < count; i++) {
@@ -153,6 +155,8 @@ test('no layout shift when interacting with any component', async ({ page }) => 
       await t.click({ force: true });
       await page.waitForTimeout(220);
       const after = await box();
+      if (!after && name === 'Command Palette') break; // running a command closes the palette by design
+      if (!after) throw new Error(`${name} disappeared after click #${i}`);
       expect(Math.round(after.x), `${name} x after click #${i}`).toBe(Math.round(before.x));
       if (name !== 'Multi-select') expect(Math.round(after.y), `${name} y after click #${i}`).toBe(Math.round(before.y));
       expect(Math.round(after.width), `${name} width after click #${i}`).toBe(Math.round(before.width));
@@ -420,4 +424,114 @@ test('new app components work in the live preview', async ({ page }) => {
   await page.goto('/#chat-composer');
   await preview.locator('[data-input]').fill('Hello');
   await expect(preview.locator('[data-send]')).toBeEnabled();
+});
+
+test('media timeline: scrub, drag, trim, split and zoom with a real pointer', async ({ page }) => {
+  await page.goto('/#media-timeline');
+  const preview = page.getByTestId('preview');
+  const canvas = preview.locator('[data-canvas]');
+  await expect(canvas).toBeVisible();
+  const box = (await canvas.boundingBox())!;
+  const ruler = preview.locator('[data-ruler]');
+  // scrub on the ruler: 24 px per second
+  await page.mouse.move(box.x + 240, box.y + 10);
+  await page.mouse.down();
+  await expect(preview.locator('[data-timecode]')).toHaveText('00:00:10:00');
+  await page.mouse.move(box.x + 480, box.y + 10, { steps: 6 });
+  await page.mouse.up();
+  await expect(preview.locator('[data-timecode]')).toHaveText('00:00:20:00');
+  await expect(ruler).toHaveAttribute('aria-valuetext', '00:00:20:00');
+  // keyboard on the ruler
+  await ruler.focus();
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowRight');
+  await expect(preview.locator('[data-timecode]')).toHaveText('00:00:00:02');
+  // drag the Title clip two seconds to the right
+  const title = preview.getByRole('button', { name: /^Title,/ });
+  const tb = (await title.boundingBox())!;
+  await page.mouse.move(tb.x + tb.width / 2, tb.y + tb.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(tb.x + tb.width / 2 + 48, tb.y + tb.height / 2, { steps: 8 });
+  await page.mouse.up();
+  await expect(title).toHaveAttribute('aria-label', /starts at 00:00:03:00/);
+  // trim the Interview clip from its right handle
+  const iv = preview.getByRole('button', { name: /^Interview,/ });
+  const ib = (await iv.boundingBox())!;
+  await page.mouse.move(ib.x + ib.width - 3, ib.y + ib.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(ib.x + ib.width - 3 - 120, ib.y + ib.height / 2, { steps: 8 });
+  await page.mouse.up();
+  const after = (await iv.boundingBox())!;
+  expect(after.width).toBeLessThan(ib.width - 90);
+  // split at the playhead with the keyboard
+  await ruler.focus();
+  await page.keyboard.press('End');
+  await page.keyboard.press('PageDown');
+  await page.keyboard.press('PageDown');
+  await page.keyboard.press('PageDown');
+  await page.keyboard.press('PageDown');
+  await expect(preview.locator('[data-timecode]')).toHaveText('00:00:10:00');
+  await preview.getByRole('button', { name: /^Music,/ }).focus();
+  await page.keyboard.press('s');
+  await expect(preview.getByRole('button', { name: /^Music,/ })).toHaveCount(2);
+  // zoom
+  const before = await preview.locator('[data-p8~=mediatl]').getAttribute('data-pps');
+  await preview.getByRole('button', { name: 'Zoom in' }).click();
+  expect(Number(await preview.locator('[data-p8~=mediatl]').getAttribute('data-pps'))).toBeGreaterThan(Number(before));
+  // playback advances the playhead
+  await preview.getByRole('button', { name: 'Play', exact: true }).click();
+  await page.waitForTimeout(600);
+  await preview.getByRole('button', { name: 'Pause', exact: true }).click();
+  expect(await preview.locator('[data-timecode]').textContent()).not.toBe('00:00:10:00');
+});
+
+test('rich text formats with the toolbar; mention suggests people; palette runs commands', async ({ page }) => {
+  const preview = page.getByTestId('preview');
+  await page.goto('/#rich-text');
+  const editor = preview.locator('[data-editor]');
+  await editor.click();
+  await editor.evaluate((el) => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection()!; s.removeAllRanges(); s.addRange(r); });
+  await preview.getByRole('button', { name: 'Bold' }).click();
+  await expect(editor).toContainText('Write something worth reading.');
+  expect(await editor.innerHTML()).toMatch(/<(b|strong)>/);
+  await expect(preview.getByRole('button', { name: 'Bold' })).toHaveAttribute('aria-pressed', 'true');
+  await preview.getByRole('button', { name: 'Link' }).click();
+  await preview.locator('[data-url]').fill('javascript:alert(1)');
+  await page.keyboard.press('Enter');
+  await expect(preview.locator('[data-linkerr]')).toBeVisible();
+  await preview.locator('[data-url]').fill('https://example.com');
+  await page.keyboard.press('Enter');
+  expect(await editor.innerHTML()).toContain('href="https://example.com"');
+
+  await page.goto('/#mention-input');
+  const ta = preview.locator('textarea');
+  await ta.click();
+  await page.keyboard.type('Hi @al');
+  await expect(preview.getByRole('option', { name: 'Alan Turing' })).toBeVisible();
+  await expect(preview.getByRole('option', { name: 'Grace Hopper' })).toBeHidden();
+  await page.keyboard.press('Enter');
+  await expect(ta).toHaveValue('Hi @Alan Turing ');
+
+  await page.goto('/#command-palette');
+  await preview.getByRole('combobox').fill('sett');
+  await expect(preview.getByRole('option', { name: /Open settings/ })).toBeVisible();
+  await expect(preview.getByRole('option', { name: /Invite people/ })).toBeHidden();
+  await page.keyboard.press('Enter');
+  await expect(preview.locator('[data-p8~=overlay]')).toBeHidden();
+});
+
+test('skeleton variants and segmented progress', async ({ page }) => {
+  await page.goto('/#skeleton');
+  const preview = page.getByTestId('preview');
+  const h = async () => Number(await preview.locator('svg').first().getAttribute('height'));
+  const text = await h();
+  await page.getByLabel('variant').selectOption('card');
+  expect(await h()).toBe(200);
+  await page.getByLabel('variant').selectOption('table');
+  expect(await h()).not.toBe(text);
+  await page.goto('/#segmented-progress');
+  await expect(preview.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '60');
+  await page.getByLabel('done').selectOption('3');
+  await expect(preview.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '85');
 });

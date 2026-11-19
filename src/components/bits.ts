@@ -17,7 +17,7 @@ export const iconButton: ComponentDef = {
     P.bool('disabled', false, 'Disables the button.'),
   ],
   rules: [
-    { cls: ib.root, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'box-sizing': 'border-box', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' } },
+    { cls: ib.root, base: { display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center', 'box-sizing': 'border-box', 'padding-block': v('space-8'), 'padding-inline': v('space-12'), 'border-radius': v('radius-8'), border: 'none', background: v('color-control'), color: v('color-ink'), cursor: 'pointer' }, hover: { background: v('color-control-strong') }, focus, disabled: { opacity: v('opacity-disabled'), cursor: 'not-allowed' }, nested: [{ sel: '[hidden]', decls: { display: 'none' } }] },
     { cls: ib.ghost, base: { background: 'transparent', ...ringDecl }, hover: { background: v('color-control') } },
     { cls: ib.flat, base: { background: 'transparent' }, hover: { background: v('color-control') } },
     iconRule,

@@ -159,14 +159,41 @@ const KINDS: Record<string, string> = {
   }, ${SIG});`,
 
   palette: `
-  function pOpts(p) { return Array.from(p.querySelectorAll('[role="option"]')).filter(function (x) { return !x.hidden; }); }
+  function pOpts(p) { return Array.from(p.querySelectorAll('[role="option"]')).filter(function (x) { return !x.hidden && !x.closest('[hidden]') && !x.closest('template'); }); }
   function pMark(p, it) { Array.from(p.querySelectorAll('[role="option"]')).forEach(function (x) { setOn(x, x === it); }); }
+  function pLabel(x) { var l = x.querySelector('[data-label]'); return (l || x).textContent.trim(); }
+  function pFilter(p, q) {
+    var empty = p.querySelector('[data-empty]'), any = false;
+    Array.from(p.querySelectorAll('[role="group"]')).forEach(function (g) {
+      var recent = g.getAttribute('data-group') === 'recent', n = 0;
+      Array.from(g.querySelectorAll('[role="option"]')).forEach(function (x) { var show = recent ? !q : pLabel(x).toLowerCase().indexOf(q) >= 0; x.hidden = !show; if (show) n++; });
+      var hasRecent = recent && g.querySelectorAll('[role="option"]').length > 0;
+      g.hidden = recent ? !(hasRecent && !q) : n === 0;
+      if (n) any = true;
+    });
+    if (empty) empty.hidden = any;
+    pMark(p, pOpts(p)[0]);
+  }
+  function pRun(p, it) {
+    var label = pLabel(it), section = it.getAttribute('data-section') || '';
+    var rg = p.querySelector('[data-group="recent"]'), tpl = p.querySelector('template[data-item-template]');
+    if (rg && tpl) {
+      Array.from(rg.querySelectorAll('[role="option"]')).forEach(function (x) { if (pLabel(x) === label) x.remove(); });
+      var src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild, c = src.cloneNode(true);
+      c.querySelector('[data-label]').textContent = label; c.setAttribute('data-section', 'Recent');
+      var h = it.querySelector('span:not([data-label])'); if (h) c.appendChild(h.cloneNode(true));
+      var heading = rg.querySelector('[aria-hidden]'); rg.insertBefore(c, heading ? heading.nextSibling : rg.firstChild);
+      Array.from(rg.querySelectorAll('[role="option"]')).slice(3).forEach(function (x) { x.remove(); });
+      rg.setAttribute('aria-label', 'Recent');
+    }
+    p.dispatchEvent(new CustomEvent('p8-run', { bubbles: true, detail: { command: label, section: section } }));
+    var inp = p.querySelector('input'); if (inp) { inp.value = ''; pFilter(p, ''); }
+    var o = p.closest('[data-p8~="overlay"]'); if (o) o.hidden = true;
+  }
   root.addEventListener('input', function (e) {
     var p = cl(e, '[data-p8~="palette"]');
     if (!p || e.target.tagName !== 'INPUT') return;
-    var q = e.target.value.toLowerCase();
-    Array.from(p.querySelectorAll('[role="option"]')).forEach(function (x) { x.hidden = x.textContent.toLowerCase().indexOf(q) < 0; });
-    pMark(p, pOpts(p)[0]);
+    pFilter(p, e.target.value.toLowerCase().trim());
   }, ${SIG});
   root.addEventListener('keydown', function (e) {
     var p = cl(e, '[data-p8~="palette"]');
@@ -174,15 +201,18 @@ const KINDS: Record<string, string> = {
     var list = pOpts(p), cur = list.findIndex(function (x) { return x.classList.contains('p8-palette__item--active'); });
     if (e.key === 'ArrowDown') cur = (cur + 1) % list.length;
     else if (e.key === 'ArrowUp') cur = (cur - 1 + list.length) % list.length;
-    else if (e.key === 'Enter') { if (list[cur]) { e.preventDefault(); list[cur].click(); } return; }
+    else if (e.key === 'Home') cur = 0;
+    else if (e.key === 'End') cur = list.length - 1;
+    else if (e.key === 'Enter') { if (list[cur]) { e.preventDefault(); pRun(p, list[cur]); } return; }
     else return;
     e.preventDefault();
-    pMark(p, list[cur]);
+    if (list[cur]) { pMark(p, list[cur]); list[cur].scrollIntoView && list[cur].scrollIntoView({ block: 'nearest' }); }
   }, ${SIG});
   root.addEventListener('click', function (e) {
     var it = cl(e, '[data-p8~="palette"] [role="option"]');
-    if (it) pMark(it.closest('[data-p8~="palette"]'), it);
-  }, ${SIG});`,
+    if (it) pRun(it.closest('[data-p8~="palette"]'), it);
+  }, ${SIG});
+  root.addEventListener('mousemove', function (e) { var it = cl(e, '[data-p8~="palette"] [role="option"]'); if (it && !it.classList.contains('p8-palette__item--active')) pMark(it.closest('[data-p8~="palette"]'), it); }, ${SIG});`,
 
   toast: `
   all('[data-p8~="toast"] [data-duration]').forEach(function (t) {
@@ -905,7 +935,7 @@ export function hasBehavior(node: Node): boolean {
 export function runtime(node: Node): string {
   const kinds = [...kindsIn(node)].filter((k) => KINDS[k]);
   const used = new Set(kinds);
-  const needsPairs = ['toggle', 'group', 'menu', 'palette', 'pager', 'copy', 'combobox', 'rating', 'multi'].some((k) => used.has(k));
+  const needsPairs = ['toggle', 'group', 'menu', 'palette', 'pager', 'copy', 'combobox', 'rating', 'multi', 'mention', 'mediatl'].some((k) => used.has(k));
   const body = kinds.map((k) => KINDS[k]).join('\n');
   return `function initP8(root, opts) {
   opts = opts || {};

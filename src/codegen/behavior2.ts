@@ -451,6 +451,399 @@ export const KINDS2: Record<string, string> = {
     a.dispatchEvent(new CustomEvent('p8-navigate', { bubbles: true, detail: { label: label.trim(), href: a.getAttribute('href') } }));
   }, ${SIG});`,
 
+  mention: `
+  function mnOpts(m) { return Array.from(m.querySelectorAll('[role="option"]')); }
+  function mnVis(m) { return mnOpts(m).filter(function (x) { return !x.hidden; }); }
+  function mnTA(m) { return m.querySelector('[data-input]'); }
+  function mnToken(m) {
+    var ta = mnTA(m), t = m.getAttribute('data-trigger'), caret = ta.selectionStart, before = ta.value.slice(0, caret), i = before.lastIndexOf(t);
+    if (i < 0 || (i > 0 && !/\\s/.test(before.charAt(i - 1)))) return null;
+    var q = before.slice(i + 1);
+    if (/\\n/.test(q) || q.length > 30 || /\\s\\s/.test(q)) return null;
+    return { start: i, query: q, end: caret };
+  }
+  function mnClose(m) { m.querySelector('[data-list]').hidden = true; var ta = mnTA(m); ta.setAttribute('aria-expanded', 'false'); ta.removeAttribute('aria-activedescendant'); }
+  function mnMark(m, it) {
+    mnOpts(m).forEach(function (x) { setOn(x, x === it); });
+    var ta = mnTA(m); if (it) ta.setAttribute('aria-activedescendant', it.id); else ta.removeAttribute('aria-activedescendant');
+    if (it && it.scrollIntoView) it.scrollIntoView({ block: 'nearest' });
+  }
+  function mnUpdate(m) {
+    var tok = mnToken(m);
+    if (!tok) { mnClose(m); return; }
+    var q = tok.query.toLowerCase();
+    mnOpts(m).forEach(function (x) { x.hidden = x.getAttribute('data-value').toLowerCase().indexOf(q) < 0; });
+    var vis = mnVis(m);
+    if (!vis.length) { mnClose(m); return; }
+    m.querySelector('[data-list]').hidden = false; mnTA(m).setAttribute('aria-expanded', 'true');
+    mnMark(m, vis[0]);
+    m.querySelector('[data-live]').textContent = vis.length + (vis.length === 1 ? ' suggestion' : ' suggestions');
+  }
+  function mnInsert(m, it) {
+    var tok = mnToken(m); if (!tok) return;
+    var ta = mnTA(m), t = m.getAttribute('data-trigger'), name = it.getAttribute('data-value');
+    ta.value = ta.value.slice(0, tok.start) + t + name + ' ' + ta.value.slice(tok.end);
+    var pos = tok.start + t.length + name.length + 1;
+    ta.setSelectionRange(pos, pos);
+    mnClose(m);
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    m.dispatchEvent(new CustomEvent('p8-mention', { bubbles: true, detail: { name: name, trigger: t } }));
+    m.querySelector('[data-live]').textContent = name + ' mentioned';
+    ta.focus();
+  }
+  root.addEventListener('input', function (e) { var m = cl(e, '[data-p8~="mention"]'); if (m && e.target.hasAttribute('data-input')) mnUpdate(m); }, ${SIG});
+  root.addEventListener('keyup', function (e) { var m = cl(e, '[data-p8~="mention"]'); if (m && e.target.hasAttribute('data-input') && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) >= 0) mnUpdate(m); }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var it = cl(e, '[data-p8~="mention"] [role="option"]');
+    if (it) { mnInsert(it.closest('[data-p8~="mention"]'), it); return; }
+    var m = cl(e, '[data-p8~="mention"]');
+    if (m && e.target.hasAttribute('data-input')) mnUpdate(m);
+  }, ${SIG});
+  root.addEventListener('mousedown', function (e) { if (cl(e, '[data-p8~="mention"] [role="option"]')) e.preventDefault(); }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var m = cl(e, '[data-p8~="mention"]');
+    if (!m || !e.target.hasAttribute('data-input') || m.querySelector('[data-list]').hidden) return;
+    var vis = mnVis(m), cur = vis.findIndex(function (x) { return x.classList.contains('p8-mention__option--active'); });
+    if (e.key === 'ArrowDown') cur = (cur + 1) % vis.length;
+    else if (e.key === 'ArrowUp') cur = (cur - 1 + vis.length) % vis.length;
+    else if (e.key === 'Enter' || e.key === 'Tab') { if (vis[cur]) { e.preventDefault(); mnInsert(m, vis[cur]); } return; }
+    else if (e.key === 'Escape') { e.preventDefault(); mnClose(m); return; }
+    else return;
+    e.preventDefault();
+    mnMark(m, vis[cur]);
+  }, ${SIG});
+  root.addEventListener('focusout', function (e) { var m = cl(e, '[data-p8~="mention"]'); if (m && e.target.hasAttribute('data-input')) setTimeout(function () { if (!m.contains(doc.activeElement)) mnClose(m); }, 0); }, ${SIG});`,
+
+  richtext: `
+  function rtEd(r) { return r.querySelector('[data-editor]'); }
+  function rtBtns(r) { return Array.from(r.querySelectorAll('[data-cmd]')); }
+  function rtSel() { var w = doc.defaultView || window; return w.getSelection ? w.getSelection() : null; }
+  function rtInside(r) { var s = rtSel(); return !!(s && s.rangeCount && s.anchorNode && rtEd(r).contains(s.anchorNode)); }
+  function rtQ(c) { try { return typeof doc.queryCommandState === 'function' && doc.queryCommandState(c); } catch (err) { return false; } }
+  function rtBlock() { try { return typeof doc.queryCommandValue === 'function' ? String(doc.queryCommandValue('formatBlock')).toLowerCase().replace(/[<>]/g, '') : ''; } catch (err) { return ''; } }
+  function rtAnchor(r) { var s = rtSel(), n = s && s.anchorNode; while (n && n !== rtEd(r)) { if (n.nodeName === 'A') return n; n = n.parentNode; } return null; }
+  function rtState(r) {
+    if (!rtInside(r)) return;
+    var b = rtBlock();
+    var on = { bold: rtQ('bold'), italic: rtQ('italic'), underline: rtQ('underline'), ul: rtQ('insertUnorderedList'), ol: rtQ('insertOrderedList'), h2: b === 'h2', quote: b === 'blockquote', link: !!rtAnchor(r) };
+    rtBtns(r).forEach(function (x) { var c = x.getAttribute('data-cmd'); if (c in on) { x.setAttribute('aria-pressed', String(on[c])); x.classList.toggle('p8-rich__btn--on', on[c]); } });
+  }
+  function rtChange(r) { var ed = rtEd(r); r.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { html: ed.innerHTML, text: ed.innerText || ed.textContent } })); }
+  function rtRestore(r) { var s = rtSel(); if (r.__range && s && !rtInside(r)) { s.removeAllRanges(); s.addRange(r.__range); } }
+  function rtEx(c, v) { return typeof doc.execCommand === 'function' ? doc.execCommand(c, false, v) : false; }
+  function rtLinkOpen(r) {
+    var s = rtSel(); if (s && rtInside(r)) r.__range = s.getRangeAt(0).cloneRange();
+    var bar = r.querySelector('[data-linkbar]'), url = r.querySelector('[data-url]'), a = rtAnchor(r);
+    bar.hidden = false; r.querySelector('[data-linkerr]').hidden = true; url.removeAttribute('aria-invalid'); url.value = a ? a.getAttribute('href') : '';
+    url.focus();
+  }
+  function rtLinkClose(r) { r.querySelector('[data-linkbar]').hidden = true; r.querySelector('[data-linkerr]').hidden = true; rtEd(r).focus(); rtRestore(r); }
+  function rtLinkApply(r) {
+    var url = r.querySelector('[data-url]'), v = url.value.trim(), err = r.querySelector('[data-linkerr]');
+    if (!/^(https?:\\/\\/|mailto:|\\/|#)/i.test(v)) { err.textContent = 'Enter an address that starts with https://, http://, mailto:, / or #.'; err.hidden = false; url.setAttribute('aria-invalid', 'true'); url.focus(); return; }
+    err.hidden = true; url.removeAttribute('aria-invalid');
+    rtEd(r).focus(); rtRestore(r);
+    rtEx('createLink', v);
+    Array.from(rtEd(r).querySelectorAll('a[href]')).forEach(function (a) { if (/^https?:/i.test(a.getAttribute('href'))) a.setAttribute('rel', 'noopener noreferrer'); });
+    r.querySelector('[data-linkbar]').hidden = true;
+    rtState(r); rtChange(r);
+  }
+  function rtRun(r, cmd) {
+    var ed = rtEd(r);
+    if (cmd === 'link') { rtLinkOpen(r); return; }
+    ed.focus(); rtRestore(r);
+    if (cmd === 'bold' || cmd === 'italic' || cmd === 'underline' || cmd === 'undo' || cmd === 'redo') rtEx(cmd);
+    else if (cmd === 'h2') rtEx('formatBlock', rtBlock() === 'h2' ? 'p' : 'h2');
+    else if (cmd === 'quote') rtEx('formatBlock', rtBlock() === 'blockquote' ? 'p' : 'blockquote');
+    else if (cmd === 'ul') rtEx('insertUnorderedList');
+    else if (cmd === 'ol') rtEx('insertOrderedList');
+    rtState(r); rtChange(r);
+    var b = r.querySelector('[data-cmd="' + cmd + '"]'); if (b) r.querySelector('[data-live]').textContent = b.getAttribute('aria-label') + (b.getAttribute('aria-pressed') === 'true' ? ' on' : ' off');
+  }
+  root.addEventListener('mousedown', function (e) { if (cl(e, '[data-p8~="richtext"] [data-cmd]')) e.preventDefault(); }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var r = cl(e, '[data-p8~="richtext"]');
+    if (!r) return;
+    var b = cl(e, '[data-p8~="richtext"] [data-cmd]');
+    if (b && !b.disabled) { rtRun(r, b.getAttribute('data-cmd')); return; }
+    if (cl(e, '[data-p8~="richtext"] [data-link-apply]')) rtLinkApply(r);
+    else if (cl(e, '[data-p8~="richtext"] [data-link-cancel]')) rtLinkClose(r);
+  }, ${SIG});
+  root.addEventListener('input', function (e) { var r = cl(e, '[data-p8~="richtext"]'); if (r && e.target.hasAttribute('data-editor')) rtChange(r); }, ${SIG});
+  root.addEventListener('paste', function (e) {
+    var r = cl(e, '[data-p8~="richtext"]');
+    if (!r || !e.target.hasAttribute || !e.target.hasAttribute('data-editor')) return;
+    e.preventDefault();
+    var t = (e.clipboardData && e.clipboardData.getData('text/plain')) || '';
+    if (t) { rtEx('insertText', t); rtChange(r); }
+  }, ${SIG});
+  root.addEventListener('keydown', function (e) {
+    var r = cl(e, '[data-p8~="richtext"]');
+    if (!r) return;
+    var t = e.target;
+    if (t.hasAttribute && t.hasAttribute('data-editor') && (e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); rtLinkOpen(r); return; }
+    if (t.hasAttribute && t.hasAttribute('data-url')) {
+      if (e.key === 'Enter') { e.preventDefault(); rtLinkApply(r); } else if (e.key === 'Escape') { e.preventDefault(); rtLinkClose(r); }
+      return;
+    }
+    var btns = rtBtns(r).filter(function (x) { return !x.disabled; }), i = btns.indexOf(t);
+    if (i < 0) return;
+    if (e.key === 'ArrowRight') i = (i + 1) % btns.length; else if (e.key === 'ArrowLeft') i = (i - 1 + btns.length) % btns.length;
+    else if (e.key === 'Home') i = 0; else if (e.key === 'End') i = btns.length - 1; else return;
+    e.preventDefault();
+    btns.forEach(function (x) { x.tabIndex = -1; }); btns[i].tabIndex = 0; btns[i].focus();
+  }, ${SIG});
+  doc.addEventListener('selectionchange', function () { all('[data-p8~="richtext"]').forEach(rtState); }, ${SIG});`,
+
+  mediatl: `
+  var mtSteps = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600];
+  function mtR(el) { return el.closest('[data-p8~="mediatl"]'); }
+  function mtN(r, a, d) { var v = Number(r.getAttribute(a)); return isNaN(v) || !v ? d : v; }
+  function mtFps(r) { return mtN(r, 'data-fps', 30); }
+  function mtPPS(r) { return mtN(r, 'data-pps', 24); }
+  function mtDur(r) { return mtN(r, 'data-duration', 30); }
+  function mtTime(r) { return Number(r.getAttribute('data-time')) || 0; }
+  function mtFrame(r, t) { var f = mtFps(r); return Math.round(t * f) / f; }
+  function mtPad(n) { return (n < 10 ? '0' : '') + n; }
+  function mtTC(r, t) { var fps = mtFps(r), f = Math.round(t * fps), s = Math.floor(f / fps); return mtPad(Math.floor(s / 3600)) + ':' + mtPad(Math.floor(s % 3600 / 60)) + ':' + mtPad(s % 60) + ':' + mtPad(f % fps); }
+  function mtShort(t) { return Math.floor(t / 60) + ':' + mtPad(Math.round(t % 60)); }
+  function mtPx(secs) { return 'calc(var(--p8-pps) * ' + secs + 'px)'; }
+  function mtClips(r) { return Array.from(r.querySelectorAll('[data-clip]')); }
+  function mtLanes(r) { return Array.from(r.querySelectorAll('[data-lane]')); }
+  function mtStart(c) { return Number(c.getAttribute('data-start')); }
+  function mtLen(c) { return Number(c.getAttribute('data-dur')); }
+  function mtName(c) { return c.querySelector('[data-name]').textContent; }
+  function mtSay(r, msg) { r.querySelector('[data-live]').textContent = msg; }
+  function mtLabel(r, c) { c.setAttribute('aria-label', mtName(c) + ', ' + c.parentNode.getAttribute('data-track') + ', starts at ' + mtTC(r, mtStart(c)) + ', ' + (Math.round(mtLen(c) * 100) / 100) + ' seconds'); }
+  function mtPlace(r, c) { c.style.left = mtPx(mtStart(c)); c.style.width = mtPx(mtLen(c)); mtLabel(r, c); }
+  function mtInfo(c) { return { track: c.parentNode.getAttribute('data-track'), name: mtName(c), start: mtStart(c), duration: mtLen(c) }; }
+  function mtChange(r) { r.dispatchEvent(new CustomEvent('p8-change', { bubbles: true, detail: { clips: mtClips(r).map(mtInfo) } })); }
+  function mtReveal(r, t) { var sc = r.querySelector('[data-scroll]'), x = t * mtPPS(r); if (sc.clientWidth && (x < sc.scrollLeft || x > sc.scrollLeft + sc.clientWidth - 8)) sc.scrollLeft = Math.max(0, x - sc.clientWidth / 2); }
+  function mtSeek(r, t, opt) {
+    opt = opt || {};
+    t = Math.max(0, Math.min(mtDur(r), mtFrame(r, t)));
+    r.setAttribute('data-time', String(t));
+    r.querySelector('[data-playhead]').style.left = mtPx(t);
+    var ru = r.querySelector('[data-ruler]'), tc = mtTC(r, t);
+    ru.setAttribute('aria-valuenow', String(Math.round(t * 100) / 100)); ru.setAttribute('aria-valuetext', tc);
+    var out = r.querySelector('[data-timecode]'); if (out) out.textContent = tc;
+    if (opt.say) mtSay(r, tc);
+    if (opt.reveal) mtReveal(r, t);
+    r.dispatchEvent(new CustomEvent('p8-seek', { bubbles: true, detail: { time: t, timecode: tc } }));
+    return t;
+  }
+  function mtRuler(r) {
+    var ru = r.querySelector('[data-ruler]'), pps = mtPPS(r), dur = mtDur(r), step = 1200;
+    for (var i = 0; i < mtSteps.length; i++) if (mtSteps[i] * pps >= 72) { step = mtSteps[i]; break; }
+    Array.from(ru.querySelectorAll('[data-tick]')).forEach(function (x) { x.remove(); });
+    var tpl = r.querySelector('template[data-parts]'), src = (tpl.content && tpl.content.firstElementChild) || tpl.firstElementChild;
+    for (var t = 0; t <= dur; t += step) { var l = src.cloneNode(true); l.textContent = mtShort(t); l.style.left = mtPx(t); ru.appendChild(l); }
+  }
+  function mtZoom(r, pps) {
+    var old = mtPPS(r), sc = r.querySelector('[data-scroll]'), t = mtTime(r);
+    pps = Math.max(4, Math.min(240, Math.round(pps)));
+    var screenX = t * old - sc.scrollLeft;
+    r.setAttribute('data-pps', String(pps)); r.style.setProperty('--p8-pps', String(pps));
+    sc.scrollLeft = Math.max(0, t * pps - screenX);
+    mtRuler(r);
+    var z = r.querySelector('[data-zoomlabel]'); if (z) z.textContent = (Math.round(pps / 24 * 10) / 10) + '×';
+    mtSay(r, 'Zoom ' + (Math.round(pps / 24 * 10) / 10) + '×');
+  }
+  function mtSnapOn(r) { return r.getAttribute('data-snap') === 'true'; }
+  function mtSnap(r, t, skip) {
+    if (!mtSnapOn(r)) return t;
+    var best = t, bd = 8 / mtPPS(r), pts = [0, mtDur(r), mtTime(r)];
+    mtClips(r).forEach(function (c) { if (c !== skip) pts.push(mtStart(c), mtStart(c) + mtLen(c)); });
+    pts.forEach(function (p) { var d = Math.abs(p - t); if (d < bd) { bd = d; best = p; } });
+    return best;
+  }
+  function mtFit(r, lane, c, start, len) {
+    var d = mtDur(r), others = Array.from(lane.querySelectorAll('[data-clip]')).filter(function (o) { return o !== c; }).sort(function (a, b) { return mtStart(a) - mtStart(b); });
+    start = Math.max(0, Math.min(d - len, start));
+    var gaps = [], cur = 0;
+    others.forEach(function (o) { var s = mtStart(o); if (s - cur >= len - 1e-6) gaps.push([cur, s]); cur = Math.max(cur, s + mtLen(o)); });
+    if (d - cur >= len - 1e-6) gaps.push([cur, d]);
+    var best = null, bd = Infinity;
+    gaps.forEach(function (g) { var st = Math.max(g[0], Math.min(g[1] - len, start)), dist = Math.abs(st - start); if (dist < bd) { bd = dist; best = st; } });
+    return best;
+  }
+  function mtSelect(r, c, focusIt) {
+    mtClips(r).forEach(function (x) { var on = x === c; x.classList.toggle('p8-mt__clip--on', on); x.setAttribute('aria-pressed', String(on)); x.tabIndex = on ? 0 : -1; });
+    if (!c) { var f = mtClips(r)[0]; if (f) f.tabIndex = 0; }
+    r.__sel = c || null;
+    if (c && focusIt) c.focus();
+    r.dispatchEvent(new CustomEvent('p8-select', { bubbles: true, detail: { clip: c ? mtInfo(c) : null } }));
+  }
+  function mtSorted(lane) { return Array.from(lane.querySelectorAll('[data-clip]')).sort(function (a, b) { return mtStart(a) - mtStart(b); }); }
+  function mtSplit(r) {
+    var t = mtTime(r), ft = 1 / mtFps(r), sel = r.__sel;
+    function covers(c) { return t - mtStart(c) >= ft - 1e-6 && mtStart(c) + mtLen(c) - t >= ft - 1e-6; }
+    var targets = sel && covers(sel) ? [sel] : (sel ? [] : mtClips(r).filter(covers));
+    if (!targets.length) { mtSay(r, 'Nothing to split at the playhead'); return; }
+    targets.forEach(function (c) {
+      var s = mtStart(c), len = mtLen(c), copy = c.cloneNode(true);
+      c.setAttribute('data-dur', String(Math.round((t - s) * 1000) / 1000));
+      copy.setAttribute('data-start', String(t)); copy.setAttribute('data-dur', String(Math.round((s + len - t) * 1000) / 1000));
+      copy.classList.remove('p8-mt__clip--on'); copy.setAttribute('aria-pressed', 'false'); copy.tabIndex = -1;
+      c.parentNode.insertBefore(copy, c.nextSibling);
+      mtPlace(r, c); mtPlace(r, copy);
+    });
+    mtSay(r, 'Split at ' + mtTC(r, t)); mtChange(r);
+  }
+  function mtDelete(r) {
+    var c = r.__sel;
+    if (!c) { mtSay(r, 'Select a clip first'); return; }
+    var list = mtSorted(c.parentNode), i = list.indexOf(c), next = list[i + 1] || list[i - 1] || null, name = mtName(c);
+    c.remove(); mtSelect(r, next, true); mtSay(r, name + ' deleted'); mtChange(r);
+  }
+  function mtTrim(r, c, edge, t) {
+    var s = mtStart(c), e = s + mtLen(c), ft = 1 / mtFps(r), sib = mtSorted(c.parentNode).filter(function (o) { return o !== c; });
+    if (edge === 'start') {
+      var lo = 0; sib.forEach(function (o) { var oe = mtStart(o) + mtLen(o); if (oe <= s + 1e-6 && oe > lo) lo = oe; });
+      var ns = Math.max(lo, Math.min(e - ft, t));
+      c.setAttribute('data-start', String(Math.round(ns * 1000) / 1000)); c.setAttribute('data-dur', String(Math.round((e - ns) * 1000) / 1000));
+    } else {
+      var hi = mtDur(r); sib.forEach(function (o) { var os = mtStart(o); if (os >= e - 1e-6 && os < hi) hi = os; });
+      var ne = Math.min(hi, Math.max(s + ft, t));
+      c.setAttribute('data-dur', String(Math.round((ne - s) * 1000) / 1000));
+    }
+    mtPlace(r, c);
+  }
+  function mtMoveTo(r, c, lane, start) {
+    var len = mtLen(c), fit = mtFit(r, lane, c, start, len);
+    if (fit === null) return false;
+    if (c.parentNode !== lane) lane.appendChild(c);
+    c.setAttribute('data-start', String(Math.round(fit * 1000) / 1000)); mtPlace(r, c);
+    return true;
+  }
+  function mtPlay(r, on) {
+    var btn = r.querySelector('[data-act="play"]');
+    if (r.__iv) { clearInterval(r.__iv); r.__iv = null; }
+    r.setAttribute('data-playing', String(on));
+    if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.setAttribute('aria-label', on ? 'Pause' : 'Play'); Array.from(btn.querySelectorAll('svg')).forEach(function (i, k) { setOn(i, on ? k === 1 : k === 0); }); }
+    if (!on) return;
+    if (mtTime(r) >= mtDur(r) - 1e-6) mtSeek(r, 0);
+    var t0 = mtTime(r), w0 = Date.now();
+    r.__iv = setInterval(function () {
+      var t = t0 + (Date.now() - w0) / 1000;
+      if (t >= mtDur(r)) { mtSeek(r, mtDur(r), { reveal: true }); mtPlay(r, false); mtSay(r, 'End of timeline'); return; }
+      mtSeek(r, t, { reveal: true });
+    }, 1000 / mtFps(r));
+    timers.push(r.__iv);
+  }
+  function mtX(r, e) { var rect = r.querySelector('[data-canvas]').getBoundingClientRect(); return (e.clientX - rect.left) / mtPPS(r); }
+  function mtLaneAt(r, e, cur) {
+    var lanes = mtLanes(r), hit = lanes.find(function (l) { var b = l.getBoundingClientRect(); return b.height > 0 && e.clientY >= b.top && e.clientY < b.bottom; });
+    return hit || cur;
+  }
+  var mtDrag = null;
+  root.addEventListener('pointerdown', function (e) {
+    var r = cl(e, '[data-p8~="mediatl"]');
+    if (!r || (e.button !== undefined && e.button !== 0)) return;
+    if (cl(e, '[data-p8~="mediatl"] [data-act]')) return;
+    var handle = cl(e, '[data-p8~="mediatl"] [data-handle]'), clip = cl(e, '[data-p8~="mediatl"] [data-clip]');
+    if (handle && clip) { mtSelect(r, clip, true); mtDrag = { r: r, mode: 'trim-' + handle.getAttribute('data-handle'), c: clip, changed: false }; e.preventDefault(); return; }
+    if (clip) { mtSelect(r, clip, true); mtDrag = { r: r, mode: 'move', c: clip, x0: e.clientX, y0: e.clientY, s0: mtStart(clip), moved: false, changed: false }; e.preventDefault(); return; }
+    if (cl(e, '[data-p8~="mediatl"] [data-ruler]') || cl(e, '[data-p8~="mediatl"] [data-lane]')) {
+      if (!cl(e, '[data-p8~="mediatl"] [data-ruler]')) mtSelect(r, null, false);
+      mtDrag = { r: r, mode: 'scrub' };
+      if (r.__iv) mtPlay(r, false);
+      mtSeek(r, mtSnap(r, mtX(r, e)), { say: true });
+      var ru = r.querySelector('[data-ruler]'); if (ru) ru.focus();
+      e.preventDefault();
+    }
+  }, ${SIG});
+  doc.addEventListener('pointermove', function (e) {
+    if (!mtDrag) return;
+    var r = mtDrag.r, d = mtDrag, c = d.c;
+    if (d.mode === 'scrub') { mtSeek(r, mtSnap(r, mtX(r, e))); return; }
+    if (d.mode === 'move') {
+      if (!d.moved && Math.abs(e.clientX - d.x0) < 3 && Math.abs(e.clientY - d.y0) < 6) return;
+      d.moved = true;
+      var raw = d.s0 + (e.clientX - d.x0) / mtPPS(r), len = mtLen(c), a = mtSnap(r, raw, c), b = mtSnap(r, raw + len, c) - len;
+      var start = mtFrame(r, Math.abs(a - raw) <= Math.abs(b - raw) ? a : b);
+      var lane = mtLaneAt(r, e, c.parentNode);
+      if (mtMoveTo(r, c, lane, start)) d.changed = true;
+      return;
+    }
+    var t = mtSnap(r, mtX(r, e), c);
+    mtTrim(r, c, d.mode === 'trim-start' ? 'start' : 'end', mtFrame(r, t)); d.changed = true;
+  }, ${SIG});
+  doc.addEventListener('pointerup', function () {
+    if (!mtDrag) return;
+    var d = mtDrag; mtDrag = null;
+    if (d.changed) { mtSay(d.r, mtName(d.c) + (d.mode === 'move' ? ' moved to ' + mtTC(d.r, mtStart(d.c)) : ' trimmed')); mtChange(d.r); }
+  }, ${SIG});
+  root.addEventListener('click', function (e) {
+    var r = cl(e, '[data-p8~="mediatl"]');
+    if (!r) return;
+    var clipEl = cl(e, '[data-p8~="mediatl"] [data-clip]');
+    if (clipEl) { if (r.__sel !== clipEl) mtSelect(r, clipEl, false); return; }
+    var b = cl(e, '[data-p8~="mediatl"] [data-act]');
+    if (!b || b.disabled) return;
+    var a = b.getAttribute('data-act');
+    if (a === 'play') mtPlay(r, !r.__iv);
+    else if (a === 'start') mtSeek(r, 0, { say: true, reveal: true });
+    else if (a === 'end') mtSeek(r, mtDur(r), { say: true, reveal: true });
+    else if (a === 'split') mtSplit(r);
+    else if (a === 'delete') mtDelete(r);
+    else if (a === 'snap') { var on = !mtSnapOn(r); r.setAttribute('data-snap', String(on)); b.setAttribute('aria-pressed', String(on)); mtSay(r, 'Snapping ' + (on ? 'on' : 'off')); }
+    else if (a === 'zoomin') mtZoom(r, mtPPS(r) * 1.5);
+    else if (a === 'zoomout') mtZoom(r, mtPPS(r) / 1.5);
+  }, ${SIG});
+  root.addEventListener('wheel', function (e) {
+    var r = cl(e, '[data-p8~="mediatl"] [data-scroll]') && mtR(e.target);
+    if (!r || !(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    mtZoom(r, mtPPS(r) * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+  }, { signal: ac.signal, passive: false });
+  root.addEventListener('keydown', function (e) {
+    var r = cl(e, '[data-p8~="mediatl"]');
+    if (!r) return;
+    var t = e.target, k = e.key, fps = mtFps(r), step = e.shiftKey ? 1 : 1 / fps;
+    if (t.hasAttribute && t.hasAttribute('data-ruler')) {
+      var now = mtTime(r), to = null;
+      if (k === 'ArrowRight') to = now + step; else if (k === 'ArrowLeft') to = now - step;
+      else if (k === 'PageUp') to = now + 5; else if (k === 'PageDown') to = now - 5;
+      else if (k === 'Home') to = 0; else if (k === 'End') to = mtDur(r);
+      else if (k === ' ') { e.preventDefault(); mtPlay(r, !r.__iv); return; }
+      if (to === null) return;
+      e.preventDefault(); mtSeek(r, to, { say: true, reveal: true }); return;
+    }
+    if (!(t.hasAttribute && t.hasAttribute('data-clip'))) return;
+    var lane = t.parentNode, list = mtSorted(lane), i = list.indexOf(t), lanes = mtLanes(r), li = lanes.indexOf(lane);
+    if (k === 's' || k === 'S') { e.preventDefault(); mtSelect(r, t, false); mtSplit(r); return; }
+    if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); mtSelect(r, t, false); mtDelete(r); return; }
+    if (k === '[' || k === ']') {
+      e.preventDefault(); var pt = mtTime(r), s0 = mtStart(t), e0 = s0 + mtLen(t);
+      if (pt <= s0 || pt >= e0) { mtSay(r, 'Move the playhead inside the clip to trim'); return; }
+      mtTrim(r, t, k === '[' ? 'start' : 'end', pt); mtSay(r, mtName(t) + ' trimmed'); mtChange(r); return;
+    }
+    if (e.altKey) {
+      var moved = false;
+      if (k === 'ArrowLeft') moved = mtMoveTo(r, t, lane, mtStart(t) - step);
+      else if (k === 'ArrowRight') moved = mtMoveTo(r, t, lane, mtStart(t) + step);
+      else if (k === 'ArrowUp' && lanes[li - 1]) moved = mtMoveTo(r, t, lanes[li - 1], mtStart(t));
+      else if (k === 'ArrowDown' && lanes[li + 1]) moved = mtMoveTo(r, t, lanes[li + 1], mtStart(t));
+      else return;
+      e.preventDefault();
+      if (moved) { t.focus(); mtSay(r, mtName(t) + ' moved to ' + mtTC(r, mtStart(t)) + ' on ' + t.parentNode.getAttribute('data-track')); mtChange(r); } else mtSay(r, 'No room there');
+      return;
+    }
+    var target = null;
+    if (k === 'ArrowLeft') target = list[i - 1]; else if (k === 'ArrowRight') target = list[i + 1];
+    else if (k === 'ArrowUp' || k === 'ArrowDown') {
+      var other = lanes[li + (k === 'ArrowUp' ? -1 : 1)];
+      if (other) { var s = mtStart(t), cl2 = mtSorted(other); target = cl2.find(function (o) { return mtStart(o) + mtLen(o) > s; }) || cl2[cl2.length - 1]; }
+    } else return;
+    e.preventDefault();
+    if (target) { t.tabIndex = -1; target.tabIndex = 0; target.focus(); }
+  }, ${SIG});
+  all('[data-p8~="mediatl"]').forEach(function (r) {
+    mtClips(r).forEach(function (c) { mtLabel(r, c); });
+    if (r.getAttribute('data-playing') === 'true') mtPlay(r, true);
+  });`,
+
   listdetail: `
   function ldSelect(c, row) {
     Array.from(c.querySelectorAll('[data-target]')).forEach(function (x) {

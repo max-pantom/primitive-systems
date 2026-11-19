@@ -3,7 +3,7 @@ import { card } from './card';
 import { divider, input, textarea, select, checkbox, switchC } from './forms';
 import { menu, tabs, disclosure, dataList, badge, tooltip, dialog, toast, avatar } from './display';
 import { radioGroup, field, search, segmented, slider } from './forms2';
-import { spinner, skeleton, progress, alert } from './feedback';
+import { spinner, skeleton, progress, alert, segmentedProgress } from './feedback';
 import { sidebarNav, breadcrumbs, pagination, commandPalette } from './nav';
 import { listRow, table, keyValue, stack, toolbar } from './data';
 import { popover, dropdown, sheet } from './overlay';
@@ -16,6 +16,8 @@ import { passwordInput, dataTable, dateRangePicker, resizablePanels, sortableLis
 import { toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton } from './kit';
 import { emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell } from './screens';
 import { linkPreview } from './linkpreview';
+import { mentionInput, richText } from './editor';
+import { mediaTimeline } from './mediatl';
 import { templates } from './templates';
 import type { ComponentDef, Node, Rule } from './types';
 
@@ -28,7 +30,7 @@ export const components: ComponentDef[] = [button, card, input, textarea, divide
   passwordInput, dataTable, dateRangePicker, resizablePanels, sortableList, filterBar, notificationList, imageViewer,
   toggleGroup, link, heading, textC, colorPicker, tagInput, infiniteList, splitButton,
   emptyState, form, calendar, chart, sparkline, chatMessage, chatComposer, navbar, appShell,
-  linkPreview];
+  linkPreview, segmentedProgress, mentionInput, richText, mediaTimeline];
 import { GUIDELINES, MARKS } from './guidelines';
 for (const c of [...components, ...templates]) { c.guidelines = GUIDELINES[c.id]; c.since = MARKS[c.id]?.since ?? '0.6.0'; c.mark = MARKS[c.id]?.mark; }
 export const getDef = (id: string) => components.find((c) => c.id === id) ?? templates.find((c) => c.id === id);

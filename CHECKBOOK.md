@@ -118,3 +118,7 @@ Checks run on every component's style rules (all states) and on its rendered mar
 | Navbar | `navbar` | pass | pass | yes |
 | App Shell | `app-shell` | pass | pass | yes |
 | Link Preview | `link-preview` | pass | pass | yes |
+| Segmented Progress | `segmented-progress` | pass | pass | yes |
+| Mention Input | `mention-input` | pass | pass | yes |
+| Rich Text | `rich-text` | pass | pass | yes |
+| Media Timeline | `media-timeline` | pass | pass | yes |

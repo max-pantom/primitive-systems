@@ -39,6 +39,8 @@ export const EXCEPTIONS: Exception[] = [
   { rule: 'control-padding', target: 'p8-cal__day', reason: 'Fixed 32px calendar cell with no padding; digits are centered in the square.' },
   { rule: 'control-padding', target: 'p8-swatch', reason: 'Fixed 24px colour swatch with no padding.' },
   { rule: 'control-padding', target: 'p8-rating__star', reason: 'Fixed 24px star target with no padding.' },
+  { rule: 'surface-padding', target: 'p8-mention__list', reason: 'Suggestion list wrapper: 4px inset around options that carry their own 12px control padding.' },
+  { rule: 'surface-padding', target: 'p8-mt', reason: 'Editor surface: its toolbar, track labels and ruler carry their own padding; the lanes must be flush so clips line up with the ruler.' },
   { rule: 'surface-padding', target: 'p8-sheet', reason: 'Full-height drawer uses 16px on all sides.' },
   { rule: 'control-padding', target: 'p8-menu__item', reason: 'Menu item exception: 6px left/right, 4px top/bottom.' },
   { rule: 'control-padding', target: 'p8-pager__btn', reason: 'Fixed-width page number button; 12px side padding inside a 32px minimum width.' },

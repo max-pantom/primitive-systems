@@ -70,6 +70,7 @@ export const theme = {
   },
   opacity: { disabled: '0.5', hover: '0.8' },
   icon: { sm: '14px', md: '16px' },
+  unit: { px: '1px' },
   motion: { fast: '150ms', ease: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
 } as const;
 
@@ -91,6 +92,7 @@ function base(): string[] {
     ...vars(theme.opacity, 'opacity-'),
     ...vars(theme.icon, 'icon-'),
     ...vars(theme.motion, 'motion-'),
+    ...vars(theme.unit, 'unit-'),
   ];
 }
 
@@ -114,5 +116,6 @@ export function flatTokens() {
     opacity: theme.opacity,
     icon: theme.icon,
     motion: theme.motion,
+    unit: theme.unit,
   };
 }

@@ -206,7 +206,7 @@ describe('generated behavior', () => {
   });
 
   it('command palette filters, navigates and runs', () => {
-    mount('command-palette', { items: 'Alpha\nBeta\nGamma' });
+    mount('command-palette', { items: 'Alpha\nBeta\nGamma', recent: '' });
     const input = $('input') as HTMLInputElement;
     input.value = 'ga';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -214,9 +214,30 @@ describe('generated behavior', () => {
     expect(opts.map((o) => o.hidden)).toEqual([true, true, false]);
     expect(opts[2].classList.contains('p8-palette__item--active')).toBe(true);
     const run = vi.fn();
-    opts[2].addEventListener('click', run);
+    document.addEventListener('p8-run', (e) => run((e as CustomEvent).detail));
     key(input, 'Enter');
-    expect(run).toHaveBeenCalled();
+    expect(run).toHaveBeenCalledWith({ command: 'Gamma', section: '' });
+  });
+
+  it('command palette: sections, shortcuts, recents, no-match message and closing on run', () => {
+    mount('command-palette', { items: '# Navigate\nGo home | G H\nGo away\n# Actions\nCreate thing | ⌘N', recent: 'Create thing' });
+    const input = $('input') as HTMLInputElement;
+    const groups = () => $$('[role=group]').map((g) => [g.getAttribute('aria-label'), g.hidden]);
+    expect(groups()).toEqual([['Recent', false], ['Navigate', false], ['Actions', false]]);
+    expect($('[data-recent]').getAttribute('aria-keyshortcuts')).toBe('⌘N');
+    input.value = 'go'; input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect(groups()).toEqual([['Recent', true], ['Navigate', false], ['Actions', true]]);
+    input.value = 'zzz'; input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect($('[data-empty]').hidden).toBe(false);
+    input.value = 'away'; input.dispatchEvent(new Event('input', { bubbles: true }));
+    expect($('[data-empty]').hidden).toBe(true);
+    const run = vi.fn();
+    document.addEventListener('p8-run', (e) => run((e as CustomEvent).detail));
+    key(input, 'Enter');
+    expect(run).toHaveBeenCalledWith({ command: 'Go away', section: 'Navigate' });
+    expect($('[data-p8~=overlay]').hidden).toBe(true);
+    expect($$('[data-group=recent] [role=option]').map((o) => o.textContent!.replace(/G H|⌘N/, '').trim())).toEqual(['Go away', 'Create thing']);
+    expect(input.value).toBe('');
   });
 
   it('Cmd/Ctrl+K toggles the palette', () => {

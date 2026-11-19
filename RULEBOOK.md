@@ -33,6 +33,8 @@ Surfaces drawn with the hairline (card, dialog, sheet, popover panel, alert, toa
 - **Exception — `p8-palette`:** Wrapper around an input and options that carry their own control padding.
 - **Exception — `p8-combobox__list`:** Option list wrapper: 4px inset around options that carry their own 12px control padding.
 - **Exception — `p8-multi__list`:** Option list wrapper: 4px inset around options that carry their own 12px control padding.
+- **Exception — `p8-mention__list`:** Suggestion list wrapper: 4px inset around options that carry their own 12px control padding.
+- **Exception — `p8-mt`:** Editor surface: its toolbar, track labels and ruler carry their own padding; the lanes must be flush so clips line up with the ruler.
 - **Exception — `p8-sheet`:** Full-height drawer uses 16px on all sides.
 
 ### Default gap 12 `gap`
